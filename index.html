@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Global Motorsport</title>
 
 <style>
+
 * {
     margin: 0;
     padding: 0;
@@ -15,24 +17,30 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
     background: #0b0b0b;
-    color: #fff;
+    color: white;
 }
 
-/* CABECERA */
+/* =========================
+   CABECERA
+========================= */
+
 header {
     height: 75px;
     background: #080808;
-    border-bottom: 2px solid #d90000;
+    border-bottom: 2px solid #e10600;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     padding: 0 25px;
     position: relative;
 }
 
 .logo {
-    color: #fff;
+    color: white;
     text-decoration: none;
+
     font-size: 24px;
     font-weight: 900;
     letter-spacing: 1px;
@@ -48,22 +56,30 @@ header {
     gap: 18px;
 }
 
-/* BUSCADOR */
+/* =========================
+   BUSCADOR DE CABECERA
+========================= */
+
 .search {
     display: flex;
     align-items: center;
+
     background: #171717;
     border: 1px solid #333;
     border-radius: 5px;
+
     overflow: hidden;
 }
 
 .search input {
     width: 230px;
+
     padding: 11px 13px;
+
     background: transparent;
     border: none;
     outline: none;
+
     color: white;
     font-size: 14px;
 }
@@ -74,31 +90,47 @@ header {
 
 .search button {
     padding: 11px 14px;
+
     background: #e10600;
     color: white;
+
     border: none;
     cursor: pointer;
 }
 
-/* BOTÓN MENÚ */
+/* =========================
+   BOTÓN MENÚ
+========================= */
+
 .menu-button {
     background: none;
     border: none;
+
     color: white;
+
     font-size: 29px;
     cursor: pointer;
 }
 
-/* MENÚ */
+/* =========================
+   MENÚ
+========================= */
+
 .menu {
     display: none;
+
     position: absolute;
+
     top: 75px;
     right: 20px;
+
     width: 250px;
+
     background: #111;
+
     border: 1px solid #333;
     border-top: 3px solid #e10600;
+
     z-index: 1000;
 }
 
@@ -108,10 +140,14 @@ header {
 
 .menu a {
     display: block;
+
     padding: 15px 20px;
+
     color: white;
     text-decoration: none;
+
     border-bottom: 1px solid #222;
+
     font-weight: bold;
 }
 
@@ -120,7 +156,10 @@ header {
     color: #e10600;
 }
 
-/* IDIOMAS */
+/* =========================
+   IDIOMAS
+========================= */
+
 .languages {
     display: none;
     background: #181818;
@@ -135,16 +174,26 @@ header {
     font-size: 14px;
 }
 
-/* PORTADA */
+/* =========================
+   PORTADA
+========================= */
+
 .hero {
     text-align: center;
+
     padding: 65px 20px 45px;
-    background: linear-gradient(to bottom, #111, #0b0b0b);
+
+    background: linear-gradient(
+        to bottom,
+        #111,
+        #0b0b0b
+    );
 }
 
 .hero h1 {
     font-size: 42px;
     font-weight: 900;
+
     margin-bottom: 12px;
 }
 
@@ -154,75 +203,111 @@ header {
 
 .hero p {
     color: #aaa;
+
     font-size: 17px;
 }
 
-/* CONTENIDO */
+/* =========================
+   CONTENIDO
+========================= */
+
 .container {
     max-width: 1100px;
+
     margin: auto;
+
     padding: 25px 20px 50px;
 }
 
 .section-title {
     font-size: 25px;
+
     margin: 25px 0 18px;
+
     border-left: 4px solid #e10600;
+
     padding-left: 12px;
 }
 
-/* EVENTOS */
+/* =========================
+   TARJETAS DE EVENTOS
+========================= */
+
 .events {
     display: grid;
+
     grid-template-columns: repeat(2, 1fr);
+
     gap: 18px;
 }
 
 .event {
     background: #151515;
+
     border: 1px solid #292929;
+
     border-radius: 6px;
+
     padding: 20px;
+
     transition: 0.2s;
 }
 
 .event:hover {
     border-color: #e10600;
+
     transform: translateY(-2px);
 }
 
 .event-date {
     color: #e10600;
+
     font-size: 14px;
+
     font-weight: bold;
+
     margin-bottom: 8px;
 }
 
 .event h3 {
     font-size: 20px;
+
     margin-bottom: 8px;
 }
 
 .event p {
     color: #999;
+
     font-size: 14px;
 }
 
-/* FOOTER */
+/* =========================
+   FOOTER
+========================= */
+
 footer {
     background: #050505;
+
     border-top: 1px solid #222;
+
     text-align: center;
+
     padding: 30px 20px;
+
     color: #777;
+
     font-size: 14px;
 }
 
-/* MÓVIL */
+/* =========================
+   MÓVIL
+========================= */
+
 @media (max-width: 700px) {
 
     header {
         height: 68px;
+
         padding: 0 14px;
     }
 
@@ -236,6 +321,7 @@ footer {
 
     .search input {
         width: 120px;
+
         padding: 9px;
     }
 
@@ -249,7 +335,9 @@ footer {
 
     .menu {
         top: 68px;
+
         right: 10px;
+
         width: 230px;
     }
 
@@ -268,11 +356,17 @@ footer {
     .events {
         grid-template-columns: 1fr;
     }
+
 }
+
 </style>
 </head>
 
 <body>
+
+<!-- =========================
+     CABECERA
+========================= -->
 
 <header>
 
@@ -282,39 +376,96 @@ footer {
 
     <div class="header-right">
 
+        <!-- BUSCADOR PEQUEÑO -->
         <div class="search">
-            <input type="text" placeholder="Buscar...">
-            <button>🔎</button>
+
+            <input
+                type="text"
+                placeholder="Buscar..."
+            >
+
+            <button>
+                🔎
+            </button>
+
         </div>
 
-        <button class="menu-button" onclick="toggleMenu()">☰</button>
+        <!-- MENÚ -->
+        <button
+            class="menu-button"
+            onclick="toggleMenu()"
+        >
+            ☰
+        </button>
 
     </div>
 
+    <!-- =========================
+         MENÚ DESPLEGABLE
+    ========================= -->
+
     <div class="menu" id="menu">
 
-        <a href="index.html">🏠 Inicio</a>
+        <a href="index.html">
+            🏠 Inicio
+        </a>
 
-        <a href="competiciones.html">🏁 Competiciones</a>
+        <a href="competiciones.html">
+            🏁 Competiciones
+        </a>
 
-        <a href="calendario.html">📅 Calendario</a>
+        <a href="calendario.html">
+            📅 Calendario
+        </a>
 
-        <a href="#">📊 Estadísticas</a>
+        <a href="#">
+            📊 Estadísticas
+        </a>
 
-        <a href="#">📸 Multimedia</a>
+        <a href="#">
+            📸 Multimedia
+        </a>
 
-        <a href="#">🚗 Vehículos</a>
+        <a href="#">
+            🚗 Vehículos
+        </a>
 
-        <a href="#">📞 Contacto</a>
+        <a href="#">
+            📞 Contacto
+        </a>
 
-        <a href="#" onclick="toggleLanguages(event)">🌐 Idioma ▾</a>
+        <a
+            href="#"
+            onclick="toggleLanguages(event)"
+        >
+            🌐 Idioma ▾
+        </a>
 
-        <div class="languages" id="languages">
+        <!-- IDIOMAS -->
 
-            <a href="#">🇪🇸 Español</a>
-            <a href="#">🇬🇧 English</a>
-            <a href="#">🇫🇷 Français</a>
-            <a href="#">🇩🇪 Deutsch</a>
+        <div
+            class="languages"
+            id="languages"
+        >
+
+            <a href="#">
+                🇪🇸 Español
+            </a>
+
+            <a href="#">
+                🇬🇧 English
+            </a>
+
+            <a href="#">
+                🇫🇷 Français
+            </a>
+
+            <a href="#">
+                🇩🇪 Deutsch
+                
+            <a href="#">
+                🇮🇹 Italiano
+            </a>
 
         </div>
 
@@ -323,95 +474,228 @@ footer {
 </header>
 
 
+<!-- =========================
+     PORTADA
+========================= -->
+
 <section class="hero">
 
-    <h1>GLOBAL <span>MOTORSPORT</span></h1>
+    <h1>
+        GLOBAL <span>MOTORSPORT</span>
+    </h1>
 
-    <p>El mundo del motorsport en un solo lugar.</p>
+    <p>
+        El mundo del motorsport en un solo lugar.
+    </p>
 
 </section>
 
 
+<!-- =========================
+     CONTENIDO
+========================= -->
+
 <main class="container">
 
-    <h2 class="section-title">📅 Próximas pruebas</h2>
+
+    <!-- PRÓXIMAS PRUEBAS -->
+
+    <h2 class="section-title">
+        📅 Próximas pruebas
+    </h2>
 
     <div class="events">
 
-        <div class="event">
-            <div class="event-date">PRÓXIMAMENTE</div>
-            <h3>Gran Premio de Italia</h3>
-            <p>Fórmula 1 · Italia</p>
-        </div>
 
         <div class="event">
-            <div class="event-date">PRÓXIMAMENTE</div>
-            <h3>Rally de España</h3>
-            <p>WRC · España</p>
+
+            <div class="event-date">
+                PRÓXIMAMENTE
+            </div>
+
+            <h3>
+                Gran Premio de Italia
+            </h3>
+
+            <p>
+                Fórmula 1 · Italia
+            </p>
+
         </div>
 
-        <div class="event">
-            <div class="event-date">PRÓXIMAMENTE</div>
-            <h3>Gran Premio de España</h3>
-            <p>MotoGP · España</p>
-        </div>
 
         <div class="event">
-            <div class="event-date">PRÓXIMAMENTE</div>
-            <h3>24 Horas de Le Mans</h3>
-            <p>Resistencia · Francia</p>
+
+            <div class="event-date">
+                PRÓXIMAMENTE
+            </div>
+
+            <h3>
+                Rally de España
+            </h3>
+
+            <p>
+                WRC · España
+            </p>
+
         </div>
+
+
+        <div class="event">
+
+            <div class="event-date">
+                PRÓXIMAMENTE
+            </div>
+
+            <h3>
+                Gran Premio de España
+            </h3>
+
+            <p>
+                MotoGP · España
+            </p>
+
+        </div>
+
+
+        <div class="event">
+
+            <div class="event-date">
+                PRÓXIMAMENTE
+            </div>
+
+            <h3>
+                24 Horas de Le Mans
+            </h3>
+
+            <p>
+                Resistencia · Francia
+            </p>
+
+        </div>
+
 
     </div>
 
 
-    <h2 class="section-title">🏆 Últimas pruebas</h2>
+    <!-- ÚLTIMAS PRUEBAS -->
+
+    <h2 class="section-title">
+        🏆 Últimas pruebas
+    </h2>
 
     <div class="events">
 
-        <div class="event">
-            <div class="event-date">FINALIZADA</div>
-            <h3>Última prueba de Fórmula 1</h3>
-            <p>Resultados y clasificación</p>
-        </div>
 
         <div class="event">
-            <div class="event-date">FINALIZADA</div>
-            <h3>Último rally</h3>
-            <p>Resultados y clasificación</p>
+
+            <div class="event-date">
+                FINALIZADA
+            </div>
+
+            <h3>
+                Última prueba de Fórmula 1
+            </h3>
+
+            <p>
+                Resultados y clasificación
+            </p>
+
         </div>
 
-        <div class="event">
-            <div class="event-date">FINALIZADA</div>
-            <h3>Última prueba de MotoGP</h3>
-            <p>Resultados y clasificación</p>
-        </div>
 
         <div class="event">
-            <div class="event-date">FINALIZADA</div>
-            <h3>Última prueba de resistencia</h3>
-            <p>Resultados y clasificación</p>
+
+            <div class="event-date">
+                FINALIZADA
+            </div>
+
+            <h3>
+                Último rally
+            </h3>
+
+            <p>
+                Resultados y clasificación
+            </p>
+
         </div>
+
+
+        <div class="event">
+
+            <div class="event-date">
+                FINALIZADA
+            </div>
+
+            <h3>
+                Última prueba de MotoGP
+            </h3>
+
+            <p>
+                Resultados y clasificación
+            </p>
+
+        </div>
+
+
+        <div class="event">
+
+            <div class="event-date">
+                FINALIZADA
+            </div>
+
+            <h3>
+                Última prueba de resistencia
+            </h3>
+
+            <p>
+                Resultados y clasificación
+            </p>
+
+        </div>
+
 
     </div>
 
 </main>
 
 
+<!-- =========================
+     PIE DE PÁGINA
+========================= -->
+
 <footer>
+
     © 2026 Global Motorsport
+
 </footer>
 
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
 
 <script>
 
 function toggleMenu() {
-    document.getElementById("menu").classList.toggle("active");
+
+    document
+        .getElementById("menu")
+        .classList
+        .toggle("active");
+
 }
 
+
 function toggleLanguages(event) {
+
     event.preventDefault();
-    document.getElementById("languages").classList.toggle("active");
+
+    document
+        .getElementById("languages")
+        .classList
+        .toggle("active");
+
 }
 
 </script>
