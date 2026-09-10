@@ -7,50 +7,129 @@
 
 <style>
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     background: #0b0b0b;
-    color: white;
+    color: #fff;
 }
 
+/* CABECERA */
 header {
-    background: #111;
-    border-bottom: 2px solid #e10600;
-    padding: 18px 25px;
+    height: 75px;
+    background: #080808;
+    border-bottom: 2px solid #d90000;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    position: relative;
 }
 
 .logo {
-    font-size: 25px;
-    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 1px;
 }
 
 .logo span {
     color: #e10600;
 }
 
-nav a {
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+/* BUSCADOR */
+.search {
+    display: flex;
+    align-items: center;
+    background: #171717;
+    border: 1px solid #333;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.search input {
+    width: 230px;
+    padding: 11px 13px;
+    background: transparent;
+    border: none;
+    outline: none;
     color: white;
-    text-decoration: none;
-    margin-left: 18px;
     font-size: 14px;
 }
 
+.search input::placeholder {
+    color: #888;
+}
+
+.search button {
+    padding: 11px 14px;
+    background: #e10600;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* BOTÓN MENÚ */
+.menu-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 29px;
+    cursor: pointer;
+}
+
+/* MENÚ */
+.menu {
+    display: none;
+    position: absolute;
+    top: 75px;
+    right: 20px;
+    width: 240px;
+    background: #111;
+    border: 1px solid #333;
+    border-top: 3px solid #e10600;
+    z-index: 1000;
+}
+
+.menu.active {
+    display: block;
+}
+
+.menu a {
+    display: block;
+    padding: 16px 20px;
+    color: white;
+    text-decoration: none;
+    border-bottom: 1px solid #222;
+    font-weight: bold;
+}
+
+.menu a:hover {
+    background: #1d1d1d;
+    color: #e10600;
+}
+
+/* PORTADA */
 .hero {
-    padding: 70px 25px;
     text-align: center;
-    background: linear-gradient(135deg, #151515, #050505);
+    padding: 65px 20px 45px;
+    background: linear-gradient(to bottom, #111, #0b0b0b);
 }
 
 .hero h1 {
-    font-size: 48px;
+    font-size: 42px;
+    font-weight: 900;
     margin-bottom: 12px;
 }
 
@@ -60,72 +139,162 @@ nav a {
 
 .hero p {
     color: #aaa;
-    font-size: 18px;
+    font-size: 17px;
 }
 
+/* BUSCADOR PRINCIPAL */
+.main-search {
+    max-width: 700px;
+    margin: 30px auto 0;
+    display: flex;
+    background: #171717;
+    border: 1px solid #444;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.main-search input {
+    flex: 1;
+    padding: 16px;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: white;
+    font-size: 16px;
+}
+
+.main-search button {
+    padding: 0 25px;
+    background: #e10600;
+    color: white;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* CONTENIDO */
 .container {
     max-width: 1100px;
     margin: auto;
-    padding: 40px 20px;
+    padding: 25px 20px 50px;
 }
 
 .section-title {
     font-size: 25px;
-    margin-bottom: 20px;
+    margin: 25px 0 18px;
     border-left: 4px solid #e10600;
     padding-left: 12px;
 }
 
-.grid {
+/* EVENTOS */
+.events {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 18px;
-    margin-bottom: 45px;
 }
 
-.card {
-    background: #171717;
+.event {
+    background: #151515;
     border: 1px solid #292929;
-    padding: 25px;
-    border-radius: 8px;
+    border-radius: 6px;
+    padding: 20px;
     transition: 0.2s;
 }
 
-.card:hover {
+.event:hover {
     border-color: #e10600;
-    transform: translateY(-3px);
+    transform: translateY(-2px);
 }
 
-.card h3 {
+.event-date {
+    color: #e10600;
+    font-size: 14px;
+    font-weight: bold;
     margin-bottom: 8px;
 }
 
-.card p {
+.event h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.event p {
     color: #999;
     font-size: 14px;
 }
 
+/* FOOTER */
 footer {
-    text-align: center;
-    padding: 30px;
-    background: #111;
-    color: #777;
+    background: #050505;
     border-top: 1px solid #222;
+    text-align: center;
+    padding: 30px 20px;
+    color: #777;
+    font-size: 14px;
 }
 
+/* MÓVIL */
 @media (max-width: 700px) {
+
     header {
-        flex-direction: column;
-        gap: 15px;
+        height: 68px;
+        padding: 0 14px;
     }
 
-    nav a {
-        margin: 0 6px;
-        font-size: 12px;
+    .logo {
+        font-size: 18px;
+    }
+
+    .header-right {
+        gap: 8px;
+    }
+
+    .search input {
+        width: 120px;
+        padding: 9px;
+    }
+
+    .search button {
+        padding: 9px 10px;
+    }
+
+    .menu-button {
+        font-size: 26px;
+    }
+
+    .menu {
+        top: 68px;
+        right: 10px;
+        width: 220px;
+    }
+
+    .hero {
+        padding: 45px 15px 35px;
     }
 
     .hero h1 {
-        font-size: 36px;
+        font-size: 30px;
+    }
+
+    .hero p {
+        font-size: 15px;
+    }
+
+    .main-search {
+        margin-top: 25px;
+    }
+
+    .main-search input {
+        font-size: 14px;
+        padding: 13px;
+    }
+
+    .main-search button {
+        padding: 0 15px;
+    }
+
+    .events {
+        grid-template-columns: 1fr;
     }
 }
 </style>
@@ -134,76 +303,109 @@ footer {
 <body>
 
 <header>
-    <div class="logo">
+
+    <a href="index.html" class="logo">
         GLOBAL <span>MOTORSPORT</span>
+    </a>
+
+    <div class="header-right">
+
+        <div class="search">
+            <input type="text" placeholder="Buscar...">
+            <button>🔎</button>
+        </div>
+
+        <button class="menu-button" onclick="toggleMenu()">☰</button>
+
     </div>
 
-    <nav>
-        <a href="#">Inicio</a>
-        <a href="competiciones.html">Competiciones</a>
-        <a href="#">Calendario</a>
-        <a href="#">Resultados</a>
-        <a href="#">Multimedia</a>
-    </nav>
+    <div class="menu" id="menu">
+
+        <a href="index.html">🏠 Inicio</a>
+        <a href="competiciones.html">🏁 Competiciones</a>
+        <a href="calendario.html">📅 Calendario</a>
+        <a href="#">📊 Estadísticas</a>
+        <a href="#">📸 Multimedia</a>
+        <a href="#">🚗 Vehículos</a>
+        <a href="#">📞 Contacto</a>
+
+    </div>
+
 </header>
 
 <section class="hero">
+
     <h1>GLOBAL <span>MOTORSPORT</span></h1>
+
     <p>El mundo del motorsport en un solo lugar.</p>
+
+    <div class="main-search">
+        <input type="text" placeholder="Buscar pilotos, pruebas, vehículos, competiciones...">
+        <button>BUSCAR</button>
+    </div>
+
 </section>
 
 <main class="container">
 
-    <h2 class="section-title">Próximos eventos</h2>
+    <h2 class="section-title">📅 Próximas pruebas</h2>
 
-    <div class="grid">
-        <div class="card">
-            <h3>🏎️ Fórmula 1</h3>
-            <p>Próximas carreras y horarios.</p>
+    <div class="events">
+
+        <div class="event">
+            <div class="event-date">PRÓXIMAMENTE</div>
+            <h3>Gran Premio de Italia</h3>
+            <p>Fórmula 1 · Italia</p>
         </div>
 
-        <div class="card">
-            <h3>🏁 Rally</h3>
-            <p>Rallyes y pruebas de todo el mundo.</p>
+        <div class="event">
+            <div class="event-date">PRÓXIMAMENTE</div>
+            <h3>Rally de España</h3>
+            <p>WRC · España</p>
         </div>
 
-        <div class="card">
-            <h3>🏆 Resistencia</h3>
-            <p>WEC, IMSA y otras competiciones.</p>
+        <div class="event">
+            <div class="event-date">PRÓXIMAMENTE</div>
+            <h3>Gran Premio de España</h3>
+            <p>MotoGP · España</p>
         </div>
 
-        <div class="card">
-            <h3>🏍️ Motociclismo</h3>
-            <p>Información de las principales categorías.</p>
+        <div class="event">
+            <div class="event-date">PRÓXIMAMENTE</div>
+            <h3>24 Horas de Le Mans</h3>
+            <p>Resistencia · Francia</p>
         </div>
+
     </div>
 
-    <h2 class="section-title">Últimos resultados</h2>
+    <h2 class="section-title">🏆 Últimas pruebas</h2>
 
-    <div class="grid">
-        <div class="card">
-            <h3>Resultados</h3>
-            <p>Consulta los resultados de las últimas pruebas.</p>
+    <div class="events">
+
+        <div class="event">
+            <div class="event-date">FINALIZADA</div>
+            <h3>Última prueba de Fórmula 1</h3>
+            <p>Resultados y clasificación</p>
         </div>
 
-        <div class="card">
-            <h3>Clasificaciones</h3>
-            <p>Pilotos, equipos y campeonatos.</p>
-        </div>
-    </div>
-
-    <h2 class="section-title">Multimedia de la comunidad</h2>
-
-    <div class="grid">
-        <div class="card">
-            <h3>📸 Fotografías</h3>
-            <p>Descubre fotografías aportadas por la comunidad.</p>
+        <div class="event">
+            <div class="event-date">FINALIZADA</div>
+            <h3>Último rally</h3>
+            <p>Resultados y clasificación</p>
         </div>
 
-        <div class="card">
-            <h3>🎥 Vídeos</h3>
-            <p>Vídeos de eventos y competiciones.</p>
+        <div class="event">
+            <div class="event-date">FINALIZADA</div>
+            <h3>Última prueba de MotoGP</h3>
+            <p>Resultados y clasificación</p>
         </div>
+
+        <div class="event">
+            <div class="event-date">FINALIZADA</div>
+            <h3>Última prueba de resistencia</h3>
+            <p>Resultados y clasificación</p>
+        </div>
+
     </div>
 
 </main>
@@ -211,6 +413,12 @@ footer {
 <footer>
     © 2026 Global Motorsport
 </footer>
+
+<script>
+function toggleMenu() {
+    document.getElementById("menu").classList.toggle("active");
+}
+</script>
 
 </body>
 </html>
