@@ -95,7 +95,7 @@ header {
     position: absolute;
     top: 75px;
     right: 20px;
-    width: 240px;
+    width: 250px;
     background: #111;
     border: 1px solid #333;
     border-top: 3px solid #e10600;
@@ -108,7 +108,7 @@ header {
 
 .menu a {
     display: block;
-    padding: 16px 20px;
+    padding: 15px 20px;
     color: white;
     text-decoration: none;
     border-bottom: 1px solid #222;
@@ -118,6 +118,21 @@ header {
 .menu a:hover {
     background: #1d1d1d;
     color: #e10600;
+}
+
+/* IDIOMAS */
+.languages {
+    display: none;
+    background: #181818;
+}
+
+.languages.active {
+    display: block;
+}
+
+.languages a {
+    padding-left: 40px;
+    font-size: 14px;
 }
 
 /* PORTADA */
@@ -141,32 +156,6 @@ header {
     color: #aaa;
     font-size: 17px;
 }
-
-/* BUSCADOR PRINCIPAL */
-.main-search {
-    max-width: 700px;
-    margin: 30px auto 0;
-    display: flex;
-    background: #171717;
-    border: 1px solid #444;
-    border-radius: 6px;
-    overflow: hidden;
-}
-
-.main-search input {
-    flex: 1;
-    padding: 16px;
-    border: none;
-    outline: none;
-    background: transparent;
-    color: white;
-    font-size: 16px;
-}
-
-.main-search button {
-    padding: 0 25px;
-    background: #e10600;
-    color: white;
 
 /* CONTENIDO */
 .container {
@@ -261,7 +250,7 @@ footer {
     .menu {
         top: 68px;
         right: 10px;
-        width: 220px;
+        width: 230px;
     }
 
     .hero {
@@ -274,19 +263,6 @@ footer {
 
     .hero p {
         font-size: 15px;
-    }
-
-    .main-search {
-        margin-top: 25px;
-    }
-
-    .main-search input {
-        font-size: 14px;
-        padding: 13px;
-    }
-
-    .main-search button {
-        padding: 0 15px;
     }
 
     .events {
@@ -318,17 +294,34 @@ footer {
     <div class="menu" id="menu">
 
         <a href="index.html">🏠 Inicio</a>
+
         <a href="competiciones.html">🏁 Competiciones</a>
+
         <a href="calendario.html">📅 Calendario</a>
+
         <a href="#">📊 Estadísticas</a>
+
         <a href="#">📸 Multimedia</a>
+
         <a href="#">🚗 Vehículos</a>
+
         <a href="#">📞 Contacto</a>
-        <a href="#">🌐 Idioma</a>
+
+        <a href="#" onclick="toggleLanguages(event)">🌐 Idioma ▾</a>
+
+        <div class="languages" id="languages">
+
+            <a href="#">🇪🇸 Español</a>
+            <a href="#">🇬🇧 English</a>
+            <a href="#">🇫🇷 Français</a>
+            <a href="#">🇩🇪 Deutsch</a>
+
+        </div>
 
     </div>
 
 </header>
+
 
 <section class="hero">
 
@@ -336,12 +329,8 @@ footer {
 
     <p>El mundo del motorsport en un solo lugar.</p>
 
-    <div class="main-search">
-        <input type="text" placeholder="Buscar pilotos, pruebas, vehículos, competiciones...">
-        <button>BUSCAR</button>
-    </div>
-
 </section>
+
 
 <main class="container">
 
@@ -375,6 +364,7 @@ footer {
 
     </div>
 
+
     <h2 class="section-title">🏆 Últimas pruebas</h2>
 
     <div class="events">
@@ -407,14 +397,23 @@ footer {
 
 </main>
 
+
 <footer>
     © 2026 Global Motorsport
 </footer>
 
+
 <script>
+
 function toggleMenu() {
     document.getElementById("menu").classList.toggle("active");
 }
+
+function toggleLanguages(event) {
+    event.preventDefault();
+    document.getElementById("languages").classList.toggle("active");
+}
+
 </script>
 
 </body>
