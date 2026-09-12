@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vehículos | Global Motorsport</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #0b0b0b;
+            color: white;
+        }
+
+        /* CABECERA */
+        header {
+            height: 65px;
+            background: #111;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #e00000;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search {
+            font-size: 21px;
+            cursor: pointer;
+        }
+
+        .menu-button {
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        /* MENÚ */
+        .menu {
+            display: none;
+            position: absolute;
+            right: 15px;
+            top: 65px;
+            width: 230px;
+            background: #151515;
+            border: 1px solid #444;
+            z-index: 100;
+        }
+
+        .menu.show {
+            display: block;
+        }
+
+        .menu a,
+        .menu button {
+            display: block;
+            width: 100%;
+            padding: 14px 16px;
+            color: white;
+            text-decoration: none;
+            background: none;
+            border: none;
+            text-align: left;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .menu a:hover,
+        .menu button:hover {
+            background: #222;
+        }
+
+        /* IDIOMAS */
+        .languages {
+            display: none;
+            background: #202020;
+        }
+
+        .languages.show {
+            display: block;
+        }
+
+        .languages a {
+            padding-left: 30px;
+            font-size: 14px;
+        }
+
+        /* CONTENIDO */
+        main {
+            max-width: 1100px;
+            margin: auto;
+            padding: 35px 15px 60px;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .title p {
+            color: #aaa;
+            font-size: 15px;
+        }
+
+        /* BUSCADOR */
+        .search-box {
+            background: #151515;
+            border: 1px solid #333;
+            border-top: 3px solid #e00000;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .search-box h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 13px;
+            background: #0d0d0d;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #e00000;
+        }
+
+        /* FILTROS */
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 6px;
+        }
+
+        .filter-group select {
+            width: 100%;
+            padding: 11px;
+            background: #0d0d0d;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        /* RESULTADOS */
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .empty {
+            background: #151515;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 35px 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        /* FICHA DEL VEHÍCULO */
+        .vehicle-detail {
+            display: none;
+            background: #151515;
+            border: 1px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .vehicle-photo {
+            width: 100%;
+            height: 330px;
+            background: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            font-size: 16px;
+        }
+
+        .vehicle-content {
+            padding: 25px;
+        }
+
+        .vehicle-content h2 {
+            font-size: 27px;
+            margin-bottom: 20px;
+        }
+
+        .info-section {
+            margin-top: 25px;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+        }
+
+        .info-section h3 {
+            font-size: 19px;
+            margin-bottom: 15px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .info-item {
+            background: #101010;
+            border: 1px solid #2d2d2d;
+            border-radius: 5px;
+            padding: 12px;
+        }
+
+        .info-item strong {
+            display: block;
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .info-item span {
+            font-size: 14px;
+        }
+
+        /* HISTORIAL */
+        .history-filters {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .history-filters label {
+            display: block;
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 6px;
+        }
+
+        .history-filters select {
+            width: 100%;
+            padding: 11px;
+            background: #0d0d0d;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 5px;
+        }
+
+        .history-empty {
+            background: #101010;
+            border: 1px solid #2d2d2d;
+            border-radius: 5px;
+            padding: 20px;
+            color: #888;
+            text-align: center;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 650px) {
+
+            .title h1 {
+                font-size: 28px;
+            }
+
+            .filters,
+            .history-filters,
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .vehicle-photo {
+                height: 230px;
+            }
+
+            .vehicle-content {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        Global <span>Motorsport</span>
+    </div>
+
+    <div class="header-right">
+
+        <div class="search">
+            🔍
+        </div>
+
+        <div class="menu-button" onclick="toggleMenu()">
+            ☰
+        </div>
+
+    </div>
+
+    <div class="menu" id="menu">
+
+        <a href="index.html">Inicio</a>
+
+        <a href="competiciones.html">Competiciones</a>
+
+        <a href="calendario.html">Calendario</a>
+
+        <a href="estadisticas.html">Estadísticas</a>
+
+        <a href="multimedia.html">Multimedia</a>
+
+        <a href="vehiculos.html">Vehículos</a>
+
+        <a href="#">Contacto</a>
+
+        <button onclick="toggleLanguages(event)">
+            Idioma ▼
+        </button>
+
+        <div class="languages" id="languages">
+            <a href="#">🇪🇸 Español</a>
+            <a href="#">🇬🇧 English</a>
+            <a href="#">🇫🇷 Français</a>
+            <a href="#">🇩🇪 Deutsch</a>
+        </div>
+
+    </div>
+
+</header>
+
+
+<main>
+
+    <div class="title">
+
+        <h1>🚗 Vehículos</h1>
+
+        <p>
+            Consulta vehículos de competición de todo el mundo.
+        </p>
+
+    </div>
+
+
+    <!-- BUSCADOR Y FILTROS -->
+
+    <section class="search-box">
+
+        <h2>🔎 Buscar vehículo</h2>
+
+        <input
+            type="text"
+            class="search-input"
+            placeholder="Buscar por nombre del vehículo..."
+        >
+
+
+        <div class="filters">
+
+            <div class="filter-group">
+
+                <label>Nombre del vehículo</label>
+
+                <select>
+                    <option>Todos</option>
+                </select>
+
+            </div>
+
+
+            <div class="filter-group">
+
+                <label>Categoría</label>
+
+                <select>
+                    <option>Todos</option>
+                </select>
+
+            </div>
+
+
+            <div class="filter-group">
+
+                <label>Campeonato</label>
+
+                <select>
+                    <option>Todos</option>
+                </select>
+
+            </div>
+
+
+            <div class="filter-group">
+
+                <label>Temporada</label>
+
+                <select>
+                    <option>Todos</option>
+                </select>
+
+            </div>
+
+
+            <div class="filter-group">
+
+                <label>Equipo</label>
+
+                <select>
+                    <option>Todos</option>
+                </select>
+
+            </div>
+
+
+            <div class="filter-group">
+
+                <label>Piloto</label>
+
+                <select>
+                    <option>Todos</option>
+                </select>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- RESULTADOS -->
+
+    <h2 class="section-title">
+        Resultados
+    </h2>
+
+    <div class="empty">
+
+        🚗
+
+        <br><br>
+
+        Próximamente encontrarás aquí los vehículos
+        registrados en Global Motorsport.
+
+    </div>
+
+
+    <!-- FICHA PREPARADA -->
+
+    <section class="vehicle-detail">
+
+        <div class="vehicle-photo">
+            Foto del vehículo
+        </div>
+
+
+        <div class="vehicle-content">
+
+            <h2>Nombre del vehículo</h2>
+
+
+            <!-- INFORMACIÓN BÁSICA -->
+
+            <div class="info-section">
+
+                <h3>Información básica</h3>
+
+                <div class="info-grid">
+
+                    <div class="info-item">
+                        <strong>Categoría</strong>
+                        <span>—</span>
+                    </div>
+
+                    <div class="info-item">
+                        <strong>Campeonato</strong>
+                        <span>—</span>
+                    </div>
+
+                    <div class="info-item">
+                        <strong>Temporada</strong>
+                        <span>—</span>
+                    </div>
+
+                    <div class="info-item">
+                        <strong>Equipo</strong>
+                        <span>—</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ESPECIFICACIONES -->
+
+            <div class="info-section">
+
+                <h3>⚙️ Especificaciones técnicas</h3>
+
+                <div class="info-grid">
+
+                    <div class="info-item">
+                        <strong>Motor</strong>
+                        <span>—</span>
+                    </div>
+
+                    <div class="info-item">
+                        <strong>Potencia</strong>
+                        <span>— CV</span>
+                    </div>
+
+                    <div class="info-item">
+                        <strong>Cilindrada</strong>
+                        <span>—</span>
+                    </div>
+
+                    <div class="info-item">
+                        <strong>Número de cilindros</strong>
+                        <span>—</span>
+                    </div>
+
+                    <div class="info-item">
+                        <strong>Tracción</strong>
+                        <span>—</span>
+                    </div>
+
+                    <div class="info-item">
+                        <strong>Par máximo</strong>
+                        <span>—</span>
+                    </div>
+
+                    <div class="info-item">
+                        <strong>Caja de cambios</strong>
+                        <span>—</span>
+                    </div>
+
+                    <div class="info-item">
+                        <strong>Peso</strong>
+                        <span>—</span>
+                    </div>
+
+                    <div class="info-item">
+                        <strong>Velocidad máxima</strong>
+                        <span>—</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- HISTORIAL -->
+
+            <div class="info-section">
+
+                <h3>🏆 Historial en competición</h3>
+
+
+                <div class="history-filters">
+
+                    <div>
+
+                        <label>Campeonato</label>
+
+                        <select>
+                            <option>Todos</option>
+                        </select>
+
+                    </div>
+
+
+                    <div>
+
+                        <label>Temporada</label>
+
+                        <select>
+                            <option>Todos</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-grid">
+
+                    <div class="info-item">
+                        <strong>Años de competición</strong>
+                        <span>—</span>
+                    </div>
+
+                    <div class="info-item">
+                        <strong>Pruebas disputadas</strong>
+                        <span>—</span>
+                    </div>
+
+                    <div class="info-item">
+                        <strong>Victorias</strong>
+                        <span>—</span>
+                    </div>
+
+                    <div class="info-item">
+                        <strong>Podios</strong>
+                        <span>—</span>
+                    </div>
+
+                    <div class="info-item">
+                        <strong>Títulos</strong>
+                        <span>—</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PILOTOS -->
+
+            <div class="info-section">
+
+                <h3>👤 Pilotos</h3>
+
+                <div class="history-empty">
+                    Próximamente se mostrarán los pilotos
+                    que hayan competido con este vehículo.
+                </div>
+
+            </div>
+
+
+            <!-- MULTIMEDIA -->
+
+            <div class="info-section">
+
+                <h3>📸🎥 Multimedia</h3>
+
+                <div class="history-empty">
+                    Próximamente aparecerán fotografías y vídeos
+                    relacionados con este vehículo.
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+    © 2026 Global Motorsport
+</footer>
+
+
+<script>
+
+function toggleMenu() {
+
+    document.getElementById("menu").classList.toggle("show");
+
+}
+
+
+function toggleLanguages(event) {
+
+    event.stopPropagation();
+
+    document.getElementById("languages").classList.toggle("show");
+
+}
+
+</script>
+
+</body>
+</html>
