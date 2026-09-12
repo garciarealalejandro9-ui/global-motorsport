@@ -1,343 +1,59 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Vehículos | Global Motorsport</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<title>Vehículos | Global Motorsport</title>
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #0b0b0b;
-            color: white;
-        }
+<style>
 
-        /* CABECERA */
-        header {
-            height: 65px;
-            background: #111;
-            border-bottom: 1px solid #333;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 15px;
-            position: relative;
-        }
+/* =========================
+   GENERAL
+========================= */
 
-        .logo {
-            font-size: 20px;
-            font-weight: bold;
-        }
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
 
-        .logo span {
-            color: #e00000;
-        }
+body{
+    background:#080808;
+    color:white;
+    font-family:Arial,Helvetica,sans-serif;
+}
 
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+/* =========================
+   ENCABEZADO
+========================= */
 
-        .search {
-            font-size: 21px;
-            cursor: pointer;
-        }
-
-        .menu-button {
-            font-size: 28px;
-            cursor: pointer;
-        }
-
-        /* MENÚ */
-        .menu {
-            display: none;
-            position: absolute;
-            right: 15px;
-            top: 65px;
-            width: 230px;
-            background: #151515;
-            border: 1px solid #444;
-            z-index: 100;
-        }
-
-        .menu.show {
-            display: block;
-        }
-
-        .menu a,
-        .menu button {
-            display: block;
-            width: 100%;
-            padding: 14px 16px;
-            color: white;
-            text-decoration: none;
-            background: none;
-            border: none;
-            text-align: left;
-            font-size: 15px;
-            cursor: pointer;
-        }
-
-        .menu a:hover,
-        .menu button:hover {
-            background: #222;
-        }
-
-        /* IDIOMAS */
-        .languages {
-            display: none;
-            background: #202020;
-        }
-
-        .languages.show {
-            display: block;
-        }
-
-        .languages a {
-            padding-left: 30px;
-            font-size: 14px;
-        }
-
-        /* CONTENIDO */
-        main {
-            max-width: 1100px;
-            margin: auto;
-            padding: 35px 15px 60px;
-        }
-
-        .title {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .title h1 {
-            font-size: 32px;
-            margin-bottom: 8px;
-        }
-
-        .title p {
-            color: #aaa;
-            font-size: 15px;
-        }
-
-        /* BUSCADOR */
-        .search-box {
-            background: #151515;
-            border: 1px solid #333;
-            border-top: 3px solid #e00000;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .search-box h2 {
-            font-size: 20px;
-            margin-bottom: 15px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 13px;
-            background: #0d0d0d;
-            border: 1px solid #444;
-            border-radius: 5px;
-            color: white;
-            font-size: 15px;
-            outline: none;
-        }
-
-        .search-input:focus {
-            border-color: #e00000;
-        }
-
-        /* FILTROS */
-        .filters {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 15px;
-        }
-
-        .filter-group label {
-            display: block;
-            font-size: 13px;
-            color: #aaa;
-            margin-bottom: 6px;
-        }
-
-        .filter-group select {
-            width: 100%;
-            padding: 11px;
-            background: #0d0d0d;
-            color: white;
-            border: 1px solid #444;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        /* RESULTADOS */
-        .section-title {
-            font-size: 22px;
-            margin-bottom: 15px;
-        }
-
-        .empty {
-            background: #151515;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 35px 20px;
-            text-align: center;
-            color: #999;
-        }
-
-        /* FICHA DEL VEHÍCULO */
-        .vehicle-detail {
-            display: none;
-            background: #151515;
-            border: 1px solid #333;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .vehicle-photo {
-            width: 100%;
-            height: 330px;
-            background: #222;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #777;
-            font-size: 16px;
-        }
-
-        .vehicle-content {
-            padding: 25px;
-        }
-
-        .vehicle-content h2 {
-            font-size: 27px;
-            margin-bottom: 20px;
-        }
-
-        .info-section {
-            margin-top: 25px;
-            border-top: 1px solid #333;
-            padding-top: 20px;
-        }
-
-        .info-section h3 {
-            font-size: 19px;
-            margin-bottom: 15px;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .info-item {
-            background: #101010;
-            border: 1px solid #2d2d2d;
-            border-radius: 5px;
-            padding: 12px;
-        }
-
-        .info-item strong {
-            display: block;
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 5px;
-        }
-
-        .info-item span {
-            font-size: 14px;
-        }
-
-        /* HISTORIAL */
-        .history-filters {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
-        .history-filters label {
-            display: block;
-            font-size: 13px;
-            color: #aaa;
-            margin-bottom: 6px;
-        }
-
-        .history-filters select {
-            width: 100%;
-            padding: 11px;
-            background: #0d0d0d;
-            color: white;
-            border: 1px solid #444;
-            border-radius: 5px;
-        }
-
-        .history-empty {
-            background: #101010;
-            border: 1px solid #2d2d2d;
-            border-radius: 5px;
-            padding: 20px;
-            color: #888;
-            text-align: center;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 650px) {
-
-            .title h1 {
-                font-size: 28px;
-            }
-
-            .filters,
-            .history-filters,
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .vehicle-photo {
-                height: 230px;
-            }
-
-            .vehicle-content {
-                padding: 18px;
-            }
-        }
-    </style>
-</head>
-
-<body>
 header{
-    height:126px;
-    background:#111;
-    border-bottom:3px solid #e00000;
+    width:100%;
+    height:260px;
+    background:#080808;
+    border-bottom:5px solid #e00000;
+
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:0 5%;
+
+    padding:0 4%;
 }
+
+/* LOGO */
 
 .logo{
     display:flex;
     flex-direction:column;
-    font-size:32px;
+
+    font-size:66px;
     font-weight:900;
-    line-height:1.05;
+    line-height:0.98;
+
     letter-spacing:1px;
-    flex-shrink:0;
 }
 
 .logo .global{
@@ -348,419 +64,1037 @@ header{
     color:#e00000;
 }
 
+/* PARTE DERECHA */
+
 .header-right{
     display:flex;
     align-items:center;
-    gap:25px;
-    flex-shrink:0;
+    gap:35px;
 }
 
+/* BUSCADOR */
+
 .search-box{
-    width:300px;
+    width:630px;
+    height:145px;
+
+    display:flex;
+    align-items:center;
+
+    background:#171717;
+    border:3px solid #303030;
+    border-radius:25px;
+
+    overflow:hidden;
 }
 
 .search-box input{
-    width:100%;
-    height:48px;
-    background:#222;
-    border:1px solid #444;
-    border-radius:30px;
-    color:white;
-    padding:0 22px;
-    font-size:18px;
+    flex:1;
+    height:100%;
+
+    background:transparent;
+    border:none;
     outline:none;
+
+    color:white;
+
+    padding:0 38px;
+
+    font-size:50px;
 }
 
 .search-box input::placeholder{
     color:#888;
 }
 
+/* BOTÓN LUPA */
+
+.search-button{
+    width:145px;
+    height:100%;
+
+    border:none;
+
+    background:#f00000;
+    color:white;
+
+    font-size:65px;
+
+    cursor:pointer;
+}
+
+.search-button:hover{
+    background:#c90000;
+}
+
+/* MENU */
+
 .menu-btn{
     background:none;
     border:none;
+
     color:white;
-    font-size:48px;
-    cursor:pointer;
+
+    font-size:90px;
     line-height:1;
+
+    cursor:pointer;
 }
+
+/* =========================
+   MENU DESPLEGABLE
+========================= */
+
+.menu{
+    display:none;
+
+    background:#111;
+
+    border-bottom:2px solid #333;
+
+    padding:20px 5%;
+}
+
+.menu.active{
+    display:block;
+}
+
+.menu a{
+    display:block;
+
+    color:white;
+    text-decoration:none;
+
+    font-size:24px;
+
+    padding:16px 0;
+
+    border-bottom:1px solid #292929;
+}
+
+.menu a:hover{
+    color:#e00000;
+}
+
+/* =========================
+   CONTENIDO
+========================= */
+
+.container{
+    max-width:1100px;
+    margin:auto;
+
+    padding:70px 30px;
+}
+
+/* TITULO */
+
+h1{
+    text-align:center;
+
+    font-size:58px;
+
+    margin-bottom:18px;
+}
+
+.subtitle{
+    text-align:center;
+
+    color:#aaa;
+
+    font-size:27px;
+
+    line-height:1.35;
+
+    margin-bottom:60px;
+}
+
+/* =========================
+   BUSCAR VEHÍCULO
+========================= */
+
+.vehicle-search{
+    background:#151515;
+
+    border:1px solid #333;
+    border-top:5px solid #e00000;
+
+    border-radius:16px;
+
+    padding:35px;
+
+    margin-bottom:45px;
+}
+
+.vehicle-search h2{
+    font-size:34px;
+
+    margin-bottom:25px;
+}
+
+.vehicle-name-search{
+    width:100%;
+
+    height:65px;
+
+    background:#0d0d0d;
+
+    color:white;
+
+    border:1px solid #444;
+
+    border-radius:10px;
+
+    padding:0 25px;
+
+    font-size:22px;
+
+    outline:none;
+
+    margin-bottom:30px;
+}
+
+.vehicle-name-search::placeholder{
+    color:#777;
+}
+
+/* =========================
+   FILTROS
+========================= */
+
+.filter{
+    margin-bottom:22px;
+}
+
+.filter label{
+    display:block;
+
+    color:#aaa;
+
+    font-size:20px;
+
+    margin-bottom:9px;
+}
+
+.filter select{
+    width:100%;
+
+    height:58px;
+
+    background:#0d0d0d;
+
+    color:white;
+
+    border:1px solid #444;
+
+    border-radius:9px;
+
+    padding:0 18px;
+
+    font-size:20px;
+
+    outline:none;
+}
+
+/* =========================
+   RESULTADOS
+========================= */
+
+.results{
+    margin-top:40px;
+}
+
+.results-title{
+    font-size:34px;
+
+    margin-bottom:20px;
+
+    border-left:5px solid #e00000;
+
+    padding-left:15px;
+}
+
+.no-results{
+    background:#151515;
+
+    border:1px solid #333;
+
+    border-radius:12px;
+
+    padding:40px 25px;
+
+    text-align:center;
+
+    color:#999;
+
+    font-size:21px;
+}
+
+/* =========================
+   DETALLE VEHÍCULO
+========================= */
+
+.vehicle-detail{
+    display:none;
+
+    margin-top:50px;
+}
+
+.vehicle-photo{
+    width:100%;
+
+    min-height:300px;
+
+    background:#151515;
+
+    border:1px solid #333;
+
+    border-radius:15px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:#777;
+
+    font-size:22px;
+
+    margin-bottom:35px;
+}
+
+.info-box{
+    background:#151515;
+
+    border:1px solid #333;
+
+    border-radius:15px;
+
+    padding:30px;
+
+    margin-bottom:25px;
+}
+
+.info-box h2{
+    font-size:30px;
+
+    margin-bottom:25px;
+
+    border-left:5px solid #e00000;
+
+    padding-left:12px;
+}
+
+.info-row{
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:20px;
+
+    padding:14px 0;
+
+    border-bottom:1px solid #292929;
+
+    font-size:18px;
+}
+
+.info-row span:first-child{
+    color:#999;
+}
+
+.info-row span:last-child{
+    text-align:right;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    text-align:center;
+
+    color:#777;
+
+    padding:40px 20px;
+
+    border-top:1px solid #222;
+
+    margin-top:50px;
+}
+
+/* =========================
+   MÓVIL
+========================= */
+
+@media(max-width:900px){
+
+    header{
+        height:170px;
+        padding:0 25px;
+    }
+
+    .logo{
+        font-size:34px;
+    }
+
+    .header-right{
+        gap:12px;
+    }
+
+    .search-box{
+        width:300px;
+        height:65px;
+
+        border-radius:14px;
+        border-width:2px;
+    }
+
+    .search-box input{
+        font-size:22px;
+        padding:0 15px;
+    }
+
+    .search-button{
+        width:65px;
+        font-size:30px;
+    }
+
+    .menu-btn{
+        font-size:45px;
+    }
+
+    h1{
+        font-size:45px;
+    }
+
+    .subtitle{
+        font-size:22px;
+    }
+}
+
+@media(max-width:600px){
+
+    header{
+        height:126px;
+        padding:0 25px;
+    }
+
+    .logo{
+        font-size:28px;
+    }
+
+    .header-right{
+        gap:10px;
+    }
+
+    .search-box{
+        width:180px;
+        height:48px;
+
+        border-radius:12px;
+    }
+
+    .search-box input{
+        font-size:17px;
+        padding:0 12px;
+    }
+
+    .search-button{
+        width:48px;
+        font-size:24px;
+    }
+
+    .menu-btn{
+        font-size:40px;
+    }
+
+    .container{
+        padding:55px 25px;
+    }
+
+    h1{
+        font-size:42px;
+    }
+
+    .subtitle{
+        font-size:21px;
+    }
+
+    .vehicle-search{
+        padding:25px;
+    }
+
+    .vehicle-search h2{
+        font-size:29px;
+    }
+
+}
+
+@media(max-width:430px){
+
+    .logo{
+        font-size:23px;
+    }
+
+    .search-box{
+        width:145px;
+    }
+
+    .search-box input{
+        font-size:15px;
+    }
+
+    .search-button{
+        width:43px;
+        font-size:21px;
+    }
+
+    .menu-btn{
+        font-size:36px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- =========================
+     ENCABEZADO
+========================= -->
+
+<header>
+
+    <div class="logo">
+
+        <span class="global">
+            GLOBAL
+        </span>
+
+        <span class="motorsport">
+            MOTORSPORT
+        </span>
 
     </div>
 
-    <div class="menu" id="menu">
 
-        <a href="index.html">Inicio</a>
+    <div class="header-right">
 
-        <a href="competiciones.html">Competiciones</a>
+        <div class="search-box">
 
-        <a href="calendario.html">Calendario</a>
+            <input
+                type="text"
+                id="globalSearch"
+                placeholder="Buscar..."
+            >
 
-        <a href="estadisticas.html">Estadísticas</a>
+            <button
+                class="search-button"
+                onclick="buscarGlobal()"
+            >
+                🔍
+            </button>
 
-        <a href="multimedia.html">Multimedia</a>
-
-        <a href="vehiculos.html">Vehículos</a>
-
-        <a href="#">Contacto</a>
-
-        <button onclick="toggleLanguages(event)">
-            Idioma ▼
-        </button>
-
-        <div class="languages" id="languages">
-            <a href="#">🇪🇸 Español</a>
-            <a href="#">🇬🇧 English</a>
-            <a href="#">🇫🇷 Français</a>
-            <a href="#">🇩🇪 Deutsch</a>
         </div>
+
+
+        <button
+            class="menu-btn"
+            onclick="toggleMenu()"
+        >
+            ☰
+        </button>
 
     </div>
 
 </header>
 
 
-<main>
+<!-- =========================
+     MENU
+========================= -->
 
-    <div class="title">
+<nav
+    class="menu"
+    id="menu"
+>
 
-        <h1>🚗 Vehículos</h1>
+    <a href="index.html">
+        Inicio
+    </a>
 
-        <p>
-            Consulta vehículos de competición de todo el mundo.
-        </p>
+    <a href="competiciones.html">
+        Competiciones
+    </a>
 
-    </div>
+    <a href="calendario.html">
+        Calendario
+    </a>
+
+    <a href="estadisticas.html">
+        Estadísticas
+    </a>
+
+    <a href="multimedia.html">
+        Multimedia
+    </a>
+
+    <a href="vehiculos.html">
+        Vehículos
+    </a>
+
+    <a href="#">
+        Contacto
+    </a>
+
+</nav>
 
 
-    <!-- BUSCADOR Y FILTROS -->
+<!-- =========================
+     CONTENIDO
+========================= -->
 
-    <section class="search-box">
+<main class="container">
 
-        <h2>🔎 Buscar vehículo</h2>
+
+    <h1>
+        🚗 Vehículos
+    </h1>
+
+
+    <p class="subtitle">
+        Consulta vehículos de competición de todo el mundo.
+    </p>
+
+
+    <!-- =========================
+         BUSCADOR VEHÍCULOS
+    ========================= -->
+
+    <section class="vehicle-search">
+
+        <h2>
+            🔍 Buscar vehículo
+        </h2>
+
 
         <input
             type="text"
-            class="search-input"
+            id="vehicleSearch"
+            class="vehicle-name-search"
             placeholder="Buscar por nombre del vehículo..."
         >
 
 
-        <div class="filters">
+        <!-- CATEGORÍA -->
 
-            <div class="filter-group">
+        <div class="filter">
 
-                <label>Nombre del vehículo</label>
+            <label>
+                Categoría
+            </label>
 
-                <select>
-                    <option>Todos</option>
-                </select>
+            <select id="filterCategoria">
 
-            </div>
+                <option>
+                    Todos
+                </option>
 
-
-            <div class="filter-group">
-
-                <label>Categoría</label>
-
-                <select>
-                    <option>Todos</option>
-                </select>
-
-            </div>
-
-
-            <div class="filter-group">
-
-                <label>Campeonato</label>
-
-                <select>
-                    <option>Todos</option>
-                </select>
-
-            </div>
-
-
-            <div class="filter-group">
-
-                <label>Temporada</label>
-
-                <select>
-                    <option>Todos</option>
-                </select>
-
-            </div>
-
-
-            <div class="filter-group">
-
-                <label>Equipo</label>
-
-                <select>
-                    <option>Todos</option>
-                </select>
-
-            </div>
-
-
-            <div class="filter-group">
-
-                <label>Piloto</label>
-
-                <select>
-                    <option>Todos</option>
-                </select>
-
-            </div>
+            </select>
 
         </div>
 
-    </section>
+
+        <!-- CAMPEONATO -->
+
+        <div class="filter">
+
+            <label>
+                Campeonato
+            </label>
+
+            <select id="filterCampeonato">
+
+                <option>
+                    Todos
+                </option>
+
+            </select>
+
+        </div>
 
 
-    <!-- RESULTADOS -->
+        <!-- TEMPORADA -->
 
-    <h2 class="section-title">
-        Resultados
+        <div class="filter">
+
+            <label>
+                Temporada
+            </label>
+
+            <select id="filterTemporada">
+
+                <option>
+                    Todos
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- EQUIPO -->
+
+        <div class="filter">
+
+            <label>
+                Equipo
+            </label>
+
+            <select id="filterEquipo">
+
+                <option>
+                    Todos
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- PILOTO -->
+
+        <div class="filter">
+
+            <label>
+                Piloto
+            </label>
+
+            <select id="filterPiloto">
+
+                <option>
+                    Todos
+                </option>
+
+            </select>
+
+        </div>
+
+</section>
+
+
+<!-- =========================
+     RESULTADOS
+========================= -->
+
+<section class="results">
+
+    <h2 class="results-title">
+        Vehículos
     </h2>
 
-    <div class="empty">
 
-        🚗
+    <div
+        class="no-results"
+        id="noResults"
+    >
 
-        <br><br>
-
-        Próximamente encontrarás aquí los vehículos
-        registrados en Global Motorsport.
+        Próximamente se añadirán vehículos de competición.
 
     </div>
 
 
-    <!-- FICHA PREPARADA -->
+    <div
+        id="vehicleResults"
+    ></div>
 
-    <section class="vehicle-detail">
+</section>
 
-        <div class="vehicle-photo">
-            Foto del vehículo
+
+<!-- =========================
+     DETALLE
+========================= -->
+
+<section
+    class="vehicle-detail"
+    id="vehicleDetail"
+>
+
+    <div class="vehicle-photo">
+        Fotografía del vehículo
+    </div>
+
+
+    <!-- INFORMACIÓN BÁSICA -->
+
+    <div class="info-box">
+
+        <h2>
+            Información básica
+        </h2>
+
+        <div class="info-row">
+            <span>Nombre</span>
+            <span id="detailNombre"></span>
         </div>
 
-
-        <div class="vehicle-content">
-
-            <h2>Nombre del vehículo</h2>
-
-
-            <!-- INFORMACIÓN BÁSICA -->
-
-            <div class="info-section">
-
-                <h3>Información básica</h3>
-
-                <div class="info-grid">
-
-                    <div class="info-item">
-                        <strong>Categoría</strong>
-                        <span>—</span>
-                    </div>
-
-                    <div class="info-item">
-                        <strong>Campeonato</strong>
-                        <span>—</span>
-                    </div>
-
-                    <div class="info-item">
-                        <strong>Temporada</strong>
-                        <span>—</span>
-                    </div>
-
-                    <div class="info-item">
-                        <strong>Equipo</strong>
-                        <span>—</span>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- ESPECIFICACIONES -->
-
-            <div class="info-section">
-
-                <h3>⚙️ Especificaciones técnicas</h3>
-
-                <div class="info-grid">
-
-                    <div class="info-item">
-                        <strong>Motor</strong>
-                        <span>—</span>
-                    </div>
-
-                    <div class="info-item">
-                        <strong>Potencia</strong>
-                        <span>— CV</span>
-                    </div>
-
-                    <div class="info-item">
-                        <strong>Cilindrada</strong>
-                        <span>—</span>
-                    </div>
-
-                    <div class="info-item">
-                        <strong>Número de cilindros</strong>
-                        <span>—</span>
-                    </div>
-
-                    <div class="info-item">
-                        <strong>Tracción</strong>
-                        <span>—</span>
-                    </div>
-
-                    <div class="info-item">
-                        <strong>Par máximo</strong>
-                        <span>—</span>
-                    </div>
-
-                    <div class="info-item">
-                        <strong>Caja de cambios</strong>
-                        <span>—</span>
-                    </div>
-
-                    <div class="info-item">
-                        <strong>Peso</strong>
-                        <span>—</span>
-                    </div>
-
-                    <div class="info-item">
-                        <strong>Velocidad máxima</strong>
-                        <span>—</span>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- HISTORIAL -->
-
-            <div class="info-section">
-
-                <h3>🏆 Historial en competición</h3>
-
-
-                <div class="history-filters">
-
-                    <div>
-
-                        <label>Campeonato</label>
-
-                        <select>
-                            <option>Todos</option>
-                        </select>
-
-                    </div>
-
-
-                    <div>
-
-                        <label>Temporada</label>
-
-                        <select>
-                            <option>Todos</option>
-                        </select>
-
-                    </div>
-
-                </div>
-
-
-                <div class="info-grid">
-
-                    <div class="info-item">
-                        <strong>Años de competición</strong>
-                        <span>—</span>
-                    </div>
-
-                    <div class="info-item">
-                        <strong>Pruebas disputadas</strong>
-                        <span>—</span>
-                    </div>
-
-                    <div class="info-item">
-                        <strong>Victorias</strong>
-                        <span>—</span>
-                    </div>
-
-                    <div class="info-item">
-                        <strong>Podios</strong>
-                        <span>—</span>
-                    </div>
-
-                    <div class="info-item">
-                        <strong>Títulos</strong>
-                        <span>—</span>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- PILOTOS -->
-
-            <div class="info-section">
-
-                <h3>👤 Pilotos</h3>
-
-                <div class="history-empty">
-                    Próximamente se mostrarán los pilotos
-                    que hayan competido con este vehículo.
-                </div>
-
-            </div>
-
-
-            <!-- MULTIMEDIA -->
-
-            <div class="info-section">
-
-                <h3>📸🎥 Multimedia</h3>
-
-                <div class="history-empty">
-                    Próximamente aparecerán fotografías y vídeos
-                    relacionados con este vehículo.
-                </div>
-
-            </div>
-
+        <div class="info-row">
+            <span>Marca</span>
+            <span id="detailMarca"></span>
         </div>
 
-    </section>
+        <div class="info-row">
+            <span>Modelo</span>
+            <span id="detailModelo"></span>
+        </div>
+
+        <div class="info-row">
+            <span>Categoría</span>
+            <span id="detailCategoria"></span>
+        </div>
+
+        <div class="info-row">
+            <span>Campeonato</span>
+            <span id="detailCampeonato"></span>
+        </div>
+
+        <div class="info-row">
+            <span>Temporada</span>
+            <span id="detailTemporada"></span>
+        </div>
+
+        <div class="info-row">
+            <span>Equipo</span>
+            <span id="detailEquipo"></span>
+        </div>
+
+    </div>
+
+
+    <!-- ESPECIFICACIONES -->
+
+    <div class="info-box">
+
+        <h2>
+            Especificaciones técnicas
+        </h2>
+
+        <div class="info-row">
+            <span>Motor</span>
+            <span id="detailMotor"></span>
+        </div>
+
+        <div class="info-row">
+            <span>Potencia</span>
+            <span id="detailPotencia"></span>
+        </div>
+
+        <div class="info-row">
+            <span>Cilindrada</span>
+            <span id="detailCilindrada"></span>
+        </div>
+
+        <div class="info-row">
+            <span>Número de cilindros</span>
+            <span id="detailCilindros"></span>
+        </div>
+
+        <div class="info-row">
+            <span>Tracción</span>
+            <span id="detailTraccion"></span>
+        </div>
+
+        <div class="info-row">
+            <span>Par máximo</span>
+            <span id="detailPar"></span>
+        </div>
+
+        <div class="info-row">
+            <span>Caja de cambios</span>
+            <span id="detailCaja"></span>
+        </div>
+
+        <div class="info-row">
+            <span>Peso</span>
+            <span id="detailPeso"></span>
+        </div>
+
+        <div class="info-row">
+            <span>Velocidad máxima</span>
+            <span id="detailVelocidad"></span>
+        </div>
+
+    </div>
+
+
+    <!-- HISTORIAL -->
+
+    <div class="info-box">
+
+        <h2>
+            Historial en competición
+        </h2>
+
+        <div class="info-row">
+            <span>Años de competición</span>
+            <span id="detailAnios"></span>
+        </div>
+
+        <div class="info-row">
+            <span>Pruebas disputadas</span>
+            <span id="detailPruebas"></span>
+        </div>
+
+        <div class="info-row">
+            <span>Victorias</span>
+            <span id="detailVictorias"></span>
+        </div>
+
+        <div class="info-row">
+            <span>Podios</span>
+            <span id="detailPodios"></span>
+        </div>
+
+        <div class="info-row">
+            <span>Títulos</span>
+            <span id="detailTitulos"></span>
+        </div>
+
+    </div>
+
+
+    <!-- PILOTOS -->
+
+    <div class="info-box">
+
+        <h2>
+            Pilotos
+        </h2>
+
+        <div id="detailPilotos">
+        </div>
+
+    </div>
+
+
+    <!-- MULTIMEDIA -->
+
+    <div class="info-box">
+
+        <h2>
+            Multimedia
+        </h2>
+
+        <div id="detailMultimedia">
+            Próximamente
+        </div>
+
+    </div>
+
+</section>
 
 </main>
 
 
+<!-- =========================
+     FOOTER
+========================= -->
+
 <footer>
+
     © 2026 Global Motorsport
+
 </footer>
 
 
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script src="vehiculos.js"></script>
+
 <script>
 
-function toggleMenu() {
+/* MENU */
 
-    document.getElementById("menu").classList.toggle("show");
+function toggleMenu(){
+
+    const menu =
+        document.getElementById("menu");
+
+    menu.classList.toggle("active");
+
+}
+
+
+/* BUSCADOR GLOBAL */
+
+function buscarGlobal(){
+
+    const texto =
+        document
+        .getElementById("globalSearch")
+        .value
+        .trim();
+
+    if(texto === ""){
+        return;
+    }
+
+    console.log(
+        "Búsqueda global:",
+        texto
+    );
 
 }
 
 
-function toggleLanguages(event) {
+/* =========================
+   CARGAR VEHÍCULOS
+========================= */
 
-    event.stopPropagation();
+const resultados =
+    document.getElementById(
+        "vehicleResults"
+    );
 
-    document.getElementById("languages").classList.toggle("show");
+const noResults =
+    document.getElementById(
+        "noResults"
+    );
+
+
+function mostrarVehiculos(){
+
+    resultados.innerHTML = "";
+
+    if(
+        typeof vehiculos === "undefined" ||
+        vehiculos.length === 0
+    ){
+
+        noResults.style.display = "block";
+
+        return;
+    }
+
+    noResults.style.display = "none";
 
 }
+
+
+/* =========================
+   INICIO
+========================= */
+
+mostrarVehiculos();
 
 </script>
 
 </body>
+
 </html>
