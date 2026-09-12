@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Multimedia | Global Motorsport</title>
 
 <style>
+
+/* =========================
+   GENERAL
+========================= */
 
 *{
     box-sizing:border-box;
@@ -20,25 +26,39 @@ body{
     font-family:Arial,Helvetica,sans-serif;
 }
 
-/* ================= HEADER ================= */
+/* =========================
+   ENCABEZADO
+========================= */
 
 header{
-    height:126px;
-    background:#111;
-    border-bottom:3px solid #e00000;
+    width:100%;
+    height:260px;
+
+    background:#080808;
+
+    border-bottom:5px solid #e00000;
+
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:0 5%;
+
+    padding:0 4%;
 }
+
+/* LOGO */
 
 .logo{
     display:flex;
     flex-direction:column;
-    font-size:32px;
+
+    font-size:66px;
     font-weight:900;
-    line-height:1.05;
+
+    line-height:0.98;
+
     letter-spacing:1px;
+
+    flex-shrink:0;
 }
 
 .logo .global{
@@ -49,60 +69,127 @@ header{
     color:#e00000;
 }
 
-/* BUSCADOR */
+/* =========================
+   PARTE DERECHA
+========================= */
 
 .header-right{
     display:flex;
     align-items:center;
-    gap:25px;
+
+    gap:35px;
 }
 
+/* =========================
+   BUSCADOR
+========================= */
+
 .search-box{
-    width:300px;
+    width:630px;
+    height:145px;
+
+    display:flex;
+    align-items:center;
+
+    background:#171717;
+
+    border:3px solid #303030;
+
+    border-radius:25px;
+
+    overflow:hidden;
 }
 
 .search-box input{
-    width:100%;
-    height:48px;
-    background:#222;
-    border:1px solid #444;
-    border-radius:30px;
-    color:white;
-    padding:0 22px;
-    font-size:18px;
+    flex:1;
+
+    height:100%;
+
+    background:transparent;
+
+    border:none;
+
     outline:none;
+
+    color:white;
+
+    padding:0 38px;
+
+    font-size:50px;
 }
 
 .search-box input::placeholder{
     color:#888;
 }
 
-/* MENU */
+/* BOTÓN ROJO */
+
+.search-button{
+    width:145px;
+    height:100%;
+
+    border:none;
+
+    background:#f00000;
+
+    color:white;
+
+    font-size:65px;
+
+    cursor:pointer;
+}
+
+.search-button:hover{
+    background:#c90000;
+}
+
+/* =========================
+   MENU
+========================= */
 
 .menu-btn{
     background:none;
+
     border:none;
+
     color:white;
-    font-size:48px;
-    cursor:pointer;
+
+    font-size:90px;
+
     line-height:1;
+
+    cursor:pointer;
 }
 
-/* ================= MENU DESPLEGABLE ================= */
+/* =========================
+   MENU DESPLEGABLE
+========================= */
 
 .menu{
     display:none;
-    background:#151515;
-    border-bottom:1px solid #333;
+
+    background:#111;
+
+    border-bottom:2px solid #333;
+
     padding:20px 5%;
+}
+
+.menu.active{
+    display:block;
 }
 
 .menu a{
     display:block;
+
     color:white;
+
     text-decoration:none;
-    font-size:20px;
-    padding:13px 0;
+
+    font-size:24px;
+
+    padding:16px 0;
+
     border-bottom:1px solid #292929;
 }
 
@@ -110,120 +197,238 @@ header{
     color:#e00000;
 }
 
-.menu.active{
-    display:block;
-}
-
-/* ================= CONTENIDO ================= */
+/* =========================
+   CONTENIDO
+========================= */
 
 .container{
     max-width:1100px;
+
     margin:auto;
-    padding:70px 25px;
+
+    padding:70px 30px;
 }
 
 h1{
     text-align:center;
-    font-size:52px;
-    margin-bottom:15px;
+
+    font-size:58px;
+
+    margin-bottom:18px;
 }
 
 .subtitle{
     text-align:center;
+
     color:#aaa;
-    font-size:25px;
+
+    font-size:27px;
+
+    line-height:1.35;
+
     margin-bottom:55px;
 }
 
-/* ================= BUSQUEDA ================= */
+/* =========================
+   PANEL DE FILTROS
+========================= */
 
-.search-panel{
+.filters-panel{
     background:#151515;
+
     border:1px solid #333;
-    border-top:4px solid #e00000;
+
+    border-top:5px solid #e00000;
+
     border-radius:16px;
+
     padding:25px;
+
     margin-bottom:45px;
 }
 
-.filter-button{
+/* BOTÓN FILTROS */
+
+.filters-button{
     width:100%;
+
     background:#222;
+
     border:1px solid #444;
+
     color:white;
-    padding:17px;
+
     border-radius:10px;
-    font-size:20px;
+
+    padding:18px 20px;
+
+    font-size:21px;
+
     font-weight:bold;
-    cursor:pointer;
+
     text-align:left;
+
+    cursor:pointer;
 }
 
-.filter-button:hover{
+.filters-button:hover{
     border-color:#e00000;
 }
 
-.filters{
+/* CONTENIDO FILTROS */
+
+.filters-content{
     display:none;
-    margin-top:20px;
+
+    margin-top:25px;
 }
 
-.filters.active{
+.filters-content.active{
     display:block;
 }
 
+/* FILTRO */
+
 .filter{
-    margin-bottom:18px;
+    margin-bottom:20px;
 }
 
 .filter label{
     display:block;
+
     color:#aaa;
-    font-size:17px;
-    margin-bottom:8px;
+
+    font-size:19px;
+
+    margin-bottom:9px;
 }
 
 .filter select{
     width:100%;
-    height:50px;
+
+    height:58px;
+
     background:#0d0d0d;
+
     color:white;
+
     border:1px solid #444;
-    border-radius:8px;
-    padding:0 15px;
-    font-size:17px;
+
+    border-radius:9px;
+
+    padding:0 18px;
+
+    font-size:19px;
+
+    outline:none;
 }
 
-/* ================= RESULTADOS ================= */
+/* =========================
+   ORDEN
+========================= */
+
+.sort-box{
+    margin-top:25px;
+
+    padding-top:20px;
+
+    border-top:1px solid #333;
+}
+
+.sort-box label{
+    display:block;
+
+    color:#aaa;
+
+    font-size:19px;
+
+    margin-bottom:9px;
+}
+
+.sort-box select{
+    width:100%;
+
+    height:58px;
+
+    background:#0d0d0d;
+
+    color:white;
+
+    border:1px solid #444;
+
+    border-radius:9px;
+
+    padding:0 18px;
+
+    font-size:19px;
+}
+
+/* =========================
+   SECCIONES
+========================= */
+
+.media-section{
+    margin-top:45px;
+}
 
 .section-title{
-    font-size:32px;
-    margin:40px 0 20px;
+    font-size:34px;
+
+    margin-bottom:20px;
+
     border-left:5px solid #e00000;
+
     padding-left:15px;
 }
 
 .no-results{
     background:#151515;
+
     border:1px solid #333;
+
     border-radius:12px;
-    padding:35px;
+
+    padding:40px 25px;
+
     text-align:center;
+
     color:#999;
-    font-size:20px;
+
+    font-size:21px;
+
+    line-height:1.5;
 }
 
-/* ================= RESPONSIVE ================= */
+/* =========================
+   FOOTER
+========================= */
 
-@media(max-width:700px){
+footer{
+    text-align:center;
+
+    color:#777;
+
+    padding:40px 20px;
+
+    border-top:1px solid #222;
+
+    margin-top:60px;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media(max-width:900px){
 
     header{
-        height:126px;
+        height:170px;
+
         padding:0 25px;
     }
 
     .logo{
-        font-size:27px;
+        font-size:34px;
     }
 
     .header-right{
@@ -231,17 +436,83 @@ h1{
     }
 
     .search-box{
-        width:155px;
+        width:300px;
+
+        height:65px;
+
+        border-radius:14px;
+
+        border-width:2px;
     }
 
     .search-box input{
-        height:44px;
-        font-size:16px;
-        padding:0 17px;
+        font-size:22px;
+
+        padding:0 15px;
+    }
+
+    .search-button{
+        width:65px;
+
+        font-size:30px;
     }
 
     .menu-btn{
-        font-size:42px;
+        font-size:45px;
+    }
+
+    h1{
+        font-size:45px;
+    }
+
+    .subtitle{
+        font-size:22px;
+    }
+
+}
+
+/* =========================
+   MÓVIL
+========================= */
+
+@media(max-width:600px){
+
+    header{
+        height:126px;
+
+        padding:0 25px;
+    }
+
+    .logo{
+        font-size:28px;
+    }
+
+    .header-right{
+        gap:10px;
+    }
+
+    .search-box{
+        width:180px;
+
+        height:48px;
+
+        border-radius:12px;
+    }
+
+    .search-box input{
+        font-size:17px;
+
+        padding:0 12px;
+    }
+
+    .search-button{
+        width:48px;
+
+        font-size:24px;
+    }
+
+    .menu-btn{
+        font-size:40px;
     }
 
     .container{
@@ -249,59 +520,103 @@ h1{
     }
 
     h1{
-        font-size:43px;
+        font-size:42px;
     }
 
     .subtitle{
         font-size:21px;
-        line-height:1.35;
+    }
+
+    .filters-panel{
+        padding:25px;
     }
 
     .section-title{
-        font-size:27px;
+        font-size:29px;
     }
+
 }
+
+/* =========================
+   MÓVILES PEQUEÑOS
+========================= */
 
 @media(max-width:430px){
 
-    .search-box{
-        width:130px;
+    .logo{
+        font-size:23px;
     }
 
-    .logo{
-        font-size:24px;
+    .search-box{
+        width:145px;
+    }
+
+    .search-box input{
+        font-size:15px;
+    }
+
+    .search-button{
+        width:43px;
+
+        font-size:21px;
     }
 
     .menu-btn{
-        font-size:38px;
+        font-size:36px;
     }
+
 }
 
 </style>
+
 </head>
 
 <body>
 
-<!-- ================= HEADER ================= -->
+
+<!-- =========================
+     ENCABEZADO
+========================= -->
 
 <header>
 
     <div class="logo">
-        <span class="global">GLOBAL</span>
-        <span class="motorsport">MOTORSPORT</span>
+
+        <span class="global">
+            GLOBAL
+        </span>
+
+        <span class="motorsport">
+            MOTORSPORT
+        </span>
+
     </div>
+
 
     <div class="header-right">
 
         <div class="search-box">
+
             <input
                 type="text"
                 id="globalSearch"
                 placeholder="Buscar..."
             >
+
+            <button
+                class="search-button"
+                onclick="buscarGlobal()"
+            >
+                🔍
+            </button>
+
         </div>
 
-        <button class="menu-btn" onclick="toggleMenu()">
+
+        <button
+            class="menu-btn"
+            onclick="toggleMenu()"
+        >
             ☰
         </button>
 
@@ -309,173 +624,354 @@ h1{
 
 </header>
 
-<!-- ================= MENU ================= -->
 
-<nav class="menu" id="menu">
+<!-- =========================
+     MENU
+========================= -->
 
-    <a href="index.html">Inicio</a>
+<nav
+    class="menu"
+    id="menu"
+>
 
-    <a href="competiciones.html">Competiciones</a>
+    <a href="index.html">
+        Inicio
+    </a>
 
-    <a href="calendario.html">Calendario</a>
+    <a href="competiciones.html">
+        Competiciones
+    </a>
 
-    <a href="estadisticas.html">Estadísticas</a>
+    <a href="calendario.html">
+        Calendario
+    </a>
 
-    <a href="multimedia.html">Multimedia</a>
+    <a href="estadisticas.html">
+        Estadísticas
+    </a>
 
-    <a href="vehiculos.html">Vehículos</a>
+    <a href="multimedia.html">
+        Multimedia
+    </a>
 
-    <a href="#">Contacto</a>
+    <a href="vehiculos.html">
+        Vehículos
+    </a>
+
+    <a href="#">
+        Contacto
+    </a>
 
 </nav>
 
-<!-- ================= CONTENIDO ================= -->
+
+<!-- =========================
+     CONTENIDO
+========================= -->
 
 <main class="container">
 
-    <h1>Multimedia</h1>
+
+    <h1>
+        Multimedia
+    </h1>
+
 
     <p class="subtitle">
         Fotografías y vídeos del mundo del motorsport
     </p>
 
-    <!-- ================= FILTROS ================= -->
 
-    <section class="search-panel">
+    <!-- =========================
+         FILTROS
+    ========================= -->
+
+    <section class="filters-panel">
+
 
         <button
-            class="filter-button"
+            class="filters-button"
             onclick="toggleFilters()"
         >
-            ⚙️ Filtros
+
+            🔽 Filtros
+
         </button>
 
-        <div class="filters" id="filters">
+
+        <div
+            class="filters-content"
+            id="filtersContent"
+        >
+
+
+            <!-- COMPETICIÓN -->
 
             <div class="filter">
 
-                <label>Competición</label>
+                <label>
+                    Competición
+                </label>
 
-                <select id="competicion">
-                    <option>Todos</option>
+                <select id="filterCompeticion">
+
+                    <option>
+                        Todos
+                    </option>
+
                 </select>
 
             </div>
 
+
+            <!-- TEMPORADA -->
+
             <div class="filter">
 
-                <label>Temporada</label>
+                <label>
+                    Temporada
+                </label>
 
-                <select id="temporada">
-                    <option>Todos</option>
+                <select id="filterTemporada">
+
+                    <option>
+                        Todos
+                    </option>
+
                 </select>
 
             </div>
 
+
+            <!-- PRUEBA -->
+
             <div class="filter">
 
-                <label>Prueba</label>
+                <label>
+                    Prueba
+                </label>
 
-                <select id="prueba">
-                    <option>Todos</option>
+                <select id="filterPrueba">
+
+                    <option>
+                        Todos
+                    </option>
+
                 </select>
 
             </div>
 
+
+            <!-- PILOTO -->
+
             <div class="filter">
 
-                <label>Piloto</label>
+                <label>
+                    Piloto
+                </label>
 
-                <select id="piloto">
-                    <option>Todos</option>
+                <select id="filterPiloto">
+
+                    <option>
+                        Todos
+                    </option>
+
                 </select>
 
             </div>
 
+
+            <!-- VEHÍCULO -->
+
             <div class="filter">
 
-                <label>Vehículo</label>
+                <label>
+                    Vehículo
+                </label>
 
-                <select id="vehiculo">
-                    <option>Todos</option>
+                <select id="filterVehiculo">
+
+                    <option>
+                        Todos
+                    </option>
+
                 </select>
 
             </div>
+
+
+            <!-- ORDEN -->
+
+            <div class="sort-box">
+
+                <label>
+                    Ordenar por
+                </label>
+
+                <select id="sortMedia">
+
+                    <option value="recientes">
+                        Más recientes
+                    </option>
+
+                    <option value="pruebas">
+                        Últimas pruebas
+                    </option>
+
+                </select>
+
+            </div>
+
 
         </div>
 
     </section>
 
-    <!-- ================= FOTOGRAFÍAS ================= -->
 
-    <section id="fotografias">
+    <!-- =========================
+         FOTOGRAFÍAS
+    ========================= -->
+
+    <section
+        class="media-section"
+        id="photosSection"
+    >
 
         <h2 class="section-title">
             📸 Fotografías
         </h2>
 
+
         <div class="no-results">
-            Próximamente habrá fotografías de pruebas y competiciones de motorsport.
+
+            Próximamente habrá fotografías
+            de competiciones y pruebas
+            de motorsport.
+
         </div>
 
     </section>
 
-    <!-- ================= VÍDEOS ================= -->
 
-    <section id="videos">
+    <!-- =========================
+         VÍDEOS
+    ========================= -->
+
+    <section
+        class="media-section"
+        id="videosSection"
+    >
 
         <h2 class="section-title">
             🎥 Vídeos
         </h2>
 
+
         <div class="no-results">
-            Próximamente habrá vídeos de pruebas y competiciones de motorsport.
+
+            Próximamente habrá vídeos
+            de competiciones y pruebas
+            de motorsport.
+
         </div>
 
     </section>
 
+
 </main>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    © 2026 Global Motorsport
+
+</footer>
+
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
 
 <script>
 
-/* ================= MENU ================= */
+/* =========================
+   MENU
+========================= */
 
 function toggleMenu(){
 
-    const menu = document.getElementById("menu");
+    const menu =
+        document.getElementById("menu");
 
     menu.classList.toggle("active");
 
 }
 
 
-/* ================= FILTROS ================= */
+/* =========================
+   FILTROS
+========================= */
 
 function toggleFilters(){
 
-    const filters = document.getElementById("filters");
+    const filters =
+        document.getElementById("filtersContent");
 
     filters.classList.toggle("active");
 
 }
 
 
-/* ================= BUSCADOR ================= */
+/* =========================
+   BUSCADOR
+========================= */
+
+function buscarGlobal(){
+
+    const texto =
+        document
+        .getElementById("globalSearch")
+        .value
+        .trim();
+
+    if(texto === ""){
+        return;
+    }
+
+    console.log(
+        "Búsqueda global:",
+        texto
+    );
+
+}
+
+
+/* =========================
+   BUSCADOR CON ENTER
+========================= */
 
 document
 .getElementById("globalSearch")
-.addEventListener("input", function(){
+.addEventListener(
+    "keydown",
+    function(event){
 
-    const texto = this.value.toLowerCase();
+        if(event.key === "Enter"){
 
-    // Preparado para conectar posteriormente
-    // con el buscador global de Global Motorsport.
+            buscarGlobal();
 
-    console.log("Buscando:", texto);
+        }
 
-});
+    }
+);
 
 </script>
 
+
 </body>
+
 </html>
