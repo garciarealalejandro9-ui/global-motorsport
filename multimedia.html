@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Multimedia | Global Motorsport</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #0b0b0b;
+            color: white;
+        }
+
+        /* CABECERA */
+        header {
+            height: 65px;
+            background: #111;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .logo span {
+            color: #e00000;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search {
+            font-size: 21px;
+            cursor: pointer;
+        }
+
+        .menu-button {
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        /* MENÚ */
+        .menu {
+            display: none;
+            position: absolute;
+            right: 15px;
+            top: 65px;
+            width: 230px;
+            background: #151515;
+            border: 1px solid #444;
+            z-index: 100;
+        }
+
+        .menu.show {
+            display: block;
+        }
+
+        .menu a,
+        .menu button {
+            display: block;
+            width: 100%;
+            padding: 14px 16px;
+            color: white;
+            text-decoration: none;
+            background: none;
+            border: none;
+            text-align: left;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .menu a:hover,
+        .menu button:hover {
+            background: #222;
+        }
+
+        /* IDIOMAS */
+        .languages {
+            display: none;
+            background: #202020;
+        }
+
+        .languages.show {
+            display: block;
+        }
+
+        .languages a {
+            padding-left: 30px;
+            font-size: 14px;
+        }
+
+        /* CONTENIDO */
+        main {
+            max-width: 1100px;
+            margin: auto;
+            padding: 35px 15px 60px;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .title p {
+            color: #aaa;
+            font-size: 15px;
+        }
+
+        /* PRÓXIMAMENTE */
+        .coming-soon {
+            background: #151515;
+            border: 1px solid #333;
+            border-top: 3px solid #e00000;
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .coming-soon .icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        .coming-soon h2 {
+            font-size: 27px;
+            margin-bottom: 15px;
+        }
+
+        .coming-soon p {
+            max-width: 650px;
+            margin: auto;
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        /* PREVISUALIZACIÓN */
+        .preview-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .preview {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .preview-card {
+            background: #151515;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 25px 20px;
+        }
+
+        .preview-card h3 {
+            font-size: 19px;
+            margin-bottom: 15px;
+        }
+
+        .preview-card p {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter {
+            background: #222;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 7px 10px;
+            font-size: 12px;
+            color: #ccc;
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid #333;
+            background: #111;
+            text-align: center;
+            padding: 20px 15px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        /* MÓVIL */
+        @media (max-width: 650px) {
+
+            .title h1 {
+                font-size: 28px;
+            }
+
+            .preview {
+                grid-template-columns: 1fr;
+            }
+
+            .coming-soon {
+                padding: 35px 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        Global <span>Motorsport</span>
+    </div>
+
+    <div class="header-right">
+        <div class="search">🔍</div>
+
+        <div class="menu-button" onclick="toggleMenu()">
+            ☰
+        </div>
+    </div>
+
+    <div class="menu" id="menu">
+
+        <a href="index.html">Inicio</a>
+
+        <a href="competiciones.html">Competiciones</a>
+
+        <a href="calendario.html">Calendario</a>
+
+        <a href="estadisticas.html">Estadísticas</a>
+
+        <a href="multimedia.html">Multimedia</a>
+
+        <a href="#">Vehículos</a>
+
+        <a href="#">Contacto</a>
+
+        <button onclick="toggleLanguages(event)">
+            Idioma ▼
+        </button>
+
+        <div class="languages" id="languages">
+            <a href="#">🇪🇸 Español</a>
+            <a href="#">🇬🇧 English</a>
+            <a href="#">🇫🇷 Français</a>
+            <a href="#">🇩🇪 Deutsch</a>
+        </div>
+
+    </div>
+
+</header>
+
+
+<main>
+
+    <div class="title">
+        <h1>Multimedia</h1>
+        <p>Fotografías y vídeos del mundo del motorsport</p>
+    </div>
+
+
+    <section class="coming-soon">
+
+        <div class="icon">
+            📸🎥
+        </div>
+
+        <h2>Próximamente</h2>
+
+        <p>
+            Estamos trabajando en el apartado de Multimedia.
+            <br><br>
+            Próximamente podrás encontrar fotografías y vídeos en Global Motorsport.
+        </p>
+
+    </section>
+
+
+    <h2 class="preview-title">
+        Así funcionará Multimedia
+    </h2>
+
+
+    <section class="preview">
+
+        <div class="preview-card">
+
+            <h3>📸 Fotografías</h3>
+
+            <p>
+                Fotografías de competiciones y pruebas de motorsport.
+            </p>
+
+            <div class="filters">
+                <div class="filter">Competición</div>
+                <div class="filter">Temporada</div>
+                <div class="filter">Prueba</div>
+                <div class="filter">Piloto</div>
+                <div class="filter">Vehículo</div>
+            </div>
+
+        </div>
+
+
+        <div class="preview-card">
+
+            <h3>🎥 Vídeos</h3>
+
+            <p>
+                Vídeos de competiciones y pruebas, con acceso a
+                su fuente original.
+            </p>
+
+            <div class="filters">
+                <div class="filter">Competición</div>
+                <div class="filter">Temporada</div>
+                <div class="filter">Prueba</div>
+                <div class="filter">Piloto</div>
+                <div class="filter">Vehículo</div>
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+    © 2026 Global Motorsport
+</footer>
+
+
+<script>
+
+function toggleMenu() {
+    document.getElementById("menu").classList.toggle("show");
+}
+
+function toggleLanguages(event) {
+    event.stopPropagation();
+
+    document.getElementById("languages").classList.toggle("show");
+}
+
+</script>
+
+</body>
+</html>
