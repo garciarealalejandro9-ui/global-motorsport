@@ -320,24 +320,69 @@
 </head>
 
 <body>
-<header>
-    <div class="logo">
-        <span>GLOBAL</span>
-        <span>MOTORSPORT</span>
-    </div>
+header{
+    height:126px;
+    background:#111;
+    border-bottom:3px solid #e00000;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 5%;
+}
 
-    <div class="header-right">
-        <div class="search-box">
-            <input type="text" placeholder="Buscar..." id="globalSearch">
-        </div>
+.logo{
+    display:flex;
+    flex-direction:column;
+    font-size:32px;
+    font-weight:900;
+    line-height:1.05;
+    letter-spacing:1px;
+    flex-shrink:0;
+}
 
-        <button class="menu-btn" onclick="toggleMenu()">☰</button>
-    </div>
-</header>
+.logo .global{
+    color:white;
+}
 
-        <div class="menu-button" onclick="toggleMenu()">
-            ☰
-        </div>
+.logo .motorsport{
+    color:#e00000;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:25px;
+    flex-shrink:0;
+}
+
+.search-box{
+    width:300px;
+}
+
+.search-box input{
+    width:100%;
+    height:48px;
+    background:#222;
+    border:1px solid #444;
+    border-radius:30px;
+    color:white;
+    padding:0 22px;
+    font-size:18px;
+    outline:none;
+}
+
+.search-box input::placeholder{
+    color:#888;
+}
+
+.menu-btn{
+    background:none;
+    border:none;
+    color:white;
+    font-size:48px;
+    cursor:pointer;
+    line-height:1;
+}
 
     </div>
 
