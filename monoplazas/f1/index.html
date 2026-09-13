@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil de Piloto | Global Motorsport</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background-color: #0b0b0b; color: #ffffff; font-family: system-ui, sans-serif; padding: 16px; }
+
+    /* Cabecera */
+    .header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid #1a1a1a; margin-bottom: 20px; }
+    .brand { font-weight: 900; color: #fff; text-decoration: none; }
+    .brand span { color: #e10600; }
+    .btn-back { color: #aaa; text-decoration: none; font-size: 0.9rem; }
+
+    .main-container { max-width: 600px; margin: 0 auto; }
+
+    /* Tarjeta de Perfil */
+    .profile-card { background: #141414; border: 1px solid #222; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 24px; }
+    .profile-avatar { width: 90px; height: 90px; border-radius: 50%; background: #222; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem; border: 2px solid #e10600; }
+    .profile-name { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; }
+    .profile-team { color: #aaa; font-size: 0.9rem; margin-bottom: 16px; }
+
+    /* Stats Rápidas */
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background: #0b0b0b; padding: 12px; border-radius: 8px; }
+    .stat-val { font-weight: 800; font-size: 1.1rem; color: #fff; }
+    .stat-label { font-size: 0.7rem; color: #777; text-transform: uppercase; }
+
+    /* Tabla de Historial */
+    .section-label { font-size: 0.85rem; text-transform: uppercase; color: #777; margin-bottom: 12px; font-weight: 700; }
+    .table-container { background: #141414; border: 1px solid #1f1f1f; border-radius: 8px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
+    th { background: #1a1a1a; color: #777; padding: 10px; text-transform: uppercase; font-size: 0.75rem; }
+    td { padding: 12px 10px; border-bottom: 1px solid #1f1f1f; }
+    td a { color: #e10600; text-decoration: none; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a href="../" class="brand">GLOBAL <span>MOTORSPORT</span></a>
+    <a href="javascript:history.back()" class="btn-back">← Volver</a>
+  </header>
+
+  <main class="main-container">
+
+    <!-- Tarjeta del Piloto -->
+    <div class="profile-card">
+      <div class="profile-avatar">🏎️</div>
+      <h1 class="profile-name">Max Verstappen</h1>
+      <p class="profile-team">Red Bull Racing • #1</p>
+
+      <div class="stats-grid">
+        <div>
+          <div class="stat-val">4</div>
+          <div class="stat-label">Títulos</div>
+        </div>
+        <div>
+          <div class="stat-val">63</div>
+          <div class="stat-label">Victorias</div>
+        </div>
+        <div>
+          <div class="stat-val">111</div>
+          <div class="stat-label">Podios</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Historial de Trayectoria -->
+    <div class="section-label">Trayectoria en Campeonatos</div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Año</th>
+            <th>Categoría</th>
+            <th>Equipo</th>
+            <th style="text-align: right;">Pos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="./f1/">2026</a></td>
+            <td>Fórmula 1</td>
+            <td style="color: #aaa;">Red Bull</td>
+            <td style="text-align: right; font-weight: 800; color: #e10600;">1º</td>
+          </tr>
+          <tr>
+            <td><a href="./f1/">2025</a></td>
+            <td>Fórmula 1</td>
+            <td style="color: #aaa;">Red Bull</td>
+            <td style="text-align: right; font-weight: 800;">2º</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+</body>
+</html>
