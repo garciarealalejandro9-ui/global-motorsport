@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monoplazas | Global Motorsport</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0b0b0b;
+      color: #ffffff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 16px;
+    }
+
+    /* Cabecera / Navbar */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #1a1a1a;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      font-weight: 900;
+      font-size: 1.2rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .brand span {
+      color: #e10600;
+    }
+
+    .nav-tools {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-back {
+      color: #aaaaaa;
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Secciones de Contenido */
+    .main-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .page-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .page-title::before {
+      content: "";
+      display: inline-block;
+      width: 4px;
+      height: 24px;
+      background-color: #e10600;
+      border-radius: 2px;
+    }
+
+    .section-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #777777;
+      margin: 24px 0 12px 0;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Tarjetas de Competición */
+    .card {
+      background-color: #141414;
+      border-radius: 8px;
+      padding: 16px;
+      text-decoration: none;
+      color: #ffffff;
+      display: block;
+      border: 1px solid #1f1f1f;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    .card:active {
+      transform: scale(0.99);
+      background-color: #1a1a1a;
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .card-number {
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .card-details {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.82rem;
+      color: #888888;
+    }
+
+    /* Personalización por Competición */
+    .f1 { border-left: 4px solid #e10600; }
+    .f1 .card-number { color: #e10600; }
+
+    .f2 { border-left: 4px solid #0090ff; }
+    .f2 .card-number { color: #0090ff; }
+
+    .f3 { border-left: 4px solid #10b981; }
+    .f3 .card-number { color: #10b981; }
+
+    .fregional { border-left: 4px solid #ff9900; }
+    .fregional .card-number { color: #ff9900; }
+
+    .indy { border-left: 4px solid #002b49; }
+    .indy .card-number { color: #3b82f6; }
+
+    .fe { border-left: 4px solid #00e5ff; }
+    .fe .card-number { color: #00e5ff; }
+
+    .sf { border-left: 4px solid #ffd700; }
+    .sf .card-number { color: #ffd700; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="header">
+    <a href="../" class="brand">GLOBAL <span>MOTORSPORT</span></a>
+    <div class="nav-tools">
+      <a href="../" class="btn-back">← Volver</a>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <h1 class="page-title">Monoplazas</h1>
+
+    <!-- Bloque 1: Pirámide FIA -->
+    <div class="section-label">Pirámide FIA</div>
+    <div class="grid">
+      
+      <a href="#" class="card f1">
+        <div class="card-head">
+          <span class="card-number">01</span>
+        </div>
+        <h2>Fórmula 1</h2>
+        <div class="card-details">
+          <span>• Próximo GP y horarios de sesiones</span>
+          <span>• Clasificación Pilotos / Equipos</span>
+        </div>
+      </a>
+
+      <a href="#" class="card f2">
+        <div class="card-head">
+          <span class="card-number">02</span>
+        </div>
+        <h2>Fórmula 2</h2>
+        <div class="card-details">
+          <span>• Resultados Sprint & Feature Race</span>
+          <span>• Tabla de Puntos</span>
+        </div>
+      </a>
+
+      <a href="#" class="card f3">
+        <div class="card-head">
+          <span class="card-number">03</span>
+        </div>
+        <h2>Fórmula 3</h2>
+        <div class="card-details">
+          <span>• Resultados por Ronda</span>
+          <span>• Clasificación General</span>
+        </div>
+      </a>
+
+      <a href="#" class="card fregional">
+        <div class="card-head">
+          <span class="card-number">04</span>
+        </div>
+        <h2>Fórmula Regional</h2>
+        <div class="card-details">
+          <span>• Tiempos de Sesión</span>
+          <span>• Puntos de Campeonato</span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Bloque 2: Series Internacionales -->
+    <div class="section-label">Series Internacionales</div>
+    <div class="grid">
+
+      <a href="#" class="card indy">
+        <div class="card-head">
+          <span class="card-number">05</span>
+        </div>
+        <h2>IndyCar Series</h2>
+        <div class="card-details">
+          <span>• Resultados de Carrera</span>
+          <span>• Standings Oficiales</span>
+        </div>
+      </a>
+
+      <a href="#" class="card fe">
+        <div class="card-head">
+          <span class="card-number">06</span>
+        </div>
+        <h2>Fórmula E</h2>
+        <div class="card-details">
+          <span>• Resultados E-Prix</span>
+          <span>• Clasificación Equipos</span>
+        </div>
+      </a>
+
+      <a href="#" class="card sf">
+        <div class="card-head">
+          <span class="card-number">07</span>
+        </div>
+        <h2>Super Formula</h2>
+        <div class="card-details">
+          <span>• Tiempos en Vivo</span>
+          <span>• Tabla de Puntos</span>
+        </div>
+      </a>
+
+    </div>
+  </main>
+
+</body>
+</html>
