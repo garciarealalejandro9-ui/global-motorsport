@@ -947,27 +947,23 @@ function updateCompetitionFilter() {
    MENÚ
 ========================================= */
 
-function toggleMenu() {
+<script>
+    function toggleMenu() {
+        document
+            .getElementById("menu")
+            .classList.toggle("show");
+    }
 
-    document
-        .getElementById("menu")
-        .classList.toggle("show");
+    function toggleLanguages(event) {
+        event.stopPropagation();
 
-}
-
-
-function toggleLanguages(event) {
-
-    event.stopPropagation();
-
-    document
-        .getElementById("languages")
-        .classList.toggle("show");
-
-}
+        document
+            .getElementById("languages")
+            .classList.toggle("show");
+    }
+</script>
 
 <script src="js/eventos.js"></script>
-    
 </body>
 </html>
 
