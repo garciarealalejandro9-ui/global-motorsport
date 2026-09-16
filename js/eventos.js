@@ -5,10 +5,11 @@ document.addEventListener("DOMContentLoaded", () => {
     ]).then(([jsonEventos, f1Data]) => {
         let todosLosEventos = [...jsonEventos];
 
-        if (f1Data && f1Data.MRData && f1Data.MRData.RaceTable.Races) {
+        if (f1Data && f1Data.MRData && f1Data.MRData.RaceTable && f1Data.MRData.RaceTable.Races) {
             const carrerasF1 = f1Data.MRData.RaceTable.Races.map(race => ({
                 categoria: "automovilismo",
                 competicion: "Fórmula 1",
+                nombre: race.raceName,
                 evento: race.raceName,
                 circuito: race.Circuit.circuitName,
                 fecha: race.date,
@@ -17,14 +18,16 @@ document.addEventListener("DOMContentLoaded", () => {
             todosLosEventos = [...todosLosEventos, ...carrerasF1];
         }
 
-        // Si estamos en la página del calendario mensual
+        // Variable global compartida
+        window.eventos = todosLosEventos;
+
+        // Para calendario.html
         if (typeof renderCalendar === "function") {
-            window.eventos = todosLosEventos;
             if (typeof updateCompetitionFilter === "function") updateCompetitionFilter();
             renderCalendar();
         }
 
-        // Si estamos en la portada (index.html)
+        // Para index.html
         renderTarjetasInicio(todosLosEventos);
     });
 });
@@ -38,21 +41,21 @@ function renderTarjetasInicio(eventos) {
     eventos.forEach(ev => {
         const tarjeta = document.createElement("div");
         
-        // Estilos visuales de tarjeta
-        tarjeta.style.background = "#111";
-        tarjeta.style.border = "1px solid #333";
+        // Estilos de tarjeta directamente aplicados
+        tarjeta.style.background = "#111111";
+        tarjeta.style.border = "1px solid #333333";
         tarjeta.style.borderRadius = "8px";
-        tarjeta.style.padding = "15px";
+        tarjeta.style.padding = "16px";
         tarjeta.style.marginBottom = "15px";
-        tarjeta.style.boxShadow = "0 4px 6px rgba(0,0,0,0.3)";
+        tarjeta.style.boxShadow = "0 4px 8px rgba(0,0,0,0.5)";
 
         const titulo = ev.competicion || ev.campeonato || "Prueba";
         const nombreEvento = ev.evento || ev.nombre || "";
 
         tarjeta.innerHTML = `
-            <h3 style="margin: 0 0 8px 0; color: #ff3333; font-size: 18px;">${titulo} - ${nombreEvento}</h3>
-            <p style="margin: 4px 0; color: #ccc;"><strong>Circuito:</strong> ${ev.circuito || "Por confirmar"}</p>
-            <p style="margin: 4px 0; color: #aaa; font-size: 14px;"><strong>Fecha:</strong> ${ev.fecha}</p>
+            <h3 style="margin: 0 0 10px 0; color: #ff3333; font-size: 18px; font-weight: bold;">${titulo} - ${nombreEvento}</h3>
+            <p style="margin: 4px 0; color: #cccccc; font-size: 14px;"><strong>Circuito:</strong> ${ev.circuito || "Por confirmar"}</p>
+            <p style="margin: 4px 0; color: #aaaaaa; font-size: 14px;"><strong>Fecha:</strong> ${ev.fecha}</p>
         `;
 
         contenedorProximas.appendChild(tarjeta);
