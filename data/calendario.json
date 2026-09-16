@@ -1,1 +1,74 @@
-
+[
+  {
+    "categoria": "Monoplazas",
+    "campeonato": "Fórmula 2",
+    "evento": "Sakhir Feature Race",
+    "circuito": "Bahrain International Circuit",
+    "fecha": "2026-03-01",
+    "estado": "PRÓXIMAMENTE"
+  },
+  {
+    "categoria": "Monoplazas",
+    "campeonato": "IndyCar",
+    "evento": "Firestone Grand Prix of St. Petersburg",
+    "circuito": "St. Petersburg Street Circuit",
+    "fecha": "2026-03-08",
+    "estado": "PRÓXIMAMENTE"
+  },
+  {
+    "categoria": "Motos",
+    "campeonato": "MotoGP",
+    "evento": "Gran Premio de España",
+    "circuito": "Circuito de Jerez",
+    "fecha": "2026-04-26",
+    "estado": "PRÓXIMAMENTE"
+  },
+  {
+    "categoria": "Motos",
+    "campeonato": "WorldSBK",
+    "evento": "Ronda de Asse",
+    "circuito": "TT Circuit Assen",
+    "fecha": "2026-04-19",
+    "estado": "PRÓXIMAMENTE"
+  },
+  {
+    "categoria": "Rally",
+    "campeonato": "WRC",
+    "evento": "Rally de Portugal",
+    "circuito": "Portugal",
+    "fecha": "2026-05-10",
+    "estado": "PRÓXIMAMENTE"
+  },
+  {
+    "categoria": "Resistencia",
+    "campeonato": "WEC / GT",
+    "evento": "24 Horas de Le Mans",
+    "circuito": "Circuit de la Sarthe",
+    "fecha": "2026-06-13",
+    "estado": "PRÓXIMAMENTE"
+  },
+  {
+    "categoria": "Stock Cars",
+    "campeonato": "NASCAR",
+    "evento": "Daytona 500",
+    "circuito": "Daytona International Speedway",
+    "fecha": "2026-02-15",
+    "estado": "FINALIZADA"
+  },
+  {
+    "categoria": "Drift",
+    "campeonato": "Formula Drift",
+    "evento": "Round 1: Streets of Long Beach",
+    "circuito": "Long Beach, EE.UU.",
+    "fecha": "2026-04-10",
+    "estado": "PRÓXIMAMENTE"
+  },
+  {
+    "categoria": "Drag",
+    "campeonato": "NHRA",
+    "evento": "Gatornationals",
+    "circuito": "Gainesville Raceway",
+    "fecha": "2026-03-15",
+    "estado": "PRÓXIMAMENTE"
+  }
+]
