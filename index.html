@@ -345,67 +345,24 @@ footer {
 
 <main class="container">
 
+    <!-- Sección que se activará cuando haya carrera en directo -->
+    <section id="seccion-en-vivo" style="display: none;">
+        <h2 class="section-title">🔴 EN VIVO AHORA</h2>
+        <div id="contenedor-en-vivo" class="events"></div>
+    </section>
+
     <h2 class="section-title">📅 Próximas pruebas</h2>
-
-    <div class="events">
-
-        <div class="event">
-            <div class="event-date">PRÓXIMAMENTE</div>
-            <h3>Gran Premio de Italia</h3>
-            <p>Fórmula 1 · Italia</p>
-        </div>
-
-        <div class="event">
-            <div class="event-date">PRÓXIMAMENTE</div>
-            <h3>Rally de España</h3>
-            <p>WRC · España</p>
-        </div>
-
-        <div class="event">
-            <div class="event-date">PRÓXIMAMENTE</div>
-            <h3>Gran Premio de España</h3>
-            <p>MotoGP · España</p>
-        </div>
-
-        <div class="event">
-            <div class="event-date">PRÓXIMAMENTE</div>
-            <h3>24 Horas de Le Mans</h3>
-            <p>Resistencia · Francia</p>
-        </div>
-
+    <div id="contenedor-proximas-pruebas" class="events">
+        <p>Cargando próximas pruebas desde la API...</p>
     </div>
 
     <h2 class="section-title">🏆 Últimas pruebas</h2>
-
-    <div class="events">
-
-        <div class="event">
-            <div class="event-date">FINALIZADA</div>
-            <h3>Última prueba de Fórmula 1</h3>
-            <p>Resultados y clasificación</p>
-        </div>
-
-        <div class="event">
-            <div class="event-date">FINALIZADA</div>
-            <h3>Último rally</h3>
-            <p>Resultados y clasificación</p>
-        </div>
-
-        <div class="event">
-            <div class="event-date">FINALIZADA</div>
-            <h3>Última prueba de MotoGP</h3>
-            <p>Resultados y clasificación</p>
-        </div>
-
-        <div class="event">
-            <div class="event-date">FINALIZADA</div>
-            <h3>Última prueba de resistencia</h3>
-            <p>Resultados y clasificación</p>
-        </div>
-
+    <div id="contenedor-ultimas-pruebas" class="events">
+        <p>Cargando resultados de las últimas pruebas...</p>
     </div>
 
 </main>
+
 
 <footer>
     © 2026 Global Motorsport
@@ -416,6 +373,8 @@ function toggleMenu() {
     document.getElementById("menu").classList.toggle("active");
 }
 </script>
+    <script src="eventos.js"></script>
+
 
 </body>
 </html>
