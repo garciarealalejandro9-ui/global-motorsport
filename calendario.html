@@ -391,14 +391,18 @@
 
 <script>
 let currentDate = new Date();
-let eventos = [];
 
 const months = [
     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
 ];
 
+function getListaEventos() {
+    return window.eventos || [];
+}
+
 function renderCalendar() {
+    const listaEventos = getListaEventos();
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     const firstDay = new Date(year, month, 1);
@@ -438,13 +442,13 @@ function renderCalendar() {
 
         const dateString = year + "-" + String(month + 1).padStart(2, "0") + "-" + String(day).padStart(2, "0");
 
-        const filteredEvents = eventos.filter(evento => {
+        const filteredEvents = listaEventos.filter(evento => {
             const category = document.getElementById("categoryFilter").value;
             const competition = document.getElementById("competitionFilter").value;
 
             if (evento.fecha !== dateString) return false;
             if (category !== "all" && evento.categoria !== category) return false;
-            if (competition !== "all" && evento.competicion !== competition) return false;
+            if (competition !== "all" && (evento.competicion || evento.campeonato) !== competition) return false;
 
             return true;
         });
@@ -465,10 +469,11 @@ function renderCalendar() {
 }
 
 function updateNoEvents() {
+    const listaEventos = getListaEventos();
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
 
-    const monthEvents = eventos.filter(evento => {
+    const monthEvents = listaEventos.filter(evento => {
         const date = new Date(evento.fecha);
         if (date.getFullYear() !== year || date.getMonth() !== month) return false;
 
@@ -476,7 +481,7 @@ function updateNoEvents() {
         const competition = document.getElementById("competitionFilter").value;
 
         if (category !== "all" && evento.categoria !== category) return false;
-        if (competition !== "all" && evento.competicion !== competition) return false;
+        if (competition !== "all" && (evento.competicion || evento.campeonato) !== competition) return false;
 
         return true;
     });
@@ -507,8 +512,9 @@ function updateCompetitionFilter() {
     const select = document.getElementById("competitionFilter");
     if (!select) return;
 
+    const listaEventos = getListaEventos();
     const currentValue = select.value;
-    const competitions = [...new Set(eventos.map(evento => evento.competicion || evento.campeonato))];
+    const competitions = [...new Set(listaEventos.map(evento => evento.competicion || evento.campeonato))];
 
     select.innerHTML = '<option value="all">Todas las competiciones</option>';
 
