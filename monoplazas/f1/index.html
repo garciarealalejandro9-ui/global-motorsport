@@ -26,14 +26,16 @@
 
         .card { background: #151515; border: 1px solid #2a2a2a; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .podium { display: flex; gap: 10px; margin-top: 10px; }
-        .podium-item { background: #222; padding: 8px 12px; border-radius: 5px; flex: 1; font-size: 13px; }
+        .podium { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .podium-item { background: #222; padding: 8px 12px; border-radius: 5px; flex: 1; min-width: 120px; font-size: 13px; }
         .podium-item strong { display: block; color: #e10600; }
 
         .btn-details { background: #222; border: 1px solid #444; color: #fff; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-top: 10px; width: 100%; font-size: 13px; text-align: center; }
         .details-table { display: none; margin-top: 12px; width: 100%; border-collapse: collapse; font-size: 13px; }
         .details-table th, .details-table td { border: 1px solid #333; padding: 8px; text-align: left; }
         .details-table th { background: #222; color: #e10600; }
+        
+        .status-msg { padding: 20px; color: #aaa; text-align: center; }
     </style>
 </head>
 <body>
@@ -54,14 +56,15 @@
     </div>
 
     <div id="racesTab" class="tab-content active">
-        <div id="racesContainer">Cargando carreras...</div>
+        <div id="racesContainer" class="status-msg">Cargando carreras...</div>
     </div>
 
     <div id="standingsTab" class="tab-content">
-        <div id="standingsContainer">Cargando clasificación...</div>
+        <div id="standingsContainer" class="status-msg">Cargando clasificación...</div>
     </div>
 
 <script>
+    // Rellenar selector de años (2026 hasta 1950)
     const select = document.getElementById("yearSelect");
     for (let y = 2026; y >= 1950; y--) {
         const opt = document.createElement("option");
@@ -79,33 +82,39 @@
     }
 
     async function loadSeasonData(year) {
-        document.getElementById("racesContainer").innerHTML = "Cargando carreras...";
-        document.getElementById("standingsContainer").innerHTML = "Cargando clasificación...";
+        document.getElementById("racesContainer").innerHTML = '<div class="status-msg">Cargando carreras de ' + year + '...</div>';
+        document.getElementById("standingsContainer").innerHTML = '<div class="status-msg">Cargando clasificación de ' + year + '...</div>';
 
+        // 1. Obtener Carreras
         try {
-            const resRaces = await fetch(`https://api.jolpica.net/ergast/f1/${year}/results.json?limit=1000`);
+            const resRaces = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/results.json?limit=1000`);
+            if (!resRaces.ok) throw new Error("Error HTTP " + resRaces.status);
             const dataRaces = await resRaces.json();
-            const races = dataRaces.MRData.RaceTable.Races || [];
-
+            const races = dataRaces?.MRData?.RaceTable?.Races || [];
             renderRaces(races);
-
-            const resStandings = await fetch(`https://api.jolpica.net/ergast/f1/${year}/driverstandings.json`);
-            const dataStandings = await resStandings.json();
-            const standingsLists = dataStandings.MRData.StandingsTable.StandingsLists;
-            const standings = standingsLists.length > 0 ? standingsLists[0].DriverStandings : [];
-
-            renderStandings(standings);
-
         } catch (e) {
-            document.getElementById("racesContainer").innerHTML = "No se pudieron obtener resultados para esta temporada.";
-            document.getElementById("standingsContainer").innerHTML = "Sin datos de clasificación disponible.";
+            console.error("Error al cargar carreras:", e);
+            document.getElementById("racesContainer").innerHTML = '<div class="status-msg">No se pudieron cargar los resultados de este año. Por favor, intenta seleccionar otro año.</div>';
+        }
+
+        // 2. Obtener Clasificación (Atención: driverStandings lleva la S mayúscula)
+        try {
+            const resStandings = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/driverStandings.json`);
+            if (!resStandings.ok) throw new Error("Error HTTP " + resStandings.status);
+            const dataStandings = await resStandings.json();
+            const standingsLists = dataStandings?.MRData?.StandingsTable?.StandingsLists || [];
+            const standings = standingsLists.length > 0 ? standingsLists[0].DriverStandings : [];
+            renderStandings(standings);
+        } catch (e) {
+            console.error("Error al cargar clasificación:", e);
+            document.getElementById("standingsContainer").innerHTML = '<div class="status-msg">Clasificación no disponible para esta temporada.</div>';
         }
     }
 
     function renderRaces(races) {
         const container = document.getElementById("racesContainer");
         if (!races || races.length === 0) {
-            container.innerHTML = "No hay resultados o carreras registradas para el año seleccionado.";
+            container.innerHTML = '<div class="status-msg">No hay resultados o carreras registradas para el año seleccionado.</div>';
             return;
         }
         
@@ -120,10 +129,10 @@
             card.className = "card";
             card.innerHTML = `
                 <div class="card-header">
-                    <h3>GP ${race.raceName}</h3>
+                    <h3 style="font-size:18px; color:#fff;">GP ${race.raceName}</h3>
                     <span style="color:#aaa; font-size:13px;">${race.date}</span>
                 </div>
-                <p style="color:#888; font-size:13px;">Circuito: ${race.Circuit.circuitName}</p>
+                <p style="color:#888; font-size:13px; margin-top:4px;">Circuito: ${race.Circuit?.circuitName || 'Por confirmar'}</p>
                 
                 <div class="podium">
                     <div class="podium-item"><strong>🥇 1º Puesto</strong>${p1}</div>
@@ -163,7 +172,7 @@
     function renderStandings(standings) {
         const container = document.getElementById("standingsContainer");
         if (!standings || standings.length === 0) {
-            container.innerHTML = "Clasificación no disponible para la temporada seleccionada.";
+            container.innerHTML = '<div class="status-msg">Clasificación no disponible para la temporada seleccionada.</div>';
             return;
         }
 
@@ -186,6 +195,7 @@
         `;
     }
 
+    // Carga inicial
     loadSeasonData(2024);
 </script>
 </body>
