@@ -43,7 +43,8 @@
 
     <div class="header">
         <div class="brand">GLOBAL <span>MOTORSPORT</span></div>
-        <a href="../monoplazas.html" class="btn-back">← Volver a Monoplazas</a>
+        <!-- Ruta para volver correctamente al archivo monoplazas.html en la raíz -->
+        <a href="../../monoplazas.html" class="btn-back">← Volver a Monoplazas</a>
     </div>
 
     <div class="top-bar">
@@ -84,34 +85,21 @@
     }
 
     async function loadSeasonData(year) {
-        document.getElementById("racesContainer").innerHTML = '<div class="status-msg">Cargando temporada ' + year + '...</div>';
-        document.getElementById("standingsContainer").innerHTML = '<div class="status-msg">Cargando clasificación ' + year + '...</div>';
+        document.getElementById("racesContainer").innerHTML = '<div class="status-msg">Cargando todas las carreras de ' + year + '...</div>';
+        document.getElementById("standingsContainer").innerHTML = '<div class="status-msg">Cargando clasificación...</div>';
 
+        // 1. Obtener la lista limpia de carreras (sin resultados) para que no haya recorte de limitación
         try {
-            // Petición al calendario pidiendo límite de 1000 para forzar todas las carreras (las 24 de la temporada)
-            const resCalendar = await fetch(`https://api.jolpi.ca/ergast/f1/${year}.json?limit=1000`);
+            const resCalendar = await fetch(`https://api.jolpi.ca/ergast/f1/${year}.json`);
             const dataCalendar = await resCalendar.json();
-            const racesCalendar = dataCalendar?.MRData?.RaceTable?.Races || [];
+            const races = dataCalendar?.MRData?.RaceTable?.Races || [];
 
-            // Obtener resultados con límite amplio
-            let resultsMap = {};
-            try {
-                const resResults = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/results.json?limit=1000`);
-                const dataResults = await resResults.json();
-                const racesResults = dataResults?.MRData?.RaceTable?.Races || [];
-                
-                racesResults.forEach(r => {
-                    resultsMap[r.round] = r.Results;
-                });
-            } catch (err) {
-                console.warn("Sin resultados para este año.");
-            }
-
-            renderRaces(racesCalendar, resultsMap, year);
+            renderRacesCalendar(races, year);
         } catch (e) {
-            document.getElementById("racesContainer").innerHTML = '<div class="status-msg">Error al cargar las carreras.</div>';
+            document.getElementById("racesContainer").innerHTML = '<div class="status-msg">Error al obtener las carreras.</div>';
         }
 
+        // 2. Obtener Clasificación General
         try {
             const resStandings = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/driverStandings.json?limit=1000`);
             const dataStandings = await resStandings.json();
@@ -123,76 +111,119 @@
         }
     }
 
-    function renderRaces(races, resultsMap, year) {
+    function renderRacesCalendar(races, year) {
         const container = document.getElementById("racesContainer");
         if (!races || races.length === 0) {
-            container.innerHTML = '<div class="status-msg">No hay carreras registradas para ' + year + '.</div>';
+            container.innerHTML = '<div class="status-msg">No hay carreras registradas para el año ' + year + '.</div>';
             return;
         }
         
         container.innerHTML = "";
+        
+        // Renderiza cada una de las carreras (las 24 de la temporada completa)
         races.forEach((race, index) => {
-            const results = resultsMap[race.round] || [];
-            
-            let podiumHtml = `<div class="podium-item" style="color:#888;">Pendiente de celebración</div>`;
-            let tableRows = `<tr><td colspan="4">Carrera aún no disputada.</td></tr>`;
-
-            if (results.length > 0) {
-                const p1 = results[0] ? `${results[0].Driver.givenName} ${results[0].Driver.familyName}` : "-";
-                const p2 = results[1] ? `${results[1].Driver.givenName} ${results[1].Driver.familyName}` : "-";
-                const p3 = results[2] ? `${results[2].Driver.givenName} ${results[2].Driver.familyName}` : "-";
-
-                podiumHtml = `
-                    <div class="podium-item"><strong>🥇 1º Puesto</strong>${p1}</div>
-                    <div class="podium-item"><strong>🥈 2º Puesto</strong>${p2}</div>
-                    <div class="podium-item"><strong>🥉 3º Puesto</strong>${p3}</div>
-                `;
-
-                tableRows = results.map(r => `
-                    <tr>
-                        <td>${r.position}</td>
-                        <td>${r.Driver.givenName} ${r.Driver.familyName}</td>
-                        <td>${r.Constructor ? r.Constructor.name : '-'}</td>
-                        <td>${r.points}</td>
-                    </tr>
-                `).join('');
-            }
-
             const card = document.createElement("div");
             card.className = "card";
+            
             card.innerHTML = `
                 <div class="card-header">
-                    <h3 style="font-size:18px; color:#fff;">Ronda ${race.round}: GP ${race.raceName}</h3>
+                    <h3 style="font-size:18px; color:#fff;">Carrera ${race.round}: GP ${race.raceName}</h3>
                     <span style="color:#aaa; font-size:13px;">${race.date}</span>
                 </div>
                 <p style="color:#888; font-size:13px; margin-top:4px;">Circuito: ${race.Circuit?.circuitName || 'Por confirmar'}</p>
                 
-                <div class="podium">${podiumHtml}</div>
+                <div class="podium" id="podium-${index}">
+                    <div class="podium-item" style="color:#aaa;">Cargando resultado...</div>
+                </div>
 
-                ${results.length > 0 ? `<button class="btn-details" onclick="toggleDetails(${index})">Ver resultado completo ▾</button>` : ''}
+                <button class="btn-details" onclick="toggleDetails(${index}, '${year}', '${race.round}')">Ver resultado completo ▾</button>
                 
                 <table class="details-table" id="details-${index}">
                     <thead>
                         <tr><th>Pos</th><th>Piloto</th><th>Escudería</th><th>Puntos</th></tr>
                     </thead>
-                    <tbody>${tableRows}</tbody>
+                    <tbody id="tbody-${index}">
+                        <tr><td colspan="4">Cargando detalles...</td></tr>
+                    </tbody>
                 </table>
             `;
             container.appendChild(card);
+
+            // Carga individual del podio de cada carrera
+            fetchRacePodium(year, race.round, index);
         });
     }
 
-    function toggleDetails(index) {
+    async function fetchRacePodium(year, round, index) {
+        try {
+            const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${round}/results.json`);
+            const data = await res.json();
+            const results = data?.MRData?.RaceTable?.Races[0]?.Results || [];
+            
+            const podiumDiv = document.getElementById(`podium-${index}`);
+            if (results.length > 0 && podiumDiv) {
+                const p1 = `${results[0].Driver.givenName} ${results[0].Driver.familyName}`;
+                const p2 = results[1] ? `${results[1].Driver.givenName} ${results[1].Driver.familyName}` : "-";
+                const p3 = results[2] ? `${results[2].Driver.givenName} ${results[2].Driver.familyName}` : "-";
+                
+                podiumDiv.innerHTML = `
+                    <div class="podium-item"><strong>🥇 1º Puesto</strong>${p1}</div>
+                    <div class="podium-item"><strong>🥈 2º Puesto</strong>${p2}</div>
+                    <div class="podium-item"><strong>🥉 3º Puesto</strong>${p3}</div>
+                `;
+            } else if (podiumDiv) {
+                podiumDiv.innerHTML = `<div class="podium-item" style="color:#888;">Pendiente de celebración</div>`;
+            }
+        } catch (e) {
+            const podiumDiv = document.getElementById(`podium-${index}`);
+            if (podiumDiv) podiumDiv.innerHTML = `<div class="podium-item" style="color:#888;">Pendiente de celebración</div>`;
+        }
+    }
+
+    async function toggleDetails(index, year, round) {
         const table = document.getElementById(`details-${index}`);
-        if (table) {
-            table.style.display = (table.style.display === "table") ? "none" : "table";
+        const tbody = document.getElementById(`tbody-${index}`);
+        
+        if (table.style.display === "table") {
+            table.style.display = "none";
+            return;
+        }
+
+        table.style.display = "table";
+
+        if (tbody.getAttribute("data-loaded") === "true") return;
+
+        tbody.innerHTML = '<tr><td colspan="4">Cargando...</td></tr>';
+
+        try {
+            const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${round}/results.json`);
+            const data = await res.json();
+            const results = data?.MRData?.RaceTable?.Races[0]?.Results || [];
+
+            if (results.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4">Carrera aún no disputada o sin resultados.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = results.map(r => `
+                <tr>
+                    <td>${r.position}</td>
+                    <td>${r.Driver.givenName} ${r.Driver.familyName}</td>
+                    <td>${r.Constructor ? r.Constructor.name : '-'}</td>
+                    <td>${r.points}</td>
+                </tr>
+            `).join('');
+            
+            tbody.setAttribute("data-loaded", "true");
+        } catch (e) {
+            tbody.innerHTML = '<tr><td colspan="4">Error al cargar detalles.</td></tr>';
         }
     }
 
     function renderStandings(standings) {
         const container = document.getElementById("standingsContainer");
         if (!standings || standings.length === 0) {
-            container.innerHTML = '<div class="status-msg">Clasificación no disponible aún.</div>';
+            container.innerHTML = '<div class="status-msg">Clasificación no disponible.</div>';
             return;
         }
 
