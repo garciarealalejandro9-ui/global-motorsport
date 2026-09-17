@@ -17,7 +17,6 @@
         .title { border-left: 4px solid #e10600; padding-left: 10px; font-size: 26px; }
         select { background: #1f1f1f; color: white; border: 1px solid #444; padding: 8px 12px; border-radius: 6px; font-size: 16px; cursor: pointer; }
         
-        /* Pestañas */
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #333; }
         .tab-btn { background: none; border: none; color: #888; padding: 10px 15px; font-size: 15px; cursor: pointer; font-weight: bold; }
         .tab-btn.active { color: #e10600; border-bottom: 2px solid #e10600; }
@@ -25,16 +24,15 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* Estilos Tarjetas y Tablas */
         .card { background: #151515; border: 1px solid #2a2a2a; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .podium { display: flex; gap: 10px; margin-top: 10px; }
         .podium-item { background: #222; padding: 8px 12px; border-radius: 5px; flex: 1; font-size: 13px; }
         .podium-item strong { display: block; color: #e10600; }
 
-        .btn-details { background: #222; border: 1px solid #444; color: #fff; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin-top: 10px; width: 100%; font-size: 13px; }
-        .details-table { display: none; margin-top: 10px; width: 100%; border-collapse: collapse; font-size: 13px; }
-        .details-table th, .details-table td { border: 1px solid #333; padding: 6px; text-align: left; }
+        .btn-details { background: #222; border: 1px solid #444; color: #fff; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-top: 10px; width: 100%; font-size: 13px; text-align: center; }
+        .details-table { display: none; margin-top: 12px; width: 100%; border-collapse: collapse; font-size: 13px; }
+        .details-table th, .details-table td { border: 1px solid #333; padding: 8px; text-align: left; }
         .details-table th { background: #222; color: #e10600; }
     </style>
 </head>
@@ -55,23 +53,21 @@
         <button class="tab-btn" onclick="switchTab('standingsTab', this)">Clasificación General</button>
     </div>
 
-    <!-- Pestaña 1: Carreras y Podios -->
     <div id="racesTab" class="tab-content active">
         <div id="racesContainer">Cargando carreras...</div>
     </div>
 
-    <!-- Pestaña 2: Clasificación General -->
     <div id="standingsTab" class="tab-content">
         <div id="standingsContainer">Cargando clasificación...</div>
     </div>
 
 <script>
-    // Generar años desde 2026 hasta 1950
     const select = document.getElementById("yearSelect");
     for (let y = 2026; y >= 1950; y--) {
         const opt = document.createElement("option");
         opt.value = y;
         opt.textContent = y;
+        if (y === 2024) opt.selected = true;
         select.appendChild(opt);
     }
 
@@ -87,28 +83,31 @@
         document.getElementById("standingsContainer").innerHTML = "Cargando clasificación...";
 
         try {
-            // Fetch Carreras y Resultados
-            const resRaces = await fetch(`https://ergast.com/api/f1/${year}/results.json?limit=1000`);
+            const resRaces = await fetch(`https://api.jolpica.net/ergast/f1/${year}/results.json?limit=1000`);
             const dataRaces = await resRaces.json();
             const races = dataRaces.MRData.RaceTable.Races || [];
 
             renderRaces(races);
 
-            // Fetch Clasificación
-            const resStandings = await fetch(`https://ergast.com/api/f1/${year}/driverStandings.json`);
+            const resStandings = await fetch(`https://api.jolpica.net/ergast/f1/${year}/driverstandings.json`);
             const dataStandings = await resStandings.json();
-            const standings = dataStandings.MRData.StandingsTable.StandingsLists[0]?.DriverStandings || [];
+            const standingsLists = dataStandings.MRData.StandingsTable.StandingsLists;
+            const standings = standingsLists.length > 0 ? standingsLists[0].DriverStandings : [];
+
             renderStandings(standings);
 
         } catch (e) {
-            document.getElementById("racesContainer").innerHTML = "No hay datos disponibles para esta temporada aún.";
-            document.getElementById("standingsContainer").innerHTML = "Sin datos de clasificación.";
+            document.getElementById("racesContainer").innerHTML = "No se pudieron obtener resultados para esta temporada.";
+            document.getElementById("standingsContainer").innerHTML = "Sin datos de clasificación disponible.";
         }
     }
 
     function renderRaces(races) {
         const container = document.getElementById("racesContainer");
-        if (!races.length) { container.innerHTML = "No hay resultados registrados para esta temporada."; return; }
+        if (!races || races.length === 0) {
+            container.innerHTML = "No hay resultados o carreras registradas para el año seleccionado.";
+            return;
+        }
         
         container.innerHTML = "";
         races.forEach((race, index) => {
@@ -136,14 +135,14 @@
                 
                 <table class="details-table" id="details-${index}">
                     <thead>
-                        <tr><th>Pos</th><th>Piloto</th><th>Equipo</th><th>Puntos</th></tr>
+                        <tr><th>Pos</th><th>Piloto</th><th>Escudería</th><th>Puntos</th></tr>
                     </thead>
                     <tbody>
                         ${results.map(r => `
                             <tr>
                                 <td>${r.position}</td>
                                 <td>${r.Driver.givenName} ${r.Driver.familyName}</td>
-                                <td>${r.Constructor.name}</td>
+                                <td>${r.Constructor ? r.Constructor.name : '-'}</td>
                                 <td>${r.points}</td>
                             </tr>
                         `).join('')}
@@ -156,12 +155,17 @@
 
     function toggleDetails(index) {
         const table = document.getElementById(`details-${index}`);
-        table.style.display = table.style.display === "table" ? "none" : "table";
+        if (table) {
+            table.style.display = (table.style.display === "table") ? "none" : "table";
+        }
     }
 
     function renderStandings(standings) {
         const container = document.getElementById("standingsContainer");
-        if (!standings.length) { container.innerHTML = "Clasificación no disponible."; return; }
+        if (!standings || standings.length === 0) {
+            container.innerHTML = "Clasificación no disponible para la temporada seleccionada.";
+            return;
+        }
 
         container.innerHTML = `
             <table class="details-table" style="display:table;">
@@ -173,7 +177,7 @@
                         <tr>
                             <td><strong>${s.position}</strong></td>
                             <td>${s.Driver.givenName} ${s.Driver.familyName}</td>
-                            <td>${s.Constructors[0]?.name || '-'}</td>
+                            <td>${s.Constructors && s.Constructors[0] ? s.Constructors[0].name : '-'}</td>
                             <td><strong>${s.points}</strong></td>
                         </tr>
                     `).join('')}
@@ -182,8 +186,7 @@
         `;
     }
 
-    // Carga inicial
-    loadSeasonData(2026);
+    loadSeasonData(2024);
 </script>
 </body>
 </html>
