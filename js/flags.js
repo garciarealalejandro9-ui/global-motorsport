@@ -2,9 +2,8 @@
 // CENTRALIZADOR DE BANDERAS - GLOBAL MOTORSPORT
 // ==========================================
 
-// Diccionario universal incluyendo regiones específicas e internacionales
 const countryCodes = {
-    // Oceanía y Asia
+    // Países y circuitos internacionales (vía FlagCDN)
     "australia": "au", "albert park": "au",
     "china": "cn", "shanghai": "cn",
     "japan": "jp", "suzuka": "jp",
@@ -15,14 +14,12 @@ const countryCodes = {
     "qatar": "qa", "lusail": "qa", "catar": "qa",
     "abu dhabi": "ae", "yas marina": "ae",
 
-    // Europa y Regiones Especiales
     "monaco": "mc",
     "spain": "es", "españa": "es", "madrid": "es",
     
-    // Banderas regionales específicas (usando URLs directas o imágenes locales optimizadas)
-    // Usaremos un enlace gráfico o miniatura limpia para Cataluña y Emilia-Romaña
-    "catalunya": "catalunya", "cataluña": "cataluña", "barcelona": "cataluña",
-    "emilia romagna": "emilia-romagna", "emilia-romagna": "emilia-romagna", "imola": "emilia-romagna",
+    // Regiones personalizadas apuntando a tus archivos con nombres largos en js/assets/flags/
+    "catalunya": "214-cataluna_400px", "cataluña": "214-cataluna_400px", "barcelona": "214-cataluna_400px",
+    "emilia romagna": "3840px-Flag_of_Emilia-Romagna_(de_facto).svg", "emilia-romagna": "3840px-Flag_of_Emilia-Romagna_(de_facto).svg", "imola": "3840px-Flag_of_Emilia-Romagna_(de_facto).svg",
 
     "austria": "at", "red bull ring": "at",
     "uk": "gb", "britain": "gb", "british": "gb", "silverstone": "gb", "gran bretaña": "gb",
@@ -30,13 +27,11 @@ const countryCodes = {
     "hungary": "hu", "hungaroring": "hu", "hungría": "hu",
     "netherlands": "nl", "dutch": "nl", "zandvoort": "nl", "países bajos": "nl", "holanda": "nl",
     
-    // Italia general (excluyendo Imola que va por separado)
     "italy": "it", "monza": "it", "italia": "it",
     
     "portugal": "pt", "algarve": "pt",
     "turkey": "tr", "turquía": "tr", "istanbul": "tr",
 
-    // América
     "miami": "us",
     "canada": "ca", "gilles villeneuve": "ca", "montreal": "ca",
     "united states": "us", "us": "us", "usa": "usa", "austin": "us", "cota": "us", "estados unidos": "us",
@@ -54,7 +49,7 @@ const driverNationalityCodes = {
 };
 
 /**
- * Devuelve la etiqueta HTML <img> con el estilo unificado de tarjeta redondeada.
+ * Devuelve la bandera en formato imagen (con la clase CSS unificada para que todas se vean iguales)
  */
 function getFlagHTML(raceName = "", circuitName = "") {
     const combined = (raceName + " " + circuitName).toLowerCase();
@@ -63,22 +58,21 @@ function getFlagHTML(raceName = "", circuitName = "") {
         if (combined.includes(key)) {
             const val = countryCodes[key];
             
-            // Si es una región especial, podemos apuntar a una imagen local en tu proyecto (ej: assets/flags/regions/)
-            // o a un recurso gráfico específico.
-            if (val === "cataluña" || val === "catalunya") {
-                // Puedes guardar la imagen de la bandera de Cataluña en tu repo como assets/flags/catalonia.png
-                return `<img src="assets/flags/catalonia.png" alt="Cataluña" class="country-flag-img" loading="lazy">`;
+            // Si es Cataluña, carga tu .jpg local desde la subcarpeta
+            if (val === "214-cataluna_400px") {
+                return `<img src="../../js/assets/flags/${val}.jpg" alt="${key}" class="country-flag-img" loading="lazy">`;
             }
-            if (val === "emilia-romagna") {
-                // Puedes guardar la imagen de Emilia-Romaña en tu repo como assets/flags/emilia-romagna.png
-                return `<img src="assets/flags/emilia-romagna.png" alt="Emilia-Romaña" class="country-flag-img" loading="lazy">`;
+            // Si es Emilia-Romaña, carga tu .png local desde la subcarpeta
+            if (val === "3840px-Flag_of_Emilia-Romagna_(de_facto).svg") {
+                return `<img src="../../js/assets/flags/${val}.png" alt="${key}" class="country-flag-img" loading="lazy">`;
             }
             
-            // Para países normales, tira de FlagCDN
+            // Para el resto de países, tira de la CDN oficial de banderas
             return `<img src="https://flagcdn.com/w40/${val}.png" alt="${key}" class="country-flag-img" loading="lazy">`;
         }
     }
     
+    // Fallback por si no encuentra nada
     return `<span class="flag-fallback">🏁</span>`;
 }
 
