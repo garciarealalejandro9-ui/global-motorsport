@@ -43,8 +43,7 @@
 
     <div class="header">
         <div class="brand">GLOBAL <span>MOTORSPORT</span></div>
-        <!-- Enlace apuntando directamente a monoplazas.html en la raíz -->
-        <a href="../../monoplazas.html" class="btn-back">← Volver a Monoplazas</a>
+        <a href="../monoplazas.html" class="btn-back">← Volver a Monoplazas</a>
     </div>
 
     <div class="top-bar">
@@ -69,7 +68,6 @@
     const select = document.getElementById("yearSelect");
     const currentYear = new Date().getFullYear();
 
-    // Generar la lista de años desde el actual hasta 1950
     for (let y = currentYear; y >= 1950; y--) {
         const opt = document.createElement("option");
         opt.value = y;
@@ -90,12 +88,12 @@
         document.getElementById("standingsContainer").innerHTML = '<div class="status-msg">Cargando clasificación ' + year + '...</div>';
 
         try {
-            // 1. Obtener la lista completa de carreras programadas en la temporada
-            const resCalendar = await fetch(`https://api.jolpi.ca/ergast/f1/${year}.json?limit=100`);
+            // Petición al calendario pidiendo límite de 1000 para forzar todas las carreras (las 24 de la temporada)
+            const resCalendar = await fetch(`https://api.jolpi.ca/ergast/f1/${year}.json?limit=1000`);
             const dataCalendar = await resCalendar.json();
             const racesCalendar = dataCalendar?.MRData?.RaceTable?.Races || [];
 
-            // 2. Obtener los resultados disputados hasta el momento
+            // Obtener resultados con límite amplio
             let resultsMap = {};
             try {
                 const resResults = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/results.json?limit=1000`);
@@ -106,15 +104,14 @@
                     resultsMap[r.round] = r.Results;
                 });
             } catch (err) {
-                console.warn("Aún no hay resultados para esta temporada.");
+                console.warn("Sin resultados para este año.");
             }
 
             renderRaces(racesCalendar, resultsMap, year);
         } catch (e) {
-            document.getElementById("racesContainer").innerHTML = '<div class="status-msg">Error al cargar las carreras de ' + year + '.</div>';
+            document.getElementById("racesContainer").innerHTML = '<div class="status-msg">Error al cargar las carreras.</div>';
         }
 
-        // 3. Obtener la clasificación mundial
         try {
             const resStandings = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/driverStandings.json?limit=1000`);
             const dataStandings = await resStandings.json();
@@ -122,14 +119,14 @@
             const standings = standingsLists.length > 0 ? standingsLists[0].DriverStandings : [];
             renderStandings(standings);
         } catch (e) {
-            document.getElementById("standingsContainer").innerHTML = '<div class="status-msg">Clasificación no disponible aún.</div>';
+            document.getElementById("standingsContainer").innerHTML = '<div class="status-msg">Clasificación no disponible.</div>';
         }
     }
 
     function renderRaces(races, resultsMap, year) {
         const container = document.getElementById("racesContainer");
         if (!races || races.length === 0) {
-            container.innerHTML = '<div class="status-msg">No hay información de carreras para ' + year + '.</div>';
+            container.innerHTML = '<div class="status-msg">No hay carreras registradas para ' + year + '.</div>';
             return;
         }
         
@@ -218,7 +215,6 @@
         `;
     }
 
-    // Cargar año actual por defecto
     loadSeasonData(currentYear);
 </script>
 </body>
