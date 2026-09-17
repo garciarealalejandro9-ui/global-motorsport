@@ -43,8 +43,8 @@
 
     <div class="header">
         <div class="brand">GLOBAL <span>MOTORSPORT</span></div>
-        <!-- Enlace corregido para volver a la categoría Monoplazas (F1, F2, F3) -->
-        <a href="../index.html" class="btn-back">← Volver a Monoplazas</a>
+        <!-- Enlace apuntando directamente a monoplazas.html en la raíz -->
+        <a href="../../monoplazas.html" class="btn-back">← Volver a Monoplazas</a>
     </div>
 
     <div class="top-bar">
@@ -69,11 +69,12 @@
     const select = document.getElementById("yearSelect");
     const currentYear = new Date().getFullYear();
 
-    for (let y = 2026; y >= 1950; y--) {
+    // Generar la lista de años desde el actual hasta 1950
+    for (let y = currentYear; y >= 1950; y--) {
         const opt = document.createElement("option");
         opt.value = y;
         opt.textContent = y;
-        if (y === 2024) opt.selected = true; // 2024 cargado por defecto para validar lista completa
+        if (y === currentYear) opt.selected = true;
         select.appendChild(opt);
     }
 
@@ -88,17 +89,32 @@
         document.getElementById("racesContainer").innerHTML = '<div class="status-msg">Cargando temporada ' + year + '...</div>';
         document.getElementById("standingsContainer").innerHTML = '<div class="status-msg">Cargando clasificación ' + year + '...</div>';
 
-        // Petición única de resultados completos (trae todas las carreras y todos los podios de un solo viaje)
         try {
-            const resRaces = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/results.json?limit=1000`);
-            const dataRaces = await resRaces.json();
-            const races = dataRaces?.MRData?.RaceTable?.Races || [];
-            renderRaces(races, year);
+            // 1. Obtener la lista completa de carreras programadas en la temporada
+            const resCalendar = await fetch(`https://api.jolpi.ca/ergast/f1/${year}.json?limit=100`);
+            const dataCalendar = await resCalendar.json();
+            const racesCalendar = dataCalendar?.MRData?.RaceTable?.Races || [];
+
+            // 2. Obtener los resultados disputados hasta el momento
+            let resultsMap = {};
+            try {
+                const resResults = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/results.json?limit=1000`);
+                const dataResults = await resResults.json();
+                const racesResults = dataResults?.MRData?.RaceTable?.Races || [];
+                
+                racesResults.forEach(r => {
+                    resultsMap[r.round] = r.Results;
+                });
+            } catch (err) {
+                console.warn("Aún no hay resultados para esta temporada.");
+            }
+
+            renderRaces(racesCalendar, resultsMap, year);
         } catch (e) {
-            document.getElementById("racesContainer").innerHTML = '<div class="status-msg">Error al obtener los datos de las carreras.</div>';
+            document.getElementById("racesContainer").innerHTML = '<div class="status-msg">Error al cargar las carreras de ' + year + '.</div>';
         }
 
-        // Petición de Clasificación General
+        // 3. Obtener la clasificación mundial
         try {
             const resStandings = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/driverStandings.json?limit=1000`);
             const dataStandings = await resStandings.json();
@@ -106,55 +122,63 @@
             const standings = standingsLists.length > 0 ? standingsLists[0].DriverStandings : [];
             renderStandings(standings);
         } catch (e) {
-            document.getElementById("standingsContainer").innerHTML = '<div class="status-msg">Clasificación no disponible.</div>';
+            document.getElementById("standingsContainer").innerHTML = '<div class="status-msg">Clasificación no disponible aún.</div>';
         }
     }
 
-    function renderRaces(races, year) {
+    function renderRaces(races, resultsMap, year) {
         const container = document.getElementById("racesContainer");
         if (!races || races.length === 0) {
-            container.innerHTML = '<div class="status-msg">No hay resultados registrados para el año ' + year + '.</div>';
+            container.innerHTML = '<div class="status-msg">No hay información de carreras para ' + year + '.</div>';
             return;
         }
         
         container.innerHTML = "";
         races.forEach((race, index) => {
-            const results = race.Results || [];
-            const p1 = results[0] ? `${results[0].Driver.givenName} ${results[0].Driver.familyName}` : "-";
-            const p2 = results[1] ? `${results[1].Driver.givenName} ${results[1].Driver.familyName}` : "-";
-            const p3 = results[2] ? `${results[2].Driver.givenName} ${results[2].Driver.familyName}` : "-";
+            const results = resultsMap[race.round] || [];
+            
+            let podiumHtml = `<div class="podium-item" style="color:#888;">Pendiente de celebración</div>`;
+            let tableRows = `<tr><td colspan="4">Carrera aún no disputada.</td></tr>`;
+
+            if (results.length > 0) {
+                const p1 = results[0] ? `${results[0].Driver.givenName} ${results[0].Driver.familyName}` : "-";
+                const p2 = results[1] ? `${results[1].Driver.givenName} ${results[1].Driver.familyName}` : "-";
+                const p3 = results[2] ? `${results[2].Driver.givenName} ${results[2].Driver.familyName}` : "-";
+
+                podiumHtml = `
+                    <div class="podium-item"><strong>🥇 1º Puesto</strong>${p1}</div>
+                    <div class="podium-item"><strong>🥈 2º Puesto</strong>${p2}</div>
+                    <div class="podium-item"><strong>🥉 3º Puesto</strong>${p3}</div>
+                `;
+
+                tableRows = results.map(r => `
+                    <tr>
+                        <td>${r.position}</td>
+                        <td>${r.Driver.givenName} ${r.Driver.familyName}</td>
+                        <td>${r.Constructor ? r.Constructor.name : '-'}</td>
+                        <td>${r.points}</td>
+                    </tr>
+                `).join('');
+            }
 
             const card = document.createElement("div");
             card.className = "card";
             card.innerHTML = `
                 <div class="card-header">
-                    <h3 style="font-size:18px; color:#fff;">Carrera ${race.round}: GP ${race.raceName}</h3>
+                    <h3 style="font-size:18px; color:#fff;">Ronda ${race.round}: GP ${race.raceName}</h3>
                     <span style="color:#aaa; font-size:13px;">${race.date}</span>
                 </div>
-                <p style="color:#888; font-size:13px; margin-top:4px;">Circuito: ${race.Circuit?.circuitName || 'Desconocido'}</p>
+                <p style="color:#888; font-size:13px; margin-top:4px;">Circuito: ${race.Circuit?.circuitName || 'Por confirmar'}</p>
                 
-                <div class="podium">
-                    <div class="podium-item"><strong>🥇 1º Puesto</strong>${p1}</div>
-                    <div class="podium-item"><strong>🥈 2º Puesto</strong>${p2}</div>
-                    <div class="podium-item"><strong>🥉 3º Puesto</strong>${p3}</div>
-                </div>
+                <div class="podium">${podiumHtml}</div>
 
-                <button class="btn-details" onclick="toggleDetails(${index})">Ver resultado completo ▾</button>
+                ${results.length > 0 ? `<button class="btn-details" onclick="toggleDetails(${index})">Ver resultado completo ▾</button>` : ''}
                 
                 <table class="details-table" id="details-${index}">
                     <thead>
                         <tr><th>Pos</th><th>Piloto</th><th>Escudería</th><th>Puntos</th></tr>
                     </thead>
-                    <tbody>
-                        ${results.map(r => `
-                            <tr>
-                                <td>${r.position}</td>
-                                <td>${r.Driver.givenName} ${r.Driver.familyName}</td>
-                                <td>${r.Constructor ? r.Constructor.name : '-'}</td>
-                                <td>${r.points}</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
+                    <tbody>${tableRows}</tbody>
                 </table>
             `;
             container.appendChild(card);
@@ -171,7 +195,7 @@
     function renderStandings(standings) {
         const container = document.getElementById("standingsContainer");
         if (!standings || standings.length === 0) {
-            container.innerHTML = '<div class="status-msg">Clasificación no disponible.</div>';
+            container.innerHTML = '<div class="status-msg">Clasificación no disponible aún.</div>';
             return;
         }
 
@@ -194,8 +218,8 @@
         `;
     }
 
-    // Carga inicial
-    loadSeasonData(2024);
+    // Cargar año actual por defecto
+    loadSeasonData(currentYear);
 </script>
 </body>
 </html>
