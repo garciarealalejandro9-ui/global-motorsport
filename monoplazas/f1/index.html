@@ -1,3 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fórmula 1 | Global Motorsport</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #0b0b0b; color: #fff; font-family: Arial, sans-serif; padding: 20px; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e10600; padding-bottom: 15px; margin-bottom: 20px; }
+        .brand { font-size: 20px; font-weight: 900; }
+        .brand span { color: #e10600; }
+        .btn-back { color: #aaa; text-decoration: none; font-size: 14px; font-weight: bold; }
+        .btn-back:hover { color: #e10600; }
+        
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .title { border-left: 4px solid #e10600; padding-left: 10px; font-size: 26px; }
+        select { background: #1f1f1f; color: white; border: 1px solid #444; padding: 8px 12px; border-radius: 6px; font-size: 16px; cursor: pointer; }
+        
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #333; }
+        .tab-btn { background: none; border: none; color: #888; padding: 10px 15px; font-size: 15px; cursor: pointer; font-weight: bold; }
+        .tab-btn.active { color: #e10600; border-bottom: 2px solid #e10600; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .card { background: #151515; border: 1px solid #2a2a2a; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .podium { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .podium-item { background: #222; padding: 8px 12px; border-radius: 5px; flex: 1; min-width: 120px; font-size: 13px; }
+        .podium-item strong { display: block; color: #e10600; }
+
+        .btn-details { background: #222; border: 1px solid #444; color: #fff; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-top: 10px; width: 100%; font-size: 13px; text-align: center; }
+        .details-table { display: none; margin-top: 12px; width: 100%; border-collapse: collapse; font-size: 13px; }
+        .details-table th, .details-table td { border: 1px solid #333; padding: 8px; text-align: left; }
+        .details-table th { background: #222; color: #e10600; }
+        
+        .status-msg { padding: 20px; color: #aaa; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="brand">GLOBAL <span>MOTORSPORT</span></div>
+        <a href="../../monoplazas.html" class="btn-back">← Volver a Monoplazas</a>
+    </div>
+
+    <div class="top-bar">
+        <h1 class="title">Fórmula 1</h1>
+        <select id="yearSelect" onchange="loadSeasonData(this.value)"></select>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('racesTab', this)">Pruebas del Campeonato</button>
+        <button class="tab-btn" onclick="switchTab('standingsTab', this)">Clasificación General</button>
+    </div>
+
+    <div id="racesTab" class="tab-content active">
+        <div id="racesContainer"></div>
+    </div>
+
+    <div id="standingsTab" class="tab-content">
+        <div id="standingsContainer" class="status-msg">Cargando clasificación...</div>
+    </div>
+
+<script>
+    // Calendario estático para garantizar que se desplieguen las 24 carreras sin límites de API
+    const F1_SCHEDULE_2026 = [
+        { round: "1", raceName: "GP de Australia", circuit: "Albert Park Circuit", date: "16-03-2026" },
+        { round: "2", raceName: "GP de China", circuit: "Shanghai International Circuit", date: "23-03-2026" },
+        { round: "3", raceName: "GP de Japón", circuit: "Suzuka Circuit", date: "06-04-2026" },
+        { round: "4", raceName: "GP de Bahréin", circuit: "Bahrain International Circuit", date: "13-04-2026" },
+        { round: "5", raceName: "GP de Arabia Saudí", circuit: "Jeddah Corniche Circuit", date: "20-04-2026" },
+        { round: "6", raceName: "GP de Miami", circuit: "Miami International Autodrome", date: "04-05-2026" },
+        { round: "7", raceName: "GP de Emilia-Romaña", circuit: "Autodromo Enzo e Dino Ferrari", date: "18-05-2026" },
+        { round: "8", raceName: "GP de Mónaco", circuit: "Circuit de Monaco", date: "25-05-2026" },
+        { round: "9", raceName: "GP de España", circuit: "Circuit de Barcelona-Catalunya", date: "01-06-2026" },
+        { round: "10", raceName: "GP de Canadá", circuit: "Circuit Gilles-Villeneuve", date: "15-06-2026" },
+        { round: "11", raceName: "GP de Austria", circuit: "Red Bull Ring", date: "29-06-2026" },
+        { round: "12", raceName: "GP del Reino Unido", circuit: "Silverstone Circuit", date: "06-07-2026" },
+        { round: "13", raceName: "GP de Bélgica", circuit: "Circuit de Spa-Francorchamps", date: "27-07-2026" },
+        { round: "14", raceName: "GP de Hungría", circuit: "Hungaroring", date: "03-08-2026" },
+        { round: "15", raceName: "GP de los Países Bajos", circuit: "Circuit Zandvoort", date: "31-08-2026" },
+        { round: "16", raceName: "GP de Italia", circuit: "Autodromo Nazionale Monza", date: "07-09-2026" },
+        { round: "17", raceName: "GP de Azerbaiyán", circuit: "Baku City Circuit", date: "21-09-2026" },
+        { round: "18", raceName: "GP de Singapur", circuit: "Marina Bay Street Circuit", date: "05-10-2026" },
+        { round: "19", raceName: "GP de Estados Unidos", circuit: "Circuit of the Americas", date: "19-10-2026" },
+        { round: "20", raceName: "GP de México", circuit: "Autódromo Hermanos Rodríguez", date: "26-10-2026" },
+        { round: "21", raceName: "GP de Brasil", circuit: "Autódromo José Carlos Pace", date: "09-11-2026" },
+        { round: "22", raceName: "GP de Las Vegas", circuit: "Las Vegas Strip Street Circuit", date: "22-11-2026" },
+        { round: "23", raceName: "GP de Qatar", circuit: "Lusail International Circuit", date: "30-11-2026" },
+        { round: "24", raceName: "GP de Abu Dabi", circuit: "Yas Marina Circuit", date: "07-12-2026" }
+    ];
+
     const select = document.getElementById("yearSelect");
     const currentYear = new Date().getFullYear();
 
@@ -17,73 +112,31 @@
     }
 
     async function loadSeasonData(year) {
-        document.getElementById("racesContainer").innerHTML = '<div class="status-msg">Cargando carreras de ' + year + '...</div>';
-        document.getElementById("standingsContainer").innerHTML = '<div class="status-msg">Cargando clasificación...</div>';
-
-        try {
-            // 1. Pedir Calendario (Límite 100 para traer las 24 carreras sin que Jolpica lo ignore)
-            const resCalendar = await fetch(`https://api.jolpi.ca/ergast/f1/${year}.json?limit=100`);
-            const dataCalendar = await resCalendar.json();
-            const races = dataCalendar?.MRData?.RaceTable?.Races || [];
-
-            // 2. Pedir ÚNICAMENTE los ganadores/podios en UNA sola llamada limpia (position 1..3 en 1 peticion)
-            let winnersMap = {};
-            try {
-                const resWinners = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/results/1.json?limit=100`);
-                const dataWinners = await resWinners.json();
-                const racesWinners = dataWinners?.MRData?.RaceTable?.Races || [];
-                
-                racesWinners.forEach(r => {
-                    if (r.Results && r.Results[0]) {
-                        winnersMap[r.round] = `${r.Results[0].Driver.givenName} ${r.Results[0].Driver.familyName}`;
-                    }
-                });
-            } catch(e) {
-                console.warn("Sin podios disponibles aún");
-            }
-
-            renderRacesCalendar(races, winnersMap, year);
-        } catch (e) {
-            document.getElementById("racesContainer").innerHTML = '<div class="status-msg">Error al cargar el calendario.</div>';
+        if (String(year) === "2026") {
+            renderStaticCalendar(F1_SCHEDULE_2026, year);
+        } else {
+            fetchDynamicCalendar(year);
         }
-
-        // 3. Pedir Clasificación General (1 sola llamada con limit=100)
-        try {
-            const resStandings = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/driverStandings.json?limit=100`);
-            const dataStandings = await resStandings.json();
-            const standingsLists = dataStandings?.MRData?.StandingsTable?.StandingsLists || [];
-            const standings = standingsLists.length > 0 ? standingsLists[0].DriverStandings : [];
-            renderStandings(standings);
-        } catch (e) {
-            document.getElementById("standingsContainer").innerHTML = '<div class="status-msg">Clasificación no disponible.</div>';
-        }
+        fetchStandings(year);
     }
 
-    function renderRacesCalendar(races, winnersMap, year) {
+    function renderStaticCalendar(races, year) {
         const container = document.getElementById("racesContainer");
-        if (!races || races.length === 0) {
-            container.innerHTML = '<div class="status-msg">No hay carreras registradas para el año ' + year + '.</div>';
-            return;
-        }
-        
         container.innerHTML = "";
-        
-        races.forEach((race, index) => {
-            const winner = winnersMap[race.round];
-            const podiumHtml = winner 
-                ? `<div class="podium-item"><strong>🥇 Ganador</strong>${winner}</div>`
-                : `<div class="podium-item" style="color:#888;">Pendiente de celebración</div>`;
 
+        races.forEach((race, index) => {
             const card = document.createElement("div");
             card.className = "card";
             card.innerHTML = `
                 <div class="card-header">
-                    <h3 style="font-size:18px; color:#fff;">Ronda ${race.round}: GP ${race.raceName}</h3>
+                    <h3 style="font-size:18px; color:#fff;">Ronda ${race.round}: ${race.raceName}</h3>
                     <span style="color:#aaa; font-size:13px;">${race.date}</span>
                 </div>
-                <p style="color:#888; font-size:13px; margin-top:4px;">Circuito: ${race.Circuit?.circuitName || 'Por confirmar'}</p>
+                <p style="color:#888; font-size:13px; margin-top:4px;">Circuito: ${race.circuit}</p>
                 
-                <div class="podium">${podiumHtml}</div>
+                <div class="podium">
+                    <div class="podium-item" style="color:#888;">Pendiente de celebración</div>
+                </div>
 
                 <button class="btn-details" onclick="toggleDetails(${index}, '${year}', '${race.round}')">Ver resultado completo ▾</button>
                 
@@ -92,12 +145,38 @@
                         <tr><th>Pos</th><th>Piloto</th><th>Escudería</th><th>Puntos</th></tr>
                     </thead>
                     <tbody id="tbody-${index}">
-                        <tr><td colspan="4">Haz clic para desplegar los detalles de la carrera.</td></tr>
+                        <tr><td colspan="4">Haz clic para intentar cargar resultados.</td></tr>
                     </tbody>
                 </table>
             `;
             container.appendChild(card);
         });
+    }
+
+    async function fetchDynamicCalendar(year) {
+        const container = document.getElementById("racesContainer");
+        container.innerHTML = '<div class="status-msg">Cargando carreras de ' + year + '...</div>';
+        try {
+            const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}.json?limit=100`);
+            const data = await res.json();
+            const races = data?.MRData?.RaceTable?.Races || [];
+
+            if (races.length === 0) {
+                container.innerHTML = '<div class="status-msg">Sin datos para ' + year + '.</div>';
+                return;
+            }
+
+            const formattedRaces = races.map(r => ({
+                round: r.round,
+                raceName: r.raceName,
+                circuit: r.Circuit?.circuitName || 'Por confirmar',
+                date: r.date
+            }));
+
+            renderStaticCalendar(formattedRaces, year);
+        } catch (e) {
+            container.innerHTML = '<div class="status-msg">Error al cargar datos históricos.</div>';
+        }
     }
 
     async function toggleDetails(index, year, round) {
@@ -113,15 +192,15 @@
 
         if (tbody.getAttribute("data-loaded") === "true") return;
 
-        tbody.innerHTML = '<tr><td colspan="4">Cargando resultados...</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4">Buscando resultados...</td></tr>';
 
         try {
-            const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${round}/results.json?limit=100`);
+            const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${round}/results.json`);
             const data = await res.json();
             const results = data?.MRData?.RaceTable?.Races[0]?.Results || [];
 
             if (results.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4">Carrera aún no disputada o sin resultados.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4">Carrera aún no disputada o sin datos.</td></tr>';
                 return;
             }
 
@@ -136,34 +215,47 @@
             
             tbody.setAttribute("data-loaded", "true");
         } catch (e) {
-            tbody.innerHTML = '<tr><td colspan="4">Error al cargar los detalles de esta carrera.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="4">Carrera aún no disputada o datos no disponibles.</td></tr>';
         }
     }
 
-    function renderStandings(standings) {
+    async function fetchStandings(year) {
         const container = document.getElementById("standingsContainer");
-        if (!standings || standings.length === 0) {
-            container.innerHTML = '<div class="status-msg">Clasificación no disponible.</div>';
-            return;
-        }
+        container.innerHTML = '<div class="status-msg">Cargando clasificación...</div>';
+        try {
+            const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/driverStandings.json?limit=100`);
+            const data = await res.json();
+            const standingsLists = data?.MRData?.StandingsTable?.StandingsLists || [];
+            const standings = standingsLists.length > 0 ? standingsLists[0].DriverStandings : [];
 
-        container.innerHTML = `
-            <table class="details-table" style="display:table;">
-                <thead>
-                    <tr><th>Pos</th><th>Piloto</th><th>Escudería</th><th>Puntos</th></tr>
-                </thead>
-                <tbody>
-                    ${standings.map(s => `
-                        <tr>
-                            <td><strong>${s.position}</strong></td>
-                            <td>${s.Driver.givenName} ${s.Driver.familyName}</td>
-                            <td>${s.Constructors && s.Constructors[0] ? s.Constructors[0].name : '-'}</td>
-                            <td><strong>${s.points}</strong></td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        `;
+            if (!standings || standings.length === 0) {
+                container.innerHTML = '<div class="status-msg">Clasificación aún no disponible para ' + year + '.</div>';
+                return;
+            }
+
+            container.innerHTML = `
+                <table class="details-table" style="display:table;">
+                    <thead>
+                        <tr><th>Pos</th><th>Piloto</th><th>Escudería</th><th>Puntos</th></tr>
+                    </thead>
+                    <tbody>
+                        ${standings.map(s => `
+                            <tr>
+                                <td><strong>${s.position}</strong></td>
+                                <td>${s.Driver.givenName} ${s.Driver.familyName}</td>
+                                <td>${s.Constructors && s.Constructors[0] ? s.Constructors[0].name : '-'}</td>
+                                <td><strong>${s.points}</strong></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        } catch (e) {
+            container.innerHTML = '<div class="status-msg">Clasificación aún no disponible.</div>';
+        }
     }
 
     loadSeasonData(currentYear);
+</script>
+</body>
+</html>
