@@ -1,169 +1,189 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fórmula 1 | Global Motorsport</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background-color: #0b0b0b; color: #ffffff; font-family: system-ui, sans-serif; padding: 16px; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fórmula 1 | Global Motorsport</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #0b0b0b; color: #fff; font-family: Arial, sans-serif; padding: 20px; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e10600; padding-bottom: 15px; margin-bottom: 20px; }
+        .brand { font-size: 20px; font-weight: 900; }
+        .brand span { color: #e10600; }
+        .btn-back { color: #aaa; text-decoration: none; font-size: 14px; }
+        
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .title { border-left: 4px solid #e10600; padding-left: 10px; font-size: 26px; }
+        select { background: #1f1f1f; color: white; border: 1px solid #444; padding: 8px 12px; border-radius: 6px; font-size: 16px; cursor: pointer; }
+        
+        /* Pestañas */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #333; }
+        .tab-btn { background: none; border: none; color: #888; padding: 10px 15px; font-size: 15px; cursor: pointer; font-weight: bold; }
+        .tab-btn.active { color: #e10600; border-bottom: 2px solid #e10600; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
-    /* Encabezado */
-    .header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid #1a1a1a; margin-bottom: 20px; }
-    .brand { font-weight: 900; color: #fff; text-decoration: none; }
-    .brand span { color: #e10600; }
-    .btn-back { color: #aaa; text-decoration: none; font-size: 0.9rem; }
+        /* Estilos Tarjetas y Tablas */
+        .card { background: #151515; border: 1px solid #2a2a2a; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .podium { display: flex; gap: 10px; margin-top: 10px; }
+        .podium-item { background: #222; padding: 8px 12px; border-radius: 5px; flex: 1; font-size: 13px; }
+        .podium-item strong { display: block; color: #e10600; }
 
-    .main-container { max-width: 600px; margin: 0 auto; }
-
-    /* Titulo y Selector de Temporadas */
-    .title-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-left: 4px solid #e10600; padding-left: 10px; }
-    .title-bar h1 { font-size: 1.5rem; font-weight: 800; }
-    .season-select { background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 8px 12px; border-radius: 6px; font-weight: 700; outline: none; }
-
-    .section-label { font-size: 0.85rem; text-transform: uppercase; color: #777; margin: 24px 0 12px 0; font-weight: 700; }
-
-    /* Tarjetas de Pruebas */
-    .race-list { display: flex; flex-direction: column; gap: 10px; }
-    .race-item { background: #141414; border: 1px solid #1f1f1f; border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: #fff; }
-    .race-item:active { background: #1a1a1a; }
-    
-    .race-info { display: flex; align-items: center; gap: 12px; }
-    .flag-box { 
-      width: 32px; 
-      height: 22px; 
-      background: #222; 
-      border-radius: 6px; 
-      border: 1px solid #333; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      font-size: 0.85rem; 
-      overflow: hidden; 
-      flex-shrink: 0;
-    }
-    
-    .race-details { display: flex; flex-direction: column; }
-    .race-name { font-weight: 700; font-size: 0.95rem; }
-    .race-podium { font-size: 0.75rem; color: #aaa; margin-top: 4px; }
-
-    /* Tabla de Clasificación */
-    .table-container { background: #141414; border: 1px solid #1f1f1f; border-radius: 8px; overflow-x: auto; margin-bottom: 24px; }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; white-space: nowrap; }
-    th { background: #1a1a1a; color: #777; padding: 10px 12px; text-transform: uppercase; font-size: 0.75rem; }
-    td { padding: 12px; border-bottom: 1px solid #1f1f1f; }
-    td a { color: #fff; text-decoration: none; font-weight: 700; }
-    td a:hover { color: #e10600; }
-    .pos { font-weight: 800; color: #e10600; text-align: center; width: 30px; }
-    .pts { font-weight: 800; text-align: right; color: #fff; }
-    .subtext { color: #777; font-size: 0.75rem; font-weight: normal; }
-  </style>
+        .btn-details { background: #222; border: 1px solid #444; color: #fff; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin-top: 10px; width: 100%; font-size: 13px; }
+        .details-table { display: none; margin-top: 10px; width: 100%; border-collapse: collapse; font-size: 13px; }
+        .details-table th, .details-table td { border: 1px solid #333; padding: 6px; text-align: left; }
+        .details-table th { background: #222; color: #e10600; }
+    </style>
 </head>
 <body>
 
-  <header class="header">
-    <a href="../../" class="brand">GLOBAL <span>MOTORSPORT</span></a>
-    <a href="../" class="btn-back">← Monoplazas</a>
-  </header>
-
-  <main class="main-container">
-
-    <!-- Selector de Temporada -->
-    <div class="title-bar">
-      <h1>Fórmula 1</h1>
-      <select class="season-select" id="seasonSelect" onchange="cargarTemporada(this.value)">
-        <!-- Se generan o leen dinámicamente -->
-        <option value="2026" selected>2026</option>
-        <option value="2025">2025</option>
-      </select>
+    <div class="header">
+        <div class="brand">GLOBAL <span>MOTORSPORT</span></div>
+        <a href="../../index.html" class="btn-back">← Volver</a>
     </div>
 
-    <!-- Contenedor dinámico de Pruebas -->
-    <div class="section-label">Pruebas del Campeonato</div>
-    <div class="race-list" id="raceList">
-      <!-- JavaScript insertará las pruebas aquí -->
+    <div class="top-bar">
+        <h1 class="title">Fórmula 1</h1>
+        <select id="yearSelect" onchange="loadSeasonData(this.value)"></select>
     </div>
 
-    <!-- Contenedor dinámico de la Clasificación General -->
-    <div class="section-label">Clasificación General</div>
-    <div class="table-container">
-      <table id="standingsTable">
-        <!-- JavaScript insertará la tabla aquí -->
-      </table>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('racesTab', this)">Pruebas del Campeonato</button>
+        <button class="tab-btn" onclick="switchTab('standingsTab', this)">Clasificación General</button>
     </div>
 
-  </main>
+    <!-- Pestaña 1: Carreras y Podios -->
+    <div id="racesTab" class="tab-content active">
+        <div id="racesContainer">Cargando carreras...</div>
+    </div>
 
-  <script>
-    // Función para leer el JSON y pintar los datos
-    async function cargarTemporada(year) {
-      try {
-        const response = await fetch('./f1-data.json');
-        const data = await response.json();
-        const seasonData = data[year];
+    <!-- Pestaña 2: Clasificación General -->
+    <div id="standingsTab" class="tab-content">
+        <div id="standingsContainer">Cargando clasificación...</div>
+    </div>
 
-        if (!seasonData) return;
-
-        // 1. Renderizar Pruebas
-        const raceListEl = document.getElementById('raceList');
-        raceListEl.innerHTML = seasonData.carreras.map(carrera => `
-          <a href="../carrera.html?id=${carrera.id}" class="race-item">
-            <div class="race-info">
-              <div class="flag-box">${carrera.bandera}</div>
-              <div class="race-details">
-                <div class="race-name">${carrera.nombre}</div>
-                <div class="race-podium">🥇 ${carrera.podio[1]} | 🥈 ${carrera.podio[2]} | 🥉 ${carrera.podio[3]}</div>
-              </div>
-            </div>
-            <span style="color: #e10600; font-weight: 700;">Ver →</span>
-          </a>
-        `).join('');
-
-        // 2. Renderizar Tabla de Clasificación
-        const tableEl = document.getElementById('standingsTable');
-        
-        // Cabecera con las siglas de cada carrera
-        const carrerasSiglas = seasonData.carreras.map(c => `<th style="text-align: center;">${c.sigla}</th>`).join('');
-        let tableHeader = `
-          <thead>
-            <tr>
-              <th style="text-align: center;">Pos</th>
-              <th>Piloto / Equipo</th>
-              ${carrerasSiglas}
-              <th style="text-align: right;">Pts</th>
-            </tr>
-          </thead>
-        `;
-
-        // Filas de los pilotos
-        let tableBody = seasonData.clasificacion_pilotos.map(p => {
-          const puntosPorCarrera = seasonData.carreras.map(c => `
-            <td style="text-align: center; color: #aaa;">${p.puntos_por_carrera[c.sigla] ?? '-'}</td>
-          `).join('');
-
-          return `
-            <tr>
-              <td class="pos">${p.pos}</td>
-              <td>
-                <a href="../piloto.html?id=${p.id_piloto}">${p.nombre}</a>
-                <div class="subtext">${p.equipo}</div>
-              </td>
-              ${puntosPorCarrera}
-              <td class="pts">${p.puntos_totales}</td>
-            </tr>
-          `;
-        }).join('');
-
-        tableEl.innerHTML = tableHeader + '<tbody>' + tableBody + '</tbody>';
-
-      } catch (error) {
-        console.error('Error cargando los datos:', error);
-      }
+<script>
+    // Generar años desde 2026 hasta 1950
+    const select = document.getElementById("yearSelect");
+    for (let y = 2026; y >= 1950; y--) {
+        const opt = document.createElement("option");
+        opt.value = y;
+        opt.textContent = y;
+        select.appendChild(opt);
     }
 
-    // Cargar temporada inicial al entrar a la página
-    document.addEventListener('DOMContentLoaded', () => cargarTemporada('2026'));
-  </script>
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        btn.classList.add('active');
+    }
 
+    async function loadSeasonData(year) {
+        document.getElementById("racesContainer").innerHTML = "Cargando carreras...";
+        document.getElementById("standingsContainer").innerHTML = "Cargando clasificación...";
+
+        try {
+            // Fetch Carreras y Resultados
+            const resRaces = await fetch(`https://ergast.com/api/f1/${year}/results.json?limit=1000`);
+            const dataRaces = await resRaces.json();
+            const races = dataRaces.MRData.RaceTable.Races || [];
+
+            renderRaces(races);
+
+            // Fetch Clasificación
+            const resStandings = await fetch(`https://ergast.com/api/f1/${year}/driverStandings.json`);
+            const dataStandings = await resStandings.json();
+            const standings = dataStandings.MRData.StandingsTable.StandingsLists[0]?.DriverStandings || [];
+            renderStandings(standings);
+
+        } catch (e) {
+            document.getElementById("racesContainer").innerHTML = "No hay datos disponibles para esta temporada aún.";
+            document.getElementById("standingsContainer").innerHTML = "Sin datos de clasificación.";
+        }
+    }
+
+    function renderRaces(races) {
+        const container = document.getElementById("racesContainer");
+        if (!races.length) { container.innerHTML = "No hay resultados registrados para esta temporada."; return; }
+        
+        container.innerHTML = "";
+        races.forEach((race, index) => {
+            const results = race.Results || [];
+            const p1 = results[0] ? `${results[0].Driver.givenName} ${results[0].Driver.familyName}` : "-";
+            const p2 = results[1] ? `${results[1].Driver.givenName} ${results[1].Driver.familyName}` : "-";
+            const p3 = results[2] ? `${results[2].Driver.givenName} ${results[2].Driver.familyName}` : "-";
+
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+                <div class="card-header">
+                    <h3>GP ${race.raceName}</h3>
+                    <span style="color:#aaa; font-size:13px;">${race.date}</span>
+                </div>
+                <p style="color:#888; font-size:13px;">Circuito: ${race.Circuit.circuitName}</p>
+                
+                <div class="podium">
+                    <div class="podium-item"><strong>🥇 1º Puesto</strong>${p1}</div>
+                    <div class="podium-item"><strong>🥈 2º Puesto</strong>${p2}</div>
+                    <div class="podium-item"><strong>🥉 3º Puesto</strong>${p3}</div>
+                </div>
+
+                <button class="btn-details" onclick="toggleDetails(${index})">Ver resultado completo ▾</button>
+                
+                <table class="details-table" id="details-${index}">
+                    <thead>
+                        <tr><th>Pos</th><th>Piloto</th><th>Equipo</th><th>Puntos</th></tr>
+                    </thead>
+                    <tbody>
+                        ${results.map(r => `
+                            <tr>
+                                <td>${r.position}</td>
+                                <td>${r.Driver.givenName} ${r.Driver.familyName}</td>
+                                <td>${r.Constructor.name}</td>
+                                <td>${r.points}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function toggleDetails(index) {
+        const table = document.getElementById(`details-${index}`);
+        table.style.display = table.style.display === "table" ? "none" : "table";
+    }
+
+    function renderStandings(standings) {
+        const container = document.getElementById("standingsContainer");
+        if (!standings.length) { container.innerHTML = "Clasificación no disponible."; return; }
+
+        container.innerHTML = `
+            <table class="details-table" style="display:table;">
+                <thead>
+                    <tr><th>Pos</th><th>Piloto</th><th>Escudería</th><th>Puntos</th></tr>
+                </thead>
+                <tbody>
+                    ${standings.map(s => `
+                        <tr>
+                            <td><strong>${s.position}</strong></td>
+                            <td>${s.Driver.givenName} ${s.Driver.familyName}</td>
+                            <td>${s.Constructors[0]?.name || '-'}</td>
+                            <td><strong>${s.points}</strong></td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+    }
+
+    // Carga inicial
+    loadSeasonData(2026);
+</script>
 </body>
 </html>
