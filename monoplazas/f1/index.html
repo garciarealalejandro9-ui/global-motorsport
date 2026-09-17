@@ -1,80 +1,16 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fórmula 1 | Global Motorsport</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #0b0b0b; color: #fff; font-family: Arial, sans-serif; padding: 20px; }
-        
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e10600; padding-bottom: 15px; margin-bottom: 20px; }
-        .brand { font-size: 20px; font-weight: 900; }
-        .brand span { color: #e10600; }
-        .btn-back { color: #aaa; text-decoration: none; font-size: 14px; }
-        
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .title { border-left: 4px solid #e10600; padding-left: 10px; font-size: 26px; }
-        select { background: #1f1f1f; color: white; border: 1px solid #444; padding: 8px 12px; border-radius: 6px; font-size: 16px; cursor: pointer; }
-        
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #333; }
-        .tab-btn { background: none; border: none; color: #888; padding: 10px 15px; font-size: 15px; cursor: pointer; font-weight: bold; }
-        .tab-btn.active { color: #e10600; border-bottom: 2px solid #e10600; }
-        
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        .card { background: #151515; border: 1px solid #2a2a2a; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .podium { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
-        .podium-item { background: #222; padding: 8px 12px; border-radius: 5px; flex: 1; min-width: 120px; font-size: 13px; }
-        .podium-item strong { display: block; color: #e10600; }
-
-        .btn-details { background: #222; border: 1px solid #444; color: #fff; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-top: 10px; width: 100%; font-size: 13px; text-align: center; }
-        .details-table { display: none; margin-top: 12px; width: 100%; border-collapse: collapse; font-size: 13px; }
-        .details-table th, .details-table td { border: 1px solid #333; padding: 8px; text-align: left; }
-        .details-table th { background: #222; color: #e10600; }
-        
-        .status-msg { padding: 20px; color: #aaa; text-align: center; }
-    </style>
-</head>
-<body>
-
-    <div class="header">
-        <div class="brand">GLOBAL <span>MOTORSPORT</span></div>
-        <a href="../../index.html" class="btn-back">← Volver</a>
-    </div>
-
-    <div class="top-bar">
-        <h1 class="title">Fórmula 1</h1>
-        <select id="yearSelect" onchange="loadSeasonData(this.value)"></select>
-    </div>
-
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('racesTab', this)">Pruebas del Campeonato</button>
-        <button class="tab-btn" onclick="switchTab('standingsTab', this)">Clasificación General</button>
-    </div>
-
-    <div id="racesTab" class="tab-content active">
-        <div id="racesContainer" class="status-msg">Cargando carreras...</div>
-    </div>
-
-    <div id="standingsTab" class="tab-content">
-        <div id="standingsContainer" class="status-msg">Cargando clasificación...</div>
-    </div>
-
-<script>
-    const currentYear = new Date().getFullYear();
     const select = document.getElementById("yearSelect");
+    const currentYear = new Date().getFullYear();
 
-    // Generar opciones desde 2026 hasta 1950
-    for (let y = 2026; y >= 1950; y--) {
+    // Genera el listado desde el año actual hacia atrás hasta 1950
+    for (let y = currentYear; y >= 1950; y--) {
         const opt = document.createElement("option");
         opt.value = y;
         opt.textContent = y;
-        if (y === 2026) opt.selected = true;
         select.appendChild(opt);
     }
+
+    // Selecciona el año actual por defecto
+    select.value = currentYear;
 
     function switchTab(tabId, btn) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -84,23 +20,23 @@
     }
 
     async function loadSeasonData(year) {
-        document.getElementById("racesContainer").innerHTML = '<div class="status-msg">Cargando carreras de ' + year + '...</div>';
+        document.getElementById("racesContainer").innerHTML = '<div class="status-msg">Cargando todas las carreras de ' + year + '...</div>';
         document.getElementById("standingsContainer").innerHTML = '<div class="status-msg">Cargando clasificación de ' + year + '...</div>';
 
-        // 1. Obtener calendario completo del año seleccionado
+        // 1. Calendario completo (limit=1000 garantiza que entren las 24 carreras o más)
         try {
-            const resCalendar = await fetch(`https://api.jolpi.ca/ergast/f1/${year}.json?limit=100`);
+            const resCalendar = await fetch(`https://api.jolpi.ca/ergast/f1/${year}.json?limit=1000`);
             const dataCalendar = await resCalendar.json();
             const races = dataCalendar?.MRData?.RaceTable?.Races || [];
             
             renderRacesCalendar(races, year);
         } catch (e) {
-            document.getElementById("racesContainer").innerHTML = '<div class="status-msg">Sin datos de carreras disponibles para ' + year + '.</div>';
+            document.getElementById("racesContainer").innerHTML = '<div class="status-msg">Error al obtener las carreras de ' + year + '.</div>';
         }
 
-        // 2. Obtener clasificación mundial del año seleccionado
+        // 2. Clasificación general completa
         try {
-            const resStandings = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/driverStandings.json?limit=100`);
+            const resStandings = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/driverStandings.json?limit=1000`);
             const dataStandings = await resStandings.json();
             const standingsLists = dataStandings?.MRData?.StandingsTable?.StandingsLists || [];
             const standings = standingsLists.length > 0 ? standingsLists[0].DriverStandings : [];
@@ -124,7 +60,7 @@
             
             card.innerHTML = `
                 <div class="card-header">
-                    <h3 style="font-size:18px; color:#fff;">Round ${race.round}: GP ${race.raceName}</h3>
+                    <h3 style="font-size:18px; color:#fff;">Carrera ${race.round}: GP ${race.raceName}</h3>
                     <span style="color:#aaa; font-size:13px;">${race.date}</span>
                 </div>
                 <p style="color:#888; font-size:13px; margin-top:4px;">Circuito: ${race.Circuit?.circuitName || 'Por confirmar'}</p>
@@ -152,7 +88,7 @@
 
     async function fetchRacePodium(year, round, index) {
         try {
-            const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${round}/results.json`);
+            const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${round}/results.json?limit=1000`);
             const data = await res.json();
             const results = data?.MRData?.RaceTable?.Races[0]?.Results || [];
             
@@ -186,7 +122,7 @@
         tbody.innerHTML = '<tr><td colspan="4">Cargando...</td></tr>';
 
         try {
-            const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${round}/results.json`);
+            const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${round}/results.json?limit=1000`);
             const data = await res.json();
             const results = data?.MRData?.RaceTable?.Races[0]?.Results || [];
 
@@ -211,7 +147,7 @@
     function renderStandings(standings) {
         const container = document.getElementById("standingsContainer");
         if (!standings || standings.length === 0) {
-            container.innerHTML = '<div class="status-msg">Clasificación no disponible aún para esta temporada.</div>';
+            container.innerHTML = '<div class="status-msg">Clasificación no disponible para este año.</div>';
             return;
         }
 
@@ -234,8 +170,5 @@
         `;
     }
 
-    // Cargar automáticamente el año por defecto (2026)
-    loadSeasonData(2026);
-</script>
-</body>
-</html>
+    // Carga inicial dinámica usando el año activo
+    loadSeasonData(currentYear);
