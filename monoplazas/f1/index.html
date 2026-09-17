@@ -3,46 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fórmula 1 - Hub Histórico y Resultados | Global Motorsport</title>
+    <title>Fórmula 1 - Hub Oficial | Global Motorsport</title>
     <style>
+        :root {
+            --f1-red: #e10600;
+            --f1-red-glow: rgba(225, 6, 0, 0.3);
+            --bg-deep: #050505;
+            --bg-panel: #111113;
+            --bg-card: #18181b;
+            --bg-card-hover: #222226;
+            --border-color: #27272a;
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body { 
-            background-color: #0b0b0b; 
-            color: #fff; 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--bg-deep); 
+            color: var(--text-main); 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
             padding: 20px;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
+            min-height: 100vh;
         }
         
         .header { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            border-bottom: 2px solid #e10600; 
+            border-bottom: 2px solid var(--f1-red); 
             padding-bottom: 16px; 
             margin-bottom: 24px; 
+            background: linear-gradient(180deg, rgba(225,6,0,0.05) 0%, transparent 100%);
+            padding-left: 10px;
+            padding-right: 10px;
         }
-        .brand { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; }
-        .brand span { color: #e10600; }
+        .brand { 
+            font-size: 20px; 
+            font-weight: 900; 
+            letter-spacing: -0.5px; 
+            text-transform: uppercase;
+        }
+        .brand span { color: var(--f1-red); text-shadow: 0 0 15px var(--f1-red-glow); }
+        
         .btn-back { 
-            color: #888; 
+            color: var(--text-muted); 
             text-decoration: none; 
-            font-size: 14px; 
+            font-size: 13px; 
             font-weight: 600; 
-            transition: color 0.2s;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
         }
-        .btn-back:hover { color: #fff; }
+        .btn-back:hover { 
+            color: #fff; 
+            border-color: var(--f1-red);
+            background: var(--bg-card-hover);
+        }
 
         .controls {
             display: flex;
-            gap: 12px;
+            gap: 16px;
             margin-bottom: 24px;
-            flex-wrap: wrap;
-            background: #141414;
-            padding: 16px;
-            border-radius: 8px;
-            border: 1px solid #262626;
+            background: var(--bg-panel);
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .select-group {
@@ -50,168 +81,289 @@
             flex-direction: column;
             gap: 6px;
             flex: 1;
-            min-width: 200px;
+            max-width: 250px;
         }
 
         .select-group label {
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 800;
             text-transform: uppercase;
-            color: #888;
-            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
         }
 
         select {
-            background: #1f1f1f;
+            background: var(--bg-deep);
             color: white;
-            border: 1px solid #333;
+            border: 1px solid var(--border-color);
             padding: 10px 14px;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 14px;
+            font-weight: 600;
             outline: none;
             cursor: pointer;
-            transition: border-color 0.2s;
+            transition: all 0.2s;
         }
-        select:focus { border-color: #e10600; }
+        select:focus { 
+            border-color: var(--f1-red); 
+            box-shadow: 0 0 0 3px var(--f1-red-glow);
+        }
 
         .content-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 1fr 1.4fr;
             gap: 24px;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             .content-grid { grid-template-columns: 1fr; }
         }
 
         .panel {
-            background: #141414;
-            border: 1px solid #262626;
-            border-radius: 8px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             padding: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            overflow: hidden;
         }
 
         .panel-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             margin-bottom: 16px;
-            border-left: 3px solid #e10600;
+            border-left: 4px solid var(--f1-red);
             padding-left: 10px;
-            color: #f0f0f0;
+            color: #fff;
         }
 
-        .race-list, .standings-list {
+        .race-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            max-height: 600px;
+            gap: 12px;
+            max-height: 650px;
             overflow-y: auto;
             padding-right: 4px;
         }
 
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--f1-red); }
+
         .race-card {
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 6px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             padding: 14px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.2s;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.2s ease;
         }
         .race-card:hover {
-            border-color: #e10600;
-            background: #222;
+            border-color: rgba(225, 6, 0, 0.5);
+            background: var(--bg-card-hover);
         }
 
-        .race-info h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; color: #fff; }
-        .race-info p { font-size: 12px; color: #888; }
-
-        .btn-result {
-            background: #e10600;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .btn-result:hover { background: #ff1e16; }
-
-        .standing-item {
+        .race-main-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #1a1a1a;
-            padding: 10px 14px;
-            border-radius: 6px;
-            border: 1px solid #2a2a2a;
-            font-size: 13px;
         }
-        .standing-pos { font-weight: 900; color: #e10600; width: 24px; }
-        .standing-name { flex: 1; font-weight: 600; margin-left: 8px; }
-        .standing-pts { font-weight: 700; color: #aaa; }
+
+        .race-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .race-flag {
+            font-size: 26px;
+            line-height: 1;
+        }
+
+        .race-info h4 { font-size: 13px; font-weight: 700; margin-bottom: 2px; color: #fff; }
+        .race-info p { font-size: 11px; color: var(--text-muted); }
+
+        .btn-result {
+            background: var(--f1-red);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(225,6,0,0.2);
+            white-space: nowrap;
+        }
+        .btn-result:hover { 
+            background: #ff1e16; 
+            box-shadow: 0 4px 16px var(--f1-red-glow);
+        }
+
+        /* Mini podio estilo WRC en la tarjeta */
+        .race-podium {
+            display: flex;
+            gap: 8px;
+            background: var(--bg-deep);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            border: 1px solid var(--border-color);
+            align-items: center;
+        }
+        .podium-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .podium-pos { font-weight: 800; }
+        .pos-1 { color: #facc15; }
+        .pos-2 { color: #e4e4e7; }
+        .pos-3 { color: #fb923c; }
+
+        /* Estilo Matriz / Hoja de Cálculo para el Mundial de Pilotos */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            max-height: 650px;
+            overflow-y: auto;
+        }
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        .matrix-table th, .matrix-table td {
+            padding: 8px 6px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        .matrix-table th {
+            background: var(--bg-deep);
+            color: var(--text-muted);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .matrix-table td.driver-col {
+            text-align: left;
+            position: sticky;
+            left: 0;
+            background: var(--bg-card);
+            z-index: 5;
+        }
+        .matrix-table th.driver-header {
+            position: sticky;
+            left: 0;
+            z-index: 15;
+            background: var(--bg-deep);
+        }
+        .driver-cell-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .driver-flag { font-size: 14px; }
+        .driver-details {
+            display: flex;
+            flex-direction: column;
+        }
+        .driver-name { font-weight: 700; color: #fff; font-size: 12px; }
+        .driver-team { font-size: 10px; color: var(--text-muted); }
+
+        /* Celdas de resultados en matriz estilo Excel */
+        .res-cell { font-weight: 700; font-size: 11px; }
+        .res-1 { background: rgba(250, 204, 21, 0.2); color: #facc15; }
+        .res-2 { background: rgba(228, 228, 231, 0.2); color: #e4e4e7; }
+        .res-3 { background: rgba(251, 146, 60, 0.2); color: #fb923c50; color: #fb923c; }
+        .res-points { font-weight: 900; background: var(--bg-deep); color: #fff; }
 
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
             justify-content: center;
             align-items: center;
             z-index: 1000;
             padding: 20px;
         }
         .modal-content {
-            background: #141414;
-            border: 1px solid #333;
-            border-radius: 8px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             width: 100%;
-            max-width: 600px;
-            max-height: 80vh;
+            max-width: 650px;
+            max-height: 85vh;
             overflow-y: auto;
             padding: 24px;
             position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
         }
         .close-modal {
             position: absolute;
-            top: 16px; right: 20px;
+            top: 18px; right: 20px;
             font-size: 22px;
-            color: #888;
+            color: var(--text-muted);
             cursor: pointer;
             font-weight: 700;
+            transition: color 0.2s;
         }
         .close-modal:hover { color: #fff; }
         
         .result-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 16px;
-            font-size: 13px;
+            margin-top: 14px;
+            font-size: 12px;
         }
         .result-table th, .result-table td {
-            padding: 10px;
+            padding: 10px 8px;
             text-align: left;
-            border-bottom: 1px solid #222;
+            border-bottom: 1px solid var(--border-color);
         }
-        .result-table th { color: #888; font-size: 11px; text-transform: uppercase; }
-        .loading { text-align: center; color: #777; padding: 20px; font-style: italic; }
+        .result-table th { 
+            color: var(--text-muted); 
+            font-size: 10px; 
+            text-transform: uppercase; 
+            background: var(--bg-deep);
+        }
+        .result-table tr:hover td { background: var(--bg-card); }
+        
+        .loading { 
+            text-align: center; 
+            color: var(--text-muted); 
+            padding: 30px; 
+            font-style: italic; 
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="brand">FÓRMULA 1 <span>HUB</span></div>
+        <div class="brand">Fórmula 1 <span>Hub Oficial</span></div>
         <a href="../index.html" class="btn-back">← Volver a Monoplazas</a>
     </div>
 
     <div class="controls">
         <div class="select-group">
-            <label for="yearSelect">Temporada</label>
+            <label for="yearSelect">Temporada del Campeonato</label>
             <select id="yearSelect">
                 <!-- Se inyecta dinámicamente -->
             </select>
@@ -227,8 +379,8 @@
         </div>
 
         <div class="panel">
-            <h2 class="panel-title">Mundial de Pilotos</h2>
-            <div id="standingsContainer" class="standings-list">
+            <h2 class="panel-title">Mundial de Pilotos (Matriz de Pruebas)</h2>
+            <div id="standingsContainer" class="table-container">
                 <div class="loading">Cargando clasificación...</div>
             </div>
         </div>
@@ -238,8 +390,8 @@
     <div id="resultModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h3 id="modalTitle" style="font-size: 18px; margin-bottom: 4px;">Resultado de Carrera</h3>
-            <p id="modalSubtitle" style="font-size: 12px; color: #888; margin-bottom: 16px;"></p>
+            <h3 id="modalTitle" style="font-size: 16px; font-weight: 800; margin-bottom: 4px;">Resultado de Carrera</h3>
+            <p id="modalSubtitle" style="font-size: 11px; color: var(--text-muted); margin-bottom: 14px;"></p>
             <div id="modalBody">
                 <div class="loading">Cargando resultados...</div>
             </div>
@@ -256,74 +408,103 @@
         const modalSubtitle = document.getElementById('modalSubtitle');
         const modalBody = document.getElementById('modalBody');
 
-        // Generar años desde 1950 hasta 2027
         for (let y = 2027; y >= 1950; y--) {
             const opt = document.createElement('option');
             opt.value = y;
             opt.textContent = y;
-            if (y === 2026) opt.selected = true; // 2026 seleccionado por defecto
+            if (y === 2026) opt.selected = true;
             yearSelect.appendChild(opt);
         }
 
-        // Calendarios manuales basados exactamente en los registros oficiales de StatsF1
+        const countryFlags = {
+            "Australia": "🇦🇺", "China": "🇨🇳", "Japan": "🇯🇵", "Miami": "🇺🇸", 
+            "Canada": "🇨🇦", "Monaco": "🇲🇨", "Spain": "🇪🇸", "Austria": "🇦🇹", 
+            "UK": "🇬🇧", "Britain": "🇬🇧", "Belgium": "🇧🇪", "Hungary": "🇭🇺", 
+            "Netherlands": "🇳🇱", "Italy": "🇮🇹", "Azerbaijan": "🇦🇿", "Bahrain": "🇧🇭", 
+            "Singapore": "🇸🇬", "United States": "🇺🇸", "Mexico": "🇲🇽", "Brazil": "🇧🇷", 
+            "São Paulo": "🇧🇷", "Las Vegas": "🇺🇸", "Qatar": "🇶🇦", "Abu Dhabi": "🇦🇪",
+            "Saudi Arabia": "🇸🇦", "Portugal": "🇵🇹", "Turkey": "🇹🇷"
+        };
+
+        const driverNationalities = {
+            "British": "🇬🇧", "Italian": "🇮🇹", "Dutch": "🇳🇱", "Monegasque": "🇲🇨",
+            "Australian": "🇦🇺", "Spanish": "🇪🇸", "Mexican": "🇲🇽", "French": "🇫🇷",
+            "German": "🇩🇪", "Thai": "🇹🇭", "Japanese": "🇯🇵", "Chinese": "🇨🇳",
+            "Danish": "🇩🇰", "Canadian": "🇨🇦", "Finnish": "🇫🇮", "Argentine": "🇦🇷",
+            "New Zealander": "🇳🇿", "Brazilian": "🇧🇷"
+        };
+
+        function getFlag(raceName, circuitName) {
+            for (let key in countryFlags) {
+                if (raceName.includes(key) || circuitName.includes(key)) {
+                    return countryFlags[key];
+                }
+            }
+            return "🏁";
+        }
+
+        function getDriverFlag(nationality) {
+            return driverNationalities[nationality] || "🏁";
+        }
+
         const customCalendars = {
             2027: [
-                { round: 1, raceName: "Bahrain Grand Prix", circuit: "Bahrain International Circuit", date: "2027-03-14" },
-                { round: 2, raceName: "Saudi Arabian Grand Prix", circuit: "Jeddah Corniche Circuit", date: "2027-03-21" },
-                { round: 3, raceName: "Australian Grand Prix", circuit: "Albert Park Circuit", date: "2027-04-04" },
-                { round: 4, raceName: "Japanese Grand Prix", circuit: "Suzuka Circuit", date: "2027-04-11" },
-                { round: 5, raceName: "Chinese Grand Prix", circuit: "Shanghai International Circuit", date: "2027-04-18" },
-                { round: 6, raceName: "Miami Grand Prix", circuit: "Miami International Autodrome", date: "2027-05-02" },
-                { round: 7, raceName: "Canadian Grand Prix", circuit: "Circuit Gilles Villeneuve", date: "2027-05-23" },
-                { round: 8, raceName: "Monaco Grand Prix", circuit: "Circuit de Monaco", date: "2027-06-06" },
-                { round: 9, raceName: "Portuguese Grand Prix", circuit: "Autódromo Internacional do Algarve", date: "2027-06-20" },
-                { round: 10, raceName: "British Grand Prix", circuit: "Silverstone Circuit", date: "2027-07-04" },
-                { round: 11, raceName: "Austrian Grand Prix", circuit: "Red Bull Ring", date: "2027-07-11" },
-                { round: 12, raceName: "Belgian Grand Prix", circuit: "Circuit de Spa-Francorchamps", date: "2027-07-25" },
-                { round: 13, raceName: "Hungarian Grand Prix", circuit: "Hungaroring", date: "2027-08-01" },
-                { round: 14, raceName: "Italian Grand Prix", circuit: "Autodromo Nazionale di Monza", date: "2027-09-05" },
-                { round: 15, raceName: "Spanish Grand Prix", circuit: "Madrid Circuit", date: "2027-09-12" },
-                { round: 16, raceName: "Azerbaijan Grand Prix", circuit: "Baku City Circuit", date: "2027-09-26" },
-                { round: 17, raceName: "Turkish Grand Prix", circuit: "Istanbul Park", date: "2027-10-03" },
-                { round: 18, raceName: "Singapore Grand Prix", circuit: "Marina Bay Street Circuit", date: "2027-10-10" },
-                { round: 19, raceName: "United States Grand Prix", circuit: "Circuit of the Americas", date: "2027-10-24" },
-                { round: 20, raceName: "Mexico City Grand Prix", circuit: "Autódromo Hermanos Rodríguez", date: "2027-10-31" },
-                { round: 21, raceName: "São Paulo Grand Prix", circuit: "Autódromo José Carlos Pace", date: "2027-11-07" },
-                { round: 22, raceName: "Las Vegas Grand Prix", circuit: "Las Vegas Strip Circuit", date: "2027-11-21" },
-                { round: 23, raceName: "Qatar Grand Prix", circuit: "Lusail International Circuit", date: "2027-12-05" },
-                { round: 24, raceName: "Abu Dhabi Grand Prix", circuit: "Yas Marina Circuit", date: "2027-12-12" }
+                { round: 1, raceName: "Bahrain GP", circuit: "Bahrain International Circuit", date: "2027-03-14" },
+                { round: 2, raceName: "Saudi Arabian GP", circuit: "Jeddah Corniche Circuit", date: "2027-03-21" },
+                { round: 3, raceName: "Australian GP", circuit: "Albert Park Circuit", date: "2027-04-04" },
+                { round: 4, raceName: "Japanese GP", circuit: "Suzuka Circuit", date: "2027-04-11" },
+                { round: 5, raceName: "Chinese GP", circuit: "Shanghai International Circuit", date: "2027-04-18" },
+                { round: 6, raceName: "Miami GP", circuit: "Miami International Autodrome", date: "2027-05-02" },
+                { round: 7, raceName: "Canadian GP", circuit: "Circuit Gilles Villeneuve", date: "2027-05-23" },
+                { round: 8, raceName: "Monaco GP", circuit: "Circuit de Monaco", date: "2027-06-06" },
+                { round: 9, raceName: "Portuguese GP", circuit: "Autódromo do Algarve", date: "2027-06-20" },
+                { round: 10, raceName: "British GP", circuit: "Silverstone Circuit", date: "2027-07-04" },
+                { round: 11, raceName: "Austrian GP", circuit: "Red Bull Ring", date: "2027-07-11" },
+                { round: 12, raceName: "Belgian GP", circuit: "Spa-Francorchamps", date: "2027-07-25" },
+                { round: 13, raceName: "Hungarian GP", circuit: "Hungaroring", date: "2027-08-01" },
+                { round: 14, raceName: "Italian GP", circuit: "Monza", date: "2027-09-05" },
+                { round: 15, raceName: "Spanish GP", circuit: "Madrid Circuit", date: "2027-09-12" },
+                { round: 16, raceName: "Azerbaijan GP", circuit: "Baku City Circuit", date: "2027-09-26" },
+                { round: 17, raceName: "Turkish GP", circuit: "Istanbul Park", date: "2027-10-03" },
+                { round: 18, raceName: "Singapore GP", circuit: "Marina Bay", date: "2027-10-10" },
+                { round: 19, raceName: "US GP", circuit: "COTA", date: "2027-10-24" },
+                { round: 20, raceName: "Mexico City GP", circuit: "Hermanos Rodríguez", date: "2027-10-31" },
+                { round: 21, raceName: "São Paulo GP", circuit: "Interlagos", date: "2027-11-07" },
+                { round: 22, raceName: "Las Vegas GP", circuit: "Las Vegas Strip", date: "2027-11-21" },
+                { round: 23, raceName: "Qatar GP", circuit: "Lusail", date: "2027-12-05" },
+                { round: 24, raceName: "Abu Dhabi GP", circuit: "Yas Marina", date: "2027-12-12" }
             ],
             2026: [
-                { round: 1, raceName: "Australian Grand Prix", circuit: "Albert Park Circuit", date: "2026-03-08" },
-                { round: 2, raceName: "Chinese Grand Prix", circuit: "Shanghai International Circuit", date: "2026-03-15" },
-                { round: 3, raceName: "Japanese Grand Prix", circuit: "Suzuka Circuit", date: "2026-03-29" },
-                { round: 4, raceName: "Miami Grand Prix", circuit: "Miami International Autodrome", date: "2026-05-03" },
-                { round: 5, raceName: "Canadian Grand Prix", circuit: "Circuit Gilles Villeneuve", date: "2026-05-24" },
-                { round: 6, raceName: "Monaco Grand Prix", circuit: "Circuit de Monaco", date: "2026-06-07" },
-                { round: 7, raceName: "Spanish Grand Prix", circuit: "Circuit de Barcelona-Catalunya", date: "2026-06-14" },
-                { round: 8, raceName: "Austrian Grand Prix", circuit: "Red Bull Ring", date: "2026-06-28" },
-                { round: 9, raceName: "British Grand Prix", circuit: "Silverstone Circuit", date: "2026-07-05" },
-                { round: 10, raceName: "Belgian Grand Prix", circuit: "Circuit de Spa-Francorchamps", date: "2026-07-19" },
-                { round: 11, raceName: "Hungarian Grand Prix", circuit: "Hungaroring", date: "2026-07-26" },
-                { round: 12, raceName: "Dutch Grand Prix", circuit: "Circuit Zandvoort", date: "2026-08-23" },
-                { round: 13, raceName: "Italian Grand Prix", circuit: "Autodromo Nazionale di Monza", date: "2026-09-06" },
-                { round: 14, raceName: "Spanish Grand Prix (Alternative)", circuit: "Madrid Circuit", date: "2026-09-13" },
-                { round: 15, raceName: "Azerbaijan Grand Prix", circuit: "Baku City Circuit", date: "2026-09-26" },
-                { round: 16, raceName: "Bahrain Grand Prix", circuit: "Bahrain International Circuit", date: "2026-10-04" },
-                { round: 17, raceName: "Singapore Grand Prix", circuit: "Marina Bay Street Circuit", date: "2026-10-11" },
-                { round: 18, raceName: "United States Grand Prix", circuit: "Circuit of the Americas", date: "2026-10-25" },
-                { round: 19, raceName: "Mexico City Grand Prix", circuit: "Autódromo Hermanos Rodríguez", date: "2026-11-01" },
-                { round: 20, raceName: "São Paulo Grand Prix", circuit: "Autódromo José Carlos Pace", date: "2026-11-08" },
-                { round: 21, raceName: "Las Vegas Grand Prix", circuit: "Las Vegas Strip Circuit", date: "2026-11-21" },
-                { round: 22, raceName: "Qatar Grand Prix", circuit: "Lusail International Circuit", date: "2026-11-29" },
-                { round: 23, raceName: "Abu Dhabi Grand Prix", circuit: "Yas Marina Circuit", date: "2026-12-06" }
+                { round: 1, raceName: "Australian GP", circuit: "Albert Park Circuit", date: "2026-03-08" },
+                { round: 2, raceName: "Chinese GP", circuit: "Shanghai International Circuit", date: "2026-03-15" },
+                { round: 3, raceName: "Japanese GP", circuit: "Suzuka Circuit", date: "2026-03-29" },
+                { round: 4, raceName: "Miami GP", circuit: "Miami International Autodrome", date: "2026-05-03" },
+                { round: 5, raceName: "Canadian GP", circuit: "Circuit Gilles Villeneuve", date: "2026-05-24" },
+                { round: 6, raceName: "Monaco GP", circuit: "Circuit de Monaco", date: "2026-06-07" },
+                { round: 7, raceName: "Spanish GP", circuit: "Circuit de Barcelona-Catalunya", date: "2026-06-14" },
+                { round: 8, raceName: "Austrian GP", circuit: "Red Bull Ring", date: "2026-06-28" },
+                { round: 9, raceName: "British GP", circuit: "Silverstone Circuit", date: "2026-07-05" },
+                { round: 10, raceName: "Belgian GP", circuit: "Circuit de Spa-Francorchamps", date: "2026-07-19" },
+                { round: 11, raceName: "Hungarian GP", circuit: "Hungaroring", date: "2026-07-26" },
+                { round: 12, raceName: "Dutch GP", circuit: "Circuit Zandvoort", date: "2026-08-23" },
+                { round: 13, raceName: "Italian GP", circuit: "Autodromo Nazionale di Monza", date: "2026-09-06" },
+                { round: 14, raceName: "Madrid GP", circuit: "Madrid Circuit", date: "2026-09-13" },
+                { round: 15, raceName: "Azerbaijan GP", circuit: "Baku City Circuit", date: "2026-09-26" },
+                { round: 16, raceName: "Bahrain GP", circuit: "Bahrain International Circuit", date: "2026-10-04" },
+                { round: 17, raceName: "Singapore GP", circuit: "Marina Bay Street Circuit", date: "2026-10-11" },
+                { round: 18, raceName: "United States GP", circuit: "Circuit of the Americas", date: "2026-10-25" },
+                { round: 19, raceName: "Mexico City GP", circuit: "Autódromo Hermanos Rodríguez", date: "2026-11-01" },
+                { round: 20, raceName: "São Paulo GP", circuit: "Autódromo José Carlos Pace", date: "2026-11-08" },
+                { round: 21, raceName: "Las Vegas GP", circuit: "Las Vegas Strip Circuit", date: "2026-11-21" },
+                { round: 22, raceName: "Qatar GP", circuit: "Lusail International Circuit", date: "2026-11-29" },
+                { round: 23, raceName: "Abu Dhabi GP", circuit: "Yas Marina Circuit", date: "2026-12-06" }
             ]
         };
 
         async function loadSeasonData(year) {
             calendarTitle.textContent = `Calendario ${year}`;
             calendarContainer.innerHTML = '<div class="loading">Cargando carreras...</div>';
-            standingsContainer.innerHTML = '<div class="loading">Cargando mundial...</div>';
+            standingsContainer.innerHTML = '<div class="loading">Cargando matriz del campeonato...</div>';
 
             let races = [];
             if (customCalendars[year]) {
@@ -334,55 +515,165 @@
                     const data = await res.json();
                     races = data.MRData.RaceTable.Races;
                 } catch (e) {
-                    calendarContainer.innerHTML = '<div class="loading" style="color:#e10600;">Error al conectar con la API.</div>';
+                    calendarContainer.innerHTML = '<div class="loading" style="color:var(--f1-red);">Error al conectar con la API.</div>';
                     return;
                 }
             }
 
             renderCalendar(year, races);
-            loadStandings(year);
+            loadMatrixStandings(year, races);
         }
 
-        function renderCalendar(year, races) {
+        async function renderCalendar(year, races) {
             calendarContainer.innerHTML = '';
-            races.forEach(race => {
+            
+            for (let race of races) {
+                const circuitName = race.Circuit ? race.Circuit.circuitName : race.circuit;
+                const flag = getFlag(race.raceName, circuitName);
+                
                 const card = document.createElement('div');
                 card.className = 'race-card';
+                card.id = `race-card-${year}-${race.round}`;
+                
                 card.innerHTML = `
-                    <div class="race-info">
-                        <h4>Ronda ${race.round}: ${race.raceName}</h4>
-                        <p>${race.Circuit ? race.Circuit.circuitName : race.circuit} • ${race.date}</p>
+                    <div class="race-main-row">
+                        <div class="race-left">
+                            <span class="race-flag">${flag}</span>
+                            <div class="race-info">
+                                <h4>Ronda ${race.round}: ${race.raceName}</h4>
+                                <p>${circuitName} • ${race.date}</p>
+                            </div>
+                        </div>
+                        <button class="btn-result" onclick="fetchResults(${year}, ${race.round}, '${race.raceName}')">Resultados</button>
                     </div>
-                    <button class="btn-result" onclick="fetchResults(${year}, ${race.round}, '${race.raceName}')">Resultados</button>
+                    <div id="podium-${year}-${race.round}"></div>
                 `;
                 calendarContainer.appendChild(card);
-            });
+
+                fetchMiniPodium(year, race.round);
+            }
         }
 
-        async function loadStandings(year) {
+        async function fetchMiniPodium(year, round) {
             try {
-                const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/driverStandings.json`);
+                const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${round}/results.json`);
                 const data = await res.json();
-                const list = data.MRData.StandingsTable.StandingsLists[0];
+                const race = data.MRData.RaceTable.Races[0];
                 
-                standingsContainer.innerHTML = '';
-                if (!list || !list.DriverStandings || list.DriverStandings.length === 0) {
+                if (race && race.Results && race.Results.length >= 3) {
+                    const p1 = race.Results[0].Driver.familyName;
+                    const p2 = race.Results[1].Driver.familyName;
+                    const p3 = race.Results[2].Driver.familyName;
+                    
+                    const container = document.getElementById(`podium-${year}-${round}`);
+                    if (container) {
+                        container.className = 'race-podium';
+                        container.innerHTML = `
+                            <div class="podium-item"><span class="podium-pos pos-1">1º</span> ${p1}</div>
+                            <div class="podium-item"><span class="podium-pos pos-2">2º</span> ${p2}</div>
+                            <div class="podium-item"><span class="podium-pos pos-3">3º</span> ${p3}</div>
+                        `;
+                    }
+                }
+            } catch (e) {}
+        }
+
+        async function loadMatrixStandings(year, races) {
+            try {
+                // Obtener clasificación general de pilotos actual
+                const standingsRes = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/driverStandings.json`);
+                const standingsData = await standingsRes.json();
+                const standingsList = standingsData.MRData.StandingsTable.StandingsLists[0];
+                
+                if (!standingsList || !standingsList.DriverStandings || standingsList.DriverStandings.length === 0) {
                     standingsContainer.innerHTML = '<div class="loading">Sin datos de clasificación para este año.</div>';
                     return;
                 }
 
-                list.DriverStandings.forEach(st => {
-                    const item = document.createElement('div');
-                    item.className = 'standing-item';
-                    item.innerHTML = `
-                        <span class="standing-pos">${st.position}</span>
-                        <span class="standing-name">${st.Driver.givenName} ${st.Driver.familyName} <small style="color:#666;">(${st.Constructors[0].name})</small></span>
-                        <span class="standing-pts">${st.points} pts</span>
-                    `;
-                    standingsContainer.appendChild(item);
+                // Precargar resultados ronda por ronda para armar la matriz estilo Excel
+                const driversMap = {};
+                standingsList.DriverStandings.forEach(st => {
+                    driversMap[st.Driver.driverId] = {
+                        position: st.position,
+                        code: st.Driver.code || st.Driver.familyName.substring(0,3).toUpperCase(),
+                        name: `${st.Driver.givenName} ${st.Driver.familyName}`,
+                        nationality: st.Driver.nationality,
+                        constructor: st.Constructors[0].name,
+                        points: st.points,
+                        results: {} // round -> position
+                    };
                 });
+
+                // Consultar resultados de cada ronda disputada de forma paralela
+                const resultsPromises = races.map(async (race) => {
+                    try {
+                        const rRes = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${race.round}/results.json`);
+                        const rData = await rRes.json();
+                        const rRace = rData.MRData.RaceTable.Races[0];
+                        if (rRace && rRace.Results) {
+                            rRace.Results.forEach(res => {
+                                if (driversMap[res.Driver.driverId]) {
+                                    driversMap[res.Driver.driverId].results[race.round] = res.position;
+                                }
+                            });
+                        }
+                    } catch (e) {}
+                });
+
+                await Promise.all(resultsPromises);
+
+                // Renderizar tabla matriz
+                let html = `
+                    <table class="matrix-table">
+                        <thead>
+                            <tr>
+                                <th class="driver-header">Pos / Piloto</th>
+                `;
+
+                races.forEach(r => {
+                    const flag = getFlag(r.raceName, r.Circuit ? r.Circuit.circuitName : r.circuit);
+                    html += `<th><span title="${r.raceName}">${flag}</span></th>`;
+                });
+
+                html += `<th>Pts</th></tr></thead><tbody>`;
+
+                // Ordenar pilotos por su posición oficial
+                const sortedDrivers = Object.values(driversMap).sort((a, b) => parseInt(a.position) - parseInt(b.position));
+
+                sortedDrivers.forEach(d => {
+                    const flag = getDriverFlag(d.nationality);
+                    html += `
+                        <tr>
+                            <td class="driver-col">
+                                <div class="driver-cell-info">
+                                    <span style="font-weight:900; width:18px; color:var(--f1-red); font-size:11px;">${d.position}</span>
+                                    <span class="driver-flag">${flag}</span>
+                                    <div class="driver-details">
+                                        <span class="driver-name">${d.name}</span>
+                                        <span class="driver-team">${d.constructor}</span>
+                                    </div>
+                                </div>
+                            </td>
+                    `;
+
+                    races.forEach(r => {
+                        const pos = d.results[r.round];
+                        let posClass = "";
+                        if (pos === "1") posClass = "res-1";
+                        else if (pos === "2") posClass = "res-2";
+                        else if (pos === "3") posClass = "res-3";
+
+                        html += `<td class="res-cell ${posClass}">${pos ? pos : '-'}</td>`;
+                    });
+
+                    html += `<td class="res-points">${d.points}</td></tr>`;
+                });
+
+                html += `</tbody></table>`;
+                standingsContainer.innerHTML = html;
+
             } catch (e) {
-                standingsContainer.innerHTML = '<div class="loading">No disponible</div>';
+                standingsContainer.innerHTML = '<div class="loading" style="color:var(--f1-red);">Error al generar la matriz de clasificación.</div>';
             }
         }
 
@@ -420,8 +711,8 @@
                     html += `
                         <tr>
                             <td><strong>${r.position}</strong></td>
-                            <td>${r.Driver.givenName} ${r.Driver.familyName}</td>
-                            <td style="color:#aaa;">${r.Constructor.name}</td>
+                            <td>${getDriverFlag(r.Driver.nationality)} ${r.Driver.givenName} ${r.Driver.familyName}</td>
+                            <td style="color:var(--text-muted);">${r.Constructor.name}</td>
                             <td>${r.Time ? r.Time.time : r.status}</td>
                             <td><strong>${r.points}</strong></td>
                         </tr>
@@ -431,7 +722,7 @@
                 html += `</tbody></table>`;
                 modalBody.innerHTML = html;
             } catch (e) {
-                modalBody.innerHTML = '<div class="loading" style="color:#e10600;">Error al obtener los resultados.</div>';
+                modalBody.innerHTML = '<div class="loading" style="color:var(--f1-red);">Error al obtener los resultados.</div>';
             }
         }
 
