@@ -750,10 +750,6 @@
             if (event.target == resultModal) closeModal();
         }
 
-        yearSelect.addEventListener('change', (e) => {
-            loadSeasonData(parseInt(e.target.value));
-        });
-
                 yearSelect.addEventListener('change', (e) => {
             const selectedYear = e.target.value;
             localStorage.setItem('f1_selected_year', selectedYear);
