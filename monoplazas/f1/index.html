@@ -754,11 +754,16 @@
             loadSeasonData(parseInt(e.target.value));
         });
 
-        yearSelect.addEventListener('change', (e) => {
-    const selectedYear = e.target.value;
-    localStorage.setItem('f1_selected_year', selectedYear);
-    loadSeasonData(parseInt(selectedYear));
-});
+                yearSelect.addEventListener('change', (e) => {
+            const selectedYear = e.target.value;
+            localStorage.setItem('f1_selected_year', selectedYear);
+            loadSeasonData(parseInt(selectedYear));
+        });
+
+        // Carga inicial segura recuperando el año guardado
+        const savedYear = localStorage.getItem('f1_selected_year') || "2026";
+        yearSelect.value = savedYear;
+        loadSeasonData(parseInt(savedYear));
 
     </script>
 </body>
