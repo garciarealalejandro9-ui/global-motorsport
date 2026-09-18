@@ -727,7 +727,7 @@
                     html += `
                         <tr>
                             <td><strong>${r.position}</strong></td>
-                            <td>${getDriverFlag(r.Driver.nationality)} ${r.Driver.givenName} ${r.Driver.familyName}</td>
+                            <td>${getDriverFlagHTML(r.Driver.nationality)} ${r.Driver.givenName} ${r.Driver.familyName}</td>
                             <td style="color:var(--text-muted);">${r.Constructor.name}</td>
                             <td>${r.Time ? r.Time.time : r.status}</td>
                             <td><strong>${r.points}</strong></td>
