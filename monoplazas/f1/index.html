@@ -457,33 +457,6 @@
             yearSelect.appendChild(opt);
         }
 
-        const countryFlags = {
-            "Australia": "🇦🇺", "China": "🇨🇳", "Japan": "🇯🇵", "Miami": "🇺🇸", 
-            "Canada": "🇨🇦", "Monaco": "🇲🇨", "Spain": "🇪🇸", "Austria": "🇦🇹", 
-            "UK": "🇬🇧", "Britain": "🇬🇧", "Belgium": "🇧🇪", "Hungary": "🇭🇺", 
-            "Netherlands": "🇳🇱", "Italy": "🇮🇹", "Azerbaijan": "🇦🇿", "Bahrain": "🇧🇭", 
-            "Singapore": "🇸🇬", "United States": "🇺🇸", "Mexico": "🇲🇽", "Brazil": "🇧🇷", 
-            "São Paulo": "🇧🇷", "Las Vegas": "🇺🇸", "Qatar": "🇶🇦", "Abu Dhabi": "🇦🇪",
-            "Saudi Arabia": "🇸🇦", "Portugal": "🇵🇹", "Turkey": "🇹🇷"
-        };
-
-        const driverNationalities = {
-            "British": "🇬🇧", "Italian": "🇮🇹", "Dutch": "🇳🇱", "Monegasque": "🇲🇨",
-            "Australian": "🇦🇺", "Spanish": "🇪🇸", "Mexican": "🇲🇽", "French": "🇫🇷",
-            "German": "🇩🇪", "Thai": "🇹🇭", "Japanese": "🇯🇵", "Chinese": "🇨🇳",
-            "Danish": "🇩🇰", "Canadian": "🇨🇦", "Finnish": "🇫🇮", "Argentine": "🇦🇷",
-            "New Zealander": "🇳🇿", "Brazilian": "🇧🇷"
-        };
-
-        function getFlag(raceName, circuitName) {
-            for (let key in countryFlags) {
-                if (raceName.includes(key) || circuitName.includes(key)) {
-                    return countryFlags[key];
-                }
-            }
-            return "🏁";
-        }
-
         function getDriverFlag(nationality) {
             return driverNationalities[nationality] || "🏁";
         }
