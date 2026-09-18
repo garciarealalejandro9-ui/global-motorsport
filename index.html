@@ -5,6 +5,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Global Motorsport</title>
+    
+/* ========================================== */
+/* ESTILOS DE CLASIFICACIÓN - GLOBAL MOTORSPORT */
+/* ========================================== */
+
+/* Colores de filas según posición / estado */
+tr.pos-points-scoring { 
+    background-color: rgba(43, 122, 75, 0.25); /* Verde: Puntuación fuera del podio (del 4º al 10º) */
+}  
+tr.pos-no-points { 
+    background-color: rgba(30, 64, 175, 0.25); /* Azul: Posiciones que no puntúan (11º en adelante) */
+}     
+tr.pos-retired { 
+    background-color: rgba(147, 51, 234, 0.3); /* Morado/Rojo: Retirados / DNF / Accidentes */
+}   
+
+/* Estructura para la celda: Piloto ➔ Logo del equipo ➔ Nombre del equipo */
+.driver-cell-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.team-logo-img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
 
 <style>
 * {
