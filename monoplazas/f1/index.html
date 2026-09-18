@@ -754,7 +754,10 @@
             loadSeasonData(parseInt(e.target.value));
         });
 
-        loadSeasonData(2026);
+        const savedYear = localStorage.getItem('f1_selected_year') || 2026;
+yearSelect.value = savedYear;
+loadSeasonData(parseInt(savedYear));
+
     </script>
 </body>
 </html>
