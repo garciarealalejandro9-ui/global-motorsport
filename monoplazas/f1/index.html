@@ -647,7 +647,7 @@
                 `;
 
                 races.forEach(r => {
-                    const flag = getFlag(r.raceName, r.Circuit ? r.Circuit.circuitName : r.circuit);
+                    const flag = getFlagHTML(r.raceName, r.Circuit ? r.Circuit.circuitName : r.circuit);
                     html += `<th><span title="${r.raceName}">${flag}</span></th>`;
                 });
 
@@ -657,7 +657,7 @@
                 const sortedDrivers = Object.values(driversMap).sort((a, b) => parseInt(a.position) - parseInt(b.position));
 
                 sortedDrivers.forEach(d => {
-                    const flag = getDriverFlag(d.nationality);
+                    const flag = getDriverFlagHTML(d.nationality);
                     html += `
                         <tr>
                             <td class="driver-col">
