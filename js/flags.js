@@ -55,11 +55,11 @@ function getFlagHTML(raceName = "", circuitName = "") {
         if (combined.includes(key)) {
             const val = countryCodes[key];
             
-            if (val === "214-cataluna_400px") {
-                return `<img src="../../js/assets/flags/${val}.jpg" alt="${key}" class="country-flag-img" loading="lazy">`;
+                        if (val === "214-cataluna_400px") {
+                return `<img src="../../js/assets/${val}.jpg" alt="${key}" class="country-flag-img" loading="lazy">`;
             }
             if (val === "3840px-Flag_of_Emilia-Romagna_(de_facto).svg") {
-                return `<img src="../../js/assets/flags/${val}.png" alt="${key}" class="country-flag-img" loading="lazy">`;
+                return `<img src="../../js/assets/${val}.png" alt="${key}" class="country-flag-img" loading="lazy">`;
             }
             
             return `<img src="https://flagcdn.com/w40/${val}.png" alt="${key}" class="country-flag-img" loading="lazy">`;
