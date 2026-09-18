@@ -459,7 +459,7 @@
             yearSelect.appendChild(opt);
         }
 
-        function getDriverFlag(nationality) {
+        function getDriverFlatHTML(nationality) {
             return driverNationalities[nationality] || "🏁";
         }
 
@@ -545,7 +545,7 @@
             
             for (let race of races) {
                 const circuitName = race.Circuit ? race.Circuit.circuitName : race.circuit;
-                const flag = getFlag(race.raceName, circuitName);
+                const flag = getFlagHTML(race.raceName, circuitName);
                 
                 const card = document.createElement('div');
                 card.className = 'race-card';
