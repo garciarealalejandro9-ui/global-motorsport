@@ -17,9 +17,9 @@ const countryCodes = {
     "monaco": "mc",
     "spain": "es", "españa": "es", "madrid": "es",
     
-    // Regiones personalizadas (apuntando a tus nombres largos en js/assets/flags/)
-    "catalunya": "214-cataluna_400px", "cataluña": "214-cataluna_400px", "barcelona": "214-cataluna_400px",
-    "emilia romagna": "3840px-Flag_of_Emilia-Romagna_(de_facto).svg", "emilia-romagna": "3840px-Flag_of_Emilia-Romagna_(de_facto).svg", "imola": "3840px-Flag_of_Emilia-Romagna_(de_facto).svg",
+    // Regiones personalizadas simplificadas
+    "catalunya": "catalunya", "cataluña": "catalunya", "barcelona": "catalunya",
+    "emilia romagna": "emilia", "emilia-romagna": "emilia", "imola": "emilia",
 
     "austria": "at", "red bull ring": "at",
     "uk": "gb", "britain": "gb", "british": "gb", "silverstone": "gb", "gran bretaña": "gb",
@@ -55,13 +55,15 @@ function getFlagHTML(raceName = "", circuitName = "") {
         if (combined.includes(key)) {
             const val = countryCodes[key];
             
-                        if (val === "214-cataluna_400px") {
-                return `<img src="../../js/assets/${val}.jpg" alt="${key}" class="country-flag-img" loading="lazy">`;
+            // Manejo de regiones locales personalizadas
+            if (val === "catalunya") {
+                return `<img src="../../js/assets/214-cataluna_400px.jpg" alt="${key}" class="country-flag-img" loading="lazy">`;
             }
-            if (val === "3840px-Flag_of_Emilia-Romagna_(de_facto).svg") {
-                return `<img src="../../js/assets/${val}.png" alt="${key}" class="country-flag-img" loading="lazy">`;
+            if (val === "emilia") {
+                return `<img src="../../js/assets/3840px-Flag_of_Emilia-Romagna_(de_facto).svg" alt="${key}" class="country-flag-img" loading="lazy">`;
             }
             
+            // Banderas estándar mediante FlagCDN
             return `<img src="https://flagcdn.com/w40/${val}.png" alt="${key}" class="country-flag-img" loading="lazy">`;
         }
     }
