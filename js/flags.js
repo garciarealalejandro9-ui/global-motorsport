@@ -3,10 +3,10 @@
 // ==========================================
 
 const countryCodes = {
-    // Países y circuitos internacionales (vía FlagCDN)
+    // Países y circuitos internacionales
     "australia": "au", "albert park": "au",
-    "china": "cn", "shanghai": "cn",
-    "japan": "jp", "suzuka": "jp",
+    "china": "cn", "chinese": "cn", "shanghai": "cn",
+    "japan": "jp", "japanese": "jp", "suzuka": "jp",
     "bahrain": "bh",
     "saudi arabia": "sa", "arabia saudí": "sa", "jeddah": "sa",
     "azerbaijan": "az", "baku": "az", "azerbaiyán": "az",
@@ -17,7 +17,7 @@ const countryCodes = {
     "monaco": "mc",
     "spain": "es", "españa": "es", "madrid": "es",
     
-    // Regiones personalizadas apuntando a tus archivos con nombres largos en js/assets/flags/
+    // Regiones personalizadas (apuntando a tus nombres largos en js/assets/flags/)
     "catalunya": "214-cataluna_400px", "cataluña": "214-cataluna_400px", "barcelona": "214-cataluna_400px",
     "emilia romagna": "3840px-Flag_of_Emilia-Romagna_(de_facto).svg", "emilia-romagna": "3840px-Flag_of_Emilia-Romagna_(de_facto).svg", "imola": "3840px-Flag_of_Emilia-Romagna_(de_facto).svg",
 
@@ -48,9 +48,6 @@ const driverNationalityCodes = {
     "new zealander": "nz", "brazilian": "br"
 };
 
-/**
- * Devuelve la bandera en formato imagen (con la clase CSS unificada para que todas se vean iguales)
- */
 function getFlagHTML(raceName = "", circuitName = "") {
     const combined = (raceName + " " + circuitName).toLowerCase();
     
@@ -58,21 +55,17 @@ function getFlagHTML(raceName = "", circuitName = "") {
         if (combined.includes(key)) {
             const val = countryCodes[key];
             
-            // Si es Cataluña, carga tu .jpg local desde la subcarpeta
             if (val === "214-cataluna_400px") {
                 return `<img src="../../js/assets/flags/${val}.jpg" alt="${key}" class="country-flag-img" loading="lazy">`;
             }
-            // Si es Emilia-Romaña, carga tu .png local desde la subcarpeta
             if (val === "3840px-Flag_of_Emilia-Romagna_(de_facto).svg") {
                 return `<img src="../../js/assets/flags/${val}.png" alt="${key}" class="country-flag-img" loading="lazy">`;
             }
             
-            // Para el resto de países, tira de la CDN oficial de banderas
             return `<img src="https://flagcdn.com/w40/${val}.png" alt="${key}" class="country-flag-img" loading="lazy">`;
         }
     }
     
-    // Fallback por si no encuentra nada
     return `<span class="flag-fallback">🏁</span>`;
 }
 
