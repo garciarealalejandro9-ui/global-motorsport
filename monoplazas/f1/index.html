@@ -459,9 +459,7 @@
             yearSelect.appendChild(opt);
         }
 
-        function getDriverFlagHTML(nationality) {
-            return driverNationalities[nationality] || "🏁";
-        }
+        // (NOTA: Eliminamos la función duplicada getDriverFlagHTML de aquí para que coja la de flags.js)
 
         const customCalendars = {
             2027: [
@@ -506,7 +504,7 @@
                 { round: 13, raceName: "Italian GP", circuit: "Autodromo Nazionale di Monza", date: "2026-09-06" },
                 { round: 14, raceName: "Madrid GP", circuit: "Madrid Circuit", date: "2026-09-13" },
                 { round: 15, raceName: "Azerbaijan GP", circuit: "Baku City Circuit", date: "2026-09-26" },
-                { round: 16, raceName: "Bahrain GP", circuit: "Bahrain International Circuit", date: "2026-10-04" },
+                { round: 16,, raceName: "Bahrain GP", circuit: "Bahrain International Circuit", date: "2026-10-04" },
                 { round: 17, raceName: "Singapore GP", circuit: "Marina Bay Street Circuit", date: "2026-10-11" },
                 { round: 18, raceName: "United States GP", circuit: "Circuit of the Americas", date: "2026-10-25" },
                 { round: 19, raceName: "Mexico City GP", circuit: "Autódromo Hermanos Rodríguez", date: "2026-11-01" },
@@ -566,7 +564,9 @@
                 `;
                 calendarContainer.appendChild(card);
 
-                fetchMiniPodium(year, race.round);
+                if (year < 2026) {
+                    fetchMiniPodium(year, race.round);
+                }
             }
         }
 
@@ -595,8 +595,12 @@
         }
 
         async function loadMatrixStandings(year, races) {
+            if (year >= 2026) {
+                standingsContainer.innerHTML = '<div class="loading">La matriz de clasificación de esta temporada se habilitará cuando comiencen las rondas oficiales.</div>';
+                return;
+            }
+
             try {
-                // Obtener clasificación general de pilotos actual
                 const standingsRes = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/driverStandings.json`);
                 const standingsData = await standingsRes.json();
                 const standingsList = standingsData.MRData.StandingsTable.StandingsLists[0];
@@ -606,7 +610,6 @@
                     return;
                 }
 
-                // Precargar resultados ronda por ronda para armar la matriz estilo Excel
                 const driversMap = {};
                 standingsList.DriverStandings.forEach(st => {
                     driversMap[st.Driver.driverId] = {
@@ -616,11 +619,10 @@
                         nationality: st.Driver.nationality,
                         constructor: st.Constructors[0].name,
                         points: st.points,
-                        results: {} // round -> position
+                        results: {} 
                     };
                 });
 
-                // Consultar resultados de cada ronda disputada de forma paralela
                 const resultsPromises = races.map(async (race) => {
                     try {
                         const rRes = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${race.round}/results.json`);
@@ -638,7 +640,6 @@
 
                 await Promise.all(resultsPromises);
 
-                // Renderizar tabla matriz
                 let html = `
                     <table class="matrix-table">
                         <thead>
@@ -653,7 +654,6 @@
 
                 html += `<th>Pts</th></tr></thead><tbody>`;
 
-                // Ordenar pilotos por su posición oficial
                 const sortedDrivers = Object.values(driversMap).sort((a, b) => parseInt(a.position) - parseInt(b.position));
 
                 sortedDrivers.forEach(d => {
@@ -697,6 +697,12 @@
             resultModal.style.display = 'flex';
             modalTitle.textContent = raceName;
             modalSubtitle.textContent = `Temporada ${year} • Ronda ${round}`;
+            
+            if (year >= 2026) {
+                modalBody.innerHTML = '<div class="loading">Los resultados para esta temporada aún no están disponibles en el sistema.</div>';
+                return;
+            }
+
             modalBody.innerHTML = '<div class="loading">Cargando resultados oficiales...</div>';
 
             try {
@@ -705,7 +711,7 @@
                 const race = data.MRData.RaceTable.Races[0];
 
                 if (!race || !race.Results || race.Results.length === 0) {
-                    modalBody.innerHTML = '<div class="loading">Los resultados de este Gran Premio aún no están disponibles o la temporada es futura.</div>';
+                    modalBody.innerHTML = '<div class="loading">Los resultados de este Gran Premio aún no están disponibles.</div>';
                     return;
                 }
 
@@ -750,17 +756,15 @@
             if (event.target == resultModal) closeModal();
         }
 
-                yearSelect.addEventListener('change', (e) => {
+        yearSelect.addEventListener('change', (e) => {
             const selectedYear = e.target.value;
             localStorage.setItem('f1_selected_year', selectedYear);
             loadSeasonData(parseInt(selectedYear));
         });
 
-        // Carga inicial segura recuperando el año guardado
         const savedYear = localStorage.getItem('f1_selected_year') || "2026";
         yearSelect.value = savedYear;
         loadSeasonData(parseInt(savedYear));
-
     </script>
 </body>
 </html>
