@@ -522,8 +522,14 @@
                     const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}.json`);
                     const data = await res.json();
                     races = data.MRData.RaceTable.Races;
+                    if (!races || races.length === 0) {
+                        calendarContainer.innerHTML = '<div class="loading">No hay datos de calendario disponibles para este año.</div>';
+                        standingsContainer.innerHTML = '<div class="loading">Sin datos de clasificación.</div>';
+                        return;
+                    }
                 } catch (e) {
-                    calendarContainer.innerHTML = '<div class="loading" style="color:var(--f1-red);">Error al conectar con la API.</div>';
+                    calendarContainer.innerHTML = '<div class="loading" style="color:var(--f1-red);">Error al conectar con la API o temporada no disponible.</div>';
+                    standingsContainer.innerHTML = '<div class="loading">Sin datos disponibles.</div>';
                     return;
                 }
             }
