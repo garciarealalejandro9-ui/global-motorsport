@@ -60,7 +60,7 @@ function getFlagHTML(raceName = "", circuitName = "") {
                 return `<img src="../../js/assets/214-cataluna_400px.jpg" alt="${key}" class="country-flag-img" loading="lazy">`;
             }
             if (val === "emilia") {
-                return `<img src="../../js/assets/3840px-Flag_of_Emilia-Romagna_(de_facto).svg" alt="${key}" class="country-flag-img" loading="lazy">`;
+                return `<img src="../../js/assets/3840px-Flag_of_Emilia-Romagna_(de_facto).svg.png" alt="${key}" class="country-flag-img" loading="lazy">`;
             }
             
             // Banderas estándar mediante FlagCDN
