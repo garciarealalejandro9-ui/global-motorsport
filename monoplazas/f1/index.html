@@ -532,6 +532,32 @@
                 { round: 22, raceName: "Las Vegas GP", circuit: "Las Vegas Strip Circuit", date: "2025-11-22" },
                 { round: 23, raceName: "Qatar GP", circuit: "Lusail International Circuit", date: "2025-11-30" },
                 { round: 24, raceName: "Abu Dhabi GP", circuit: "Yas Marina Circuit", date: "2025-12-07" }
+            ],
+            2024: [
+                { round: 1, raceName: "Bahrain GP", circuit: "Bahrain International Circuit", date: "2024-03-02" },
+                { round: 2, raceName: "Saudi Arabian GP", circuit: "Jeddah Corniche Circuit", date: "2024-03-09" },
+                { round: 3, raceName: "Australian GP", circuit: "Albert Park Circuit", date: "2024-03-24" },
+                { round: 4, raceName: "Japanese GP", circuit: "Suzuka Circuit", date: "2024-04-07" },
+                { round: 5, raceName: "Chinese GP", circuit: "Shanghai International Circuit", date: "2024-04-21" },
+                { round: 6, raceName: "Miami GP", circuit: "Miami International Autodrome", date: "2024-05-05" },
+                { round: 7, raceName: "Emilia Romagna GP", circuit: "Autodromo Internazionale Enzo e Dino Ferrari", date: "2024-05-19" },
+                { round: 8, raceName: "Monaco GP", circuit: "Circuit de Monaco", date: "2024-05-26" },
+                { round: 9, raceName: "Canadian GP", circuit: "Circuit Gilles Villeneuve", date: "2024-06-09" },
+                { round: 10, raceName: "Spanish GP", circuit: "Circuit de Barcelona-Catalunya", date: "2024-06-23" },
+                { round: 11, raceName: "Austrian GP", circuit: "Red Bull Ring", date: "2024-06-30" },
+                { round: 12, raceName: "British GP", circuit: "Silverstone Circuit", date: "2024-07-07" },
+                { round: 13, raceName: "Hungarian GP", circuit: "Hungaroring", date: "2024-07-21" },
+                { round: 14, raceName: "Belgian GP", circuit: "Circuit de Spa-Francorchamps", date: "2024-07-28" },
+                { round: 15, raceName: "Dutch GP", circuit: "Circuit Zandvoort", date: "2024-08-25" },
+                { round: 16, raceName: "Italian GP", circuit: "Autodromo Nazionale di Monza", date: "2024-09-01" },
+                { round: 17, raceName: "Azerbaijan GP", circuit: "Baku City Circuit", date: "2024-09-15" },
+                { round: 18, raceName: "Singapore GP", circuit: "Marina Bay Street Circuit", date: "2024-09-22" },
+                { round: 19, raceName: "United States GP", circuit: "Circuit of the Americas", date: "2024-10-20" },
+                { round: 20, raceName: "Mexico City GP", circuit: "Autódromo Hermanos Rodríguez", date: "2024-10-27" },
+                { round: 21, raceName: "São Paulo GP", circuit: "Autódromo José Carlos Pace", date: "2024-11-03" },
+                { round: 22, raceName: "Las Vegas GP", circuit: "Las Vegas Strip Circuit", date: "2024-11-23" },
+                { round: 23, raceName: "Qatar GP", circuit: "Lusail International Circuit", date: "2024-12-01" },
+                { round: 24, raceName: "Abu Dhabi GP", circuit: "Yas Marina Circuit", date: "2024-12-08" }
             ]
         };
 
@@ -541,19 +567,26 @@
             standingsContainer.innerHTML = '<div class="loading">Cargando matriz del campeonato...</div>';
 
             let races = [];
+            
+            // 1. Usar calendario local rápido para los años recientes definidos
             if (customCalendars[year]) {
                 races = customCalendars[year];
             } else {
+                // 2. Consulta dinámica por API para el resto de años históricos (1950 - 2023)
                 try {
                     const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}.json`);
                     if (!res.ok) throw new Error("API no disponible");
                     const data = await res.json();
-                    races = data.MRData.RaceTable.Races;
+                    
+                    if (data.MRData && data.MRData.RaceTable && data.MRData.RaceTable.Races) {
+                        races = data.MRData.RaceTable.Races;
+                    }
+                    
                     if (!races || races.length === 0) {
-                        throw new Error("Sin carreras");
+                        throw new Error("Sin carreras encontradas");
                     }
                 } catch (e) {
-                    calendarContainer.innerHTML = `<div class="loading" style="color:var(--text-muted);">El servicio externo no está disponible temporalmente para el año ${year}. Prueba con 2025, 2026 o 2027.</div>`;
+                    calendarContainer.innerHTML = `<div class="loading" style="color:var(--text-muted);">No se pudieron cargar los datos de la temporada ${year} desde el servidor externo. Comprueba tu conexión.</div>`;
                     standingsContainer.innerHTML = '<div class="loading">Sin datos de clasificación disponibles.</div>';
                     return;
                 }
