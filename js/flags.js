@@ -3,7 +3,7 @@
 // ==========================================
 
 const countryCodes = {
-    // Países y circuitos internacionales
+    // Países y circuitos internacionales habituales
     "australia": "au", "albert park": "au",
     "china": "cn", "chinese": "cn", "shanghai": "cn",
     "japan": "jp", "japanese": "jp", "suzuka": "jp",
@@ -29,15 +29,33 @@ const countryCodes = {
     
     "italy": "it", "monza": "it", "italia": "it",
     
-    "portugal": "pt", "algarve": "pt",
     "turkey": "tr", "turquía": "tr", "istanbul": "tr",
 
     "miami": "us",
     "canada": "ca", "gilles villeneuve": "ca", "montreal": "ca",
-    "united states": "us", "us": "us", "usa": "usa", "austin": "us", "cota": "us", "estados unidos": "us",
+    "united states": "us", "us": "us", "usa": "us", "austin": "us", "cota": "us", "estados unidos": "us",
     "mexico": "mx", "méxico": "mx", "hermanos rodríguez": "mx",
     "brazil": "br", "brasil": "br", "são paulo": "br", "sao paulo": "br", "interlagos": "br",
-    "las vegas": "us"
+    "las vegas": "us",
+
+    // ==========================================
+    // NUEVAS BANDERAS HISTÓRICAS Y ESPECÍFICAS
+    // ==========================================
+    "france": "fr", "francia": "fr", "french": "fr", "paul ricard": "fr", "magny-cours": "fr",
+    "russia": "ru", "rusia": "ru", "sochi": "ru",
+    "germany": "de", "alemania": "de", "hockenheim": "de", "nürburgring": "de", "nurburgring": "de",
+    "malaysia": "my", "malasia": "my", "sepang": "my",
+    "europe": "eu", "europa": "eu", "european": "eu", // Bandera de la Unión Europea para el GP de Europa
+    "korea": "kr", "corea": "kr", "yeongam": "kr",
+    "india": "in", "buddh": "in",
+    "san marino": "sm", 
+    "south africa": "za", "sudáfrica": "za", "sudafrice": "za", "kyalami": "za",
+    "argentina": "ar", "buenos aires": "ar",
+    "portugal": "pt", "algarve": "pt", "portimão": "pt", "estoril": "pt",
+    "500": "us", "indianapolis": "us", // Para las 500 Millas de Indianápolis (histórico F1)
+    "pacific": "jp", "tiAis": "jp", // Para el GP del Pacífico (Japón)
+    "eifel": "de" // Para el GP de Eifel (Alemania)
+    "morocco": "ma", "marruecos": "ma", "ain-diab": "ma"
 };
 
 const driverNationalityCodes = {
