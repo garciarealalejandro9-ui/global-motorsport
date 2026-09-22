@@ -430,7 +430,7 @@
             yearSelect.appendChild(opt);
         }
 
-        // Calendario 2026 limpio de F2 (sin Sakhir ni Jeddah)
+        // Calendarios limpios de F2 oficiales por temporada
         const customF2Calendars = {
             2026: [
                 { round: 1, raceName: "Melbourne F2 Round", circuit: "Albert Park Circuit", date: "2026-03-29" },
@@ -449,39 +449,27 @@
         async function loadF2SeasonData(year) {
             calendarTitle.textContent = `Calendario F2 ${year}`;
             calendarContainer.innerHTML = '<div class="loading">Cargando rondas...</div>';
-            standingsContainer.innerHTML = '<div class="loading">Cargando matriz del campeonato...</div>';
+            standingsContainer.innerHTML = '<div class="loading">Cargando clasificación de F2...</div>';
 
-            let races = [];
-            if (customF2Calendars[year]) {
-                races = customF2Calendars[year];
-            } else {
-                try {
-                    const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}.json`);
-                    const data = await res.json();
-                    races = data.MRData.RaceTable.Races;
-                } catch (e) {
-                    races = [
-                        { round: 1, raceName: `Sakhir F2`, circuit: "Bahrain International Circuit", date: `${year}-03-01` },
-                        { round: 2, raceName: `Monaco F2`, circuit: "Circuit de Monaco", date: `${year}-05-24` },
-                        { round: 3, raceName: `Monza F2`, circuit: "Monza", date: `${year}-09-06` }
-                    ];
-                }
-            }
+            // Como la API de Ergast es de F1, definimos calendarios base seguros para F2 o avisamos amigablemente
+            let races = customF2Calendars[year] || [
+                { round: 1, raceName: `Sakhir F2 Round (${year})`, circuit: "Bahrain International Circuit", date: `${year}-03-01` },
+                { round: 2, raceName: `Monaco F2 Round (${year})`, circuit: "Circuit de Monaco", date: `${year}-05-24` },
+                { round: 3, raceName: `Monza F2 Round (${year})`, circuit: "Autodromo Nazionale di Monza", date: `${year}-09-06` }
+            ];
 
             renderF2Calendar(year, races);
-            loadF2MatrixStandings(year, races);
+            renderF2StandingsPlaceholder(year, races);
         }
 
         async function renderF2Calendar(year, races) {
             calendarContainer.innerHTML = '';
             
             for (let race of races) {
-                const circuitName = race.Circuit ? race.Circuit.circuitName : race.circuit;
-                const flag = getFlagHTML(race.raceName, circuitName);
+                const flag = getFlagHTML(race.raceName, race.circuit);
                 
                 const card = document.createElement('div');
                 card.className = 'race-card';
-                card.id = `race-card-f2-${year}-${race.round}`;
                 
                 card.innerHTML = `
                     <div class="race-main-row">
@@ -489,183 +477,48 @@
                             <span class="race-flag">${flag}</span>
                             <div class="race-info">
                                 <h4>Ronda ${race.round}: ${race.raceName}</h4>
-                                <p>${circuitName} • ${race.date}</p>
+                                <p>${race.circuit} • ${race.date}</p>
                             </div>
                         </div>
-                        <button class="btn-result" onclick="fetchF2Results(${year}, ${race.round}, '${race.raceName}')">Resultados</button>
+                        <button class="btn-result" onclick="openF2ResultModal('${race.raceName}', '${race.circuit}', '${race.date}')">Ver Info</button>
                     </div>
-                    <div id="f2-podium-${year}-${race.round}"></div>
                 `;
                 calendarContainer.appendChild(card);
-
-                fetchF2MiniPodium(year, race.round);
             }
         }
 
-        async function fetchF2MiniPodium(year, round) {
-            try {
-                const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${round}/results.json`);
-                const data = await res.json();
-                const race = data.MRData.RaceTable.Races[0];
-                
-                if (race && race.Results && race.Results.length >= 3) {
-                    const p1 = race.Results[0].Driver.familyName;
-                    const p2 = race.Results[1].Driver.familyName;
-                    const p3 = race.Results[2].Driver.familyName;
-                    
-                    const container = document.getElementById(`f2-podium-${year}-${round}`);
-                    if (container) {
-                        container.className = 'race-podium';
-                        container.innerHTML = `
-                            <div class="podium-item"><span class="podium-pos pos-1">1º</span> ${p1}</div>
-                            <div class="podium-item"><span class="podium-pos pos-2">2º</span> ${p2}</div>
-                            <div class="podium-item"><span class="podium-pos pos-3">3º</span> ${p3}</div>
-                        `;
-                    }
-                }
-            } catch (e) {}
-        }
-
-        async function loadF2MatrixStandings(year, races) {
-            try {
-                const standingsRes = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/driverStandings.json`);
-                const standingsData = await standingsRes.json();
-                const standingsList = standingsData.MRData.StandingsTable.StandingsLists[0];
-                
-                if (!standingsList || !standingsList.DriverStandings || standingsList.DriverStandings.length === 0) {
-                    standingsContainer.innerHTML = '<div class="loading">Sin datos de clasificación para este año.</div>';
-                    return;
-                }
-
-                const driversMap = {};
-                standingsList.DriverStandings.forEach(st => {
-                    driversMap[st.Driver.driverId] = {
-                        position: st.position,
-                        name: `${st.Driver.givenName} ${st.Driver.familyName}`,
-                        nationality: st.Driver.nationality,
-                        constructor: st.Constructors[0].name,
-                        points: st.points,
-                        results: {}
-                    };
-                });
-
-                const resultsPromises = races.map(async (race) => {
-                    try {
-                        const rRes = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${race.round}/results.json`);
-                        const rData = await rRes.json();
-                        const rRace = rData.MRData.RaceTable.Races[0];
-                        if (rRace && rRace.Results) {
-                            rRace.Results.forEach(res => {
-                                if (driversMap[res.Driver.driverId]) {
-                                    driversMap[res.Driver.driverId].results[race.round] = res.position;
-                                }
-                            });
-                        }
-                    } catch (e) {}
-                });
-
-                await Promise.all(resultsPromises);
-
-                let html = `
-                    <table class="matrix-table">
-                        <thead>
-                            <tr>
-                                <th class="driver-header">Pos / Piloto</th>
-                `;
-
-                races.forEach(r => {
-                    const flag = getFlagHTML(r.raceName, r.Circuit ? r.Circuit.circuitName : r.circuit);
-                    html += `<th><span title="${r.raceName}">${flag}</span></th>`;
-                });
-
-                html += `<th>Pts</th></tr></thead><tbody>`;
-
-                const sortedDrivers = Object.values(driversMap).sort((a, b) => parseInt(a.position) - parseInt(b.position));
-
-                sortedDrivers.forEach(d => {
-                    const flag = getDriverFlagHTML(d.nationality);
-                    html += `
+        function renderF2StandingsPlaceholder(year, races) {
+            // Tabla limpia adaptada para F2 sin buscar en endpoints de F1 inexistentes que daban 404
+            let html = `
+                <table class="matrix-table">
+                    <thead>
                         <tr>
-                            <td class="driver-col">
-                                <div class="driver-cell-info">
-                                    <span style="font-weight:900; width:18px; color:var(--f2-blue); font-size:11px;">${d.position}</span>
-                                    <span class="driver-flag">${flag}</span>
-                                    <div class="driver-details">
-                                        <span class="driver-name">${d.name}</span>
-                                        <span class="driver-team">${d.constructor}</span>
-                                    </div>
-                                </div>
-                            </td>
-                    `;
+                            <th class="driver-header">Pos / Piloto</th>
+            `;
 
-                    races.forEach(r => {
-                        const pos = d.results[r.round];
-                        let posClass = "";
-                        if (pos === "1") posClass = "res-1";
-                        else if (pos === "2") posClass = "res-2";
-                        else if (pos === "3") posClass = "res-3";
+            races.forEach(r => {
+                const flag = getFlagHTML(r.raceName, r.circuit);
+                html += `<th><span title="${r.raceName}">${flag}</span></th>`;
+            });
 
-                        html += `<td class="res-cell ${posClass}">${pos ? pos : '-'}</td>`;
-                    });
-
-                    html += `<td class="res-points">${d.points}</td></tr>`;
-                });
-
-                html += `</tbody></table>`;
-                standingsContainer.innerHTML = html;
-
-            } catch (e) {
-                standingsContainer.innerHTML = '<div class="loading" style="color:var(--f2-blue);">Error al generar la matriz de clasificación de F2.</div>';
-            }
+            html += `<th>Pts</th></tr></thead><tbody>`;
+            html += `<tr><td colspan="${races.length + 2}" class="loading">Los datos oficiales de la clasificación de F2 para la temporada ${year} se gestionan mediante eventos locales.</td></tr>`;
+            html += `</tbody></table>`;
+            
+            standingsContainer.innerHTML = html;
         }
 
-        async function fetchF2Results(year, round, raceName) {
+        function openF2ResultModal(raceName, circuit, date) {
             resultModal.style.display = 'flex';
             modalTitle.textContent = raceName;
-            modalSubtitle.textContent = `Temporada F2 ${year} • Ronda ${round}`;
-            modalBody.innerHTML = '<div class="loading">Cargando resultados oficiales...</div>';
-
-            try {
-                const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${round}/results.json`);
-                const data = await res.json();
-                const race = data.MRData.RaceTable.Races[0];
-
-                if (!race || !race.Results || race.Results.length === 0) {
-                    modalBody.innerHTML = '<div class="loading">Los resultados de esta ronda aún no están disponibles.</div>';
-                    return;
-                }
-
-                let html = `
-                    <table class="result-table">
-                        <thead>
-                            <tr>
-                                <th>Pos</th>
-                                <th>Piloto</th>
-                                <th>Escudería</th>
-                                <th>Tiempo / Estado</th>
-                                <th>Pts</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-
-                race.Results.forEach(r => {
-                    html += `
-                        <tr>
-                            <td><strong>${r.position}</strong></td>
-                            <td>${getDriverFlagHTML(r.Driver.nationality)} ${r.Driver.givenName} ${r.Driver.familyName}</td>
-                            <td style="color:var(--text-muted);">${r.Constructor.name}</td>
-                            <td>${r.Time ? r.Time.time : r.status}</td>
-                            <td><strong>${r.points}</strong></td>
-                        </tr>
-                    `;
-                });
-
-                html += `</tbody></table>`;
-                modalBody.innerHTML = html;
-            } catch (e) {
-                modalBody.innerHTML = '<div class="loading" style="color:var(--f2-blue);">Error al obtener los resultados.</div>';
-            }
+            modalSubtitle.textContent = `${circuit} • ${date}`;
+            modalBody.innerHTML = `
+                <div style="padding: 20px; text-align: center; color: var(--text-muted);">
+                    <p style="margin-bottom: 10px; font-weight: 600; color: #fff;">Información del Gran Premio</p>
+                    <p>Circuito: ${circuit}</p>
+                    <p>Fecha programada: ${date}</p>
+                </div>
+            `;
         }
 
         function closeModal() {
@@ -682,7 +535,7 @@
             loadF2SeasonData(parseInt(selectedYear));
         });
 
-        // Carga inicial recordando la última temporada visitada
+        // Carga inicial recordando la última temporada seleccionada
         const savedYear = localStorage.getItem('f2_selected_year') || "2026";
         yearSelect.value = savedYear;
         loadF2SeasonData(parseInt(savedYear));
