@@ -292,7 +292,11 @@
                 races = customCalendars[year];
             } else {
                 try {
-                    const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}.json`);
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 4000);
+                    const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}.json`, { signal: controller.signal });
+                    clearTimeout(timeoutId);
+
                     if (!res.ok) throw new Error("API no disponible");
                     const data = await res.json();
                     if (data.MRData && data.MRData.RaceTable && data.MRData.RaceTable.Races) {
@@ -337,7 +341,11 @@
 
         async function fetchMiniPodium(year, round) {
             try {
-                const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${round}/results.json`);
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3000);
+                const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${round}/results.json`, { signal: controller.signal });
+                clearTimeout(timeoutId);
+
                 if (!res.ok) return;
                 const data = await res.json();
                 const race = data.MRData.RaceTable.Races[0];
@@ -364,7 +372,11 @@
                 return;
             }
             try {
-                const standingsRes = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/driverStandings.json`);
+                const controllerStandings = new AbortController();
+                const timeoutIdS = setTimeout(() => controllerStandings.abort(), 4000);
+                const standingsRes = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/driverStandings.json`, { signal: controllerStandings.signal });
+                clearTimeout(timeoutIdS);
+
                 if (!standingsRes.ok) throw new Error("Error API");
                 const standingsData = await standingsRes.json();
                 const standingsList = standingsData.MRData.StandingsTable.StandingsLists[0];
@@ -385,12 +397,17 @@
                     };
                 });
 
-                // Bucle con retraso de 80ms entre cada petición para evitar bloqueos del servidor externo
+                // Bucle optimizado con Timeout de 3s por petición para evitar bloqueos
                 for (let i = 0; i < races.length; i++) {
                     const race = races[i];
-                    await new Promise(resolve => setTimeout(resolve, i * 80));
+                    await new Promise(resolve => setTimeout(resolve, i * 60));
                     try {
-                        const rRes = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${race.round}/results.json`);
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+                        const rRes = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${race.round}/results.json`, { signal: controller.signal });
+                        clearTimeout(timeoutId);
+
                         if (rRes.ok) {
                             const rData = await rRes.json();
                             const rRace = rData.MRData.RaceTable.Races[0];
@@ -455,7 +472,11 @@
             }
             modalBody.innerHTML = '<div class="loading">Cargando resultados oficiales...</div>';
             try {
-                const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${round}/results.json`);
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 4000);
+                const res = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/${round}/results.json`, { signal: controller.signal });
+                clearTimeout(timeoutId);
+
                 if (!res.ok) throw new Error("Error API");
                 const data = await res.json();
                 const race = data.MRData.RaceTable.Races[0];
