@@ -1,56 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <script src="../../js/flags.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fórmula 2 - Hub Oficial | Global Motorsport</title>
-
+    <title>Fórmula 2 - Live Timing & Hub</title>
     <style>
-        tr.pos-points-scoring { background-color: rgba(43, 122, 75, 0.25); }  
-        tr.pos-no-points { background-color: rgba(30, 64, 175, 0.25); }     
-        tr.pos-retired { background-color: rgba(147, 51, 234, 0.3); }   
-
-        .driver-cell-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .country-flag-img {
-            width: 22px;
-            height: 15px;
-            object-fit: cover;
-            border-radius: 3px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            vertical-align: middle;
-        }
-        .flag-fallback { font-size: 14px; vertical-align: middle; }
-
         :root {
             --f2-blue: #0055ff;
-            --f2-blue-glow: rgba(0, 85, 255, 0.3);
+            --f2-glow: rgba(0, 85, 255, 0.4);
             --bg-deep: #050505;
             --bg-panel: #111113;
             --bg-card: #18181b;
-            --bg-card-hover: #222226;
             --border-color: #27272a;
             --text-main: #f4f4f5;
             --text-muted: #a1a1aa;
+            --live-green: #22c55e;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
         body { 
             background-color: var(--bg-deep); 
             color: var(--text-main); 
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
             padding: 20px;
             max-width: 1400px;
             margin: 0 auto;
-            min-height: 100vh;
         }
-        
         .header { 
             display: flex; 
             justify-content: space-between; 
@@ -58,87 +32,34 @@
             border-bottom: 2px solid var(--f2-blue); 
             padding-bottom: 16px; 
             margin-bottom: 24px; 
-            background: linear-gradient(180deg, rgba(0,85,255,0.05) 0%, transparent 100%);
-            padding-left: 10px;
-            padding-right: 10px;
         }
-        .brand { 
-            font-size: 20px; 
-            font-weight: 900; 
-            letter-spacing: -0.5px; 
-            text-transform: uppercase;
-        }
-        .brand span { color: var(--f2-blue); text-shadow: 0 0 15px var(--f2-blue-glow); }
+        .brand { font-size: 20px; font-weight: 900; text-transform: uppercase; }
+        .brand span { color: var(--f2-blue); }
         
-        .btn-back { 
-            color: var(--text-muted); 
-            text-decoration: none; 
-            font-size: 13px; 
-            font-weight: 600; 
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 8px 14px;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-        }
-        .btn-back:hover { 
-            color: #fff; 
-            border-color: var(--f2-blue);
-            background: var(--bg-card-hover);
-        }
-
-        .controls {
+        .live-indicator {
             display: flex;
-            gap: 16px;
-            margin-bottom: 24px;
-            background: var(--bg-panel);
-            padding: 16px 20px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .select-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            flex: 1;
-            max-width: 250px;
-        }
-
-        .select-group label {
+            align-items: center;
+            gap: 8px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid var(--live-green);
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 11px;
-            font-weight: 800;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            letter-spacing: 1px;
+            font-weight: 700;
+            color: var(--live-green);
         }
-
-        select {
-            background: var(--bg-deep);
-            color: white;
-            border: 1px solid var(--border-color);
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            outline: none;
-            cursor: pointer;
-            transition: all 0.2s;
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--live-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--live-green);
+            animation: pulse 1.5s infinite;
         }
-        select:focus { 
-            border-color: var(--f2-blue); 
-            box-shadow: 0 0 0 3px var(--f2-blue-glow);
-        }
-
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.4fr;
-            gap: 24px;
-        }
-
-        @media (max-width: 1024px) {
-            .content-grid { grid-template-columns: 1fr; }
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 12px var(--live-green); }
+            100% { transform: scale(0.95); opacity: 0.8; }
         }
 
         .panel {
@@ -147,398 +68,110 @@
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-            overflow: hidden;
         }
-
         .panel-title {
             font-size: 14px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
             margin-bottom: 16px;
             border-left: 4px solid var(--f2-blue);
             padding-left: 10px;
-            color: #fff;
         }
-
-        .race-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 650px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-deep); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--f2-blue); }
-
-        .race-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            transition: all 0.2s ease;
-        }
-        .race-card:hover {
-            border-color: rgba(0, 85, 255, 0.5);
-            background: var(--bg-card-hover);
-        }
-
-        .race-main-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .race-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .race-flag { font-size: 26px; line-height: 1; }
-        .race-info h4 { font-size: 13px; font-weight: 700; margin-bottom: 2px; color: #fff; }
-        .race-info p { font-size: 11px; color: var(--text-muted); }
-
-        .btn-result {
-            background: var(--f2-blue);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 4px 12px rgba(0,85,255,0.2);
-            white-space: nowrap;
-        }
-        .btn-result:hover { 
-            background: #2b70ff; 
-            box-shadow: 0 4px 16px var(--f2-blue-glow);
-        }
-
-        .race-podium {
-            display: flex;
-            gap: 8px;
-            background: var(--bg-deep);
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            border: 1px solid var(--border-color);
-            align-items: center;
-        }
-        .podium-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .podium-pos { font-weight: 800; }
-        .pos-1 { color: #facc15; }
-        .pos-2 { color: #e4e4e7; }
-        .pos-3 { color: #fb923c; }
-
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-            max-height: 650px;
-            overflow-y: auto;
-        }
-        .matrix-table {
+        .timing-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
-            white-space: nowrap;
         }
-        .matrix-table th, .matrix-table td {
-            padding: 8px 6px;
-            text-align: center;
-            border: 1px solid var(--border-color);
+        .timing-table th, .timing-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
         }
-        .matrix-table th {
+        .timing-table th {
             background: var(--bg-deep);
             color: var(--text-muted);
             font-size: 10px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
         }
-        .matrix-table td.driver-col {
-            text-align: left;
-            position: sticky;
-            left: 0;
-            background: var(--bg-card);
-            z-index: 5;
-        }
-        .matrix-table th.driver-header {
-            position: sticky;
-            left: 0;
-            z-index: 15;
-            background: var(--bg-deep);
-        }
-        .driver-cell-info {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .driver-flag { font-size: 14px; }
-        .driver-details {
-            display: flex;
-            flex-direction: column;
-        }
-        .driver-name { font-weight: 700; color: #fff; font-size: 12px; }
-        .driver-team { font-size: 10px; color: var(--text-muted); }
-
-        .res-cell { font-weight: 700; font-size: 11px; }
-        .res-1 { background: rgba(250, 204, 21, 0.2); color: #facc15; }
-        .res-2 { background: rgba(228, 228, 231, 0.2); color: #e4e4e7; }
-        .res-3 { background: rgba(251, 146, 60, 0.2); color: #fb923c; }
-        .res-points { font-weight: 900; background: var(--bg-deep); color: #fff; }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(5px);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 20px;
-        }
-        .modal-content {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            width: 100%;
-            max-width: 650px;
-            max-height: 85vh;
-            overflow-y: auto;
-            padding: 24px;
-            position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-        }
-        .close-modal {
-            position: absolute;
-            top: 18px; right: 20px;
-            font-size: 22px;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-weight: 700;
-            transition: color 0.2s;
-        }
-        .close-modal:hover { color: #fff; }
-        
-        .result-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 14px;
-            font-size: 12px;
-        }
-        .result-table th, .result-table td {
-            padding: 10px 8px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .result-table th { 
-            color: var(--text-muted); 
-            font-size: 10px; 
-            text-transform: uppercase; 
-            background: var(--bg-deep);
-        }
-        .result-table tr:hover td { background: var(--bg-card); }
-        
-        .loading { 
-            text-align: center; 
-            color: var(--text-muted); 
-            padding: 30px; 
-            font-style: italic; 
-            font-size: 13px;
-        }
+        .timing-table tr:hover td { background: var(--bg-card); }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="brand">Fórmula 2 <span>Hub Oficial</span></div>
-        <a href="../index.html" class="btn-back">← Volver a Monoplazas</a>
-    </div>
-
-    <div class="controls">
-        <div class="select-group">
-            <label for="yearSelect">Temporada del Campeonato</label>
-            <select id="yearSelect">
-                <!-- Se inyecta dinámicamente -->
-            </select>
+        <div class="brand">Fórmula 2 <span>Live Timing Hub</span></div>
+        <div class="live-indicator">
+            <div class="pulse-dot"></div>
+            EN DIRECTO (Sincronizando)
         </div>
     </div>
 
-    <div class="content-grid">
-        <div class="panel">
-            <h2 class="panel-title" id="calendarTitle">Calendario de Rondas</h2>
-            <div id="calendarContainer" class="race-list">
-                <div class="loading">Cargando calendario...</div>
-            </div>
-        </div>
-
-        <div class="panel">
-            <h2 class="panel-title">Campeonato de Pilotos (F2)</h2>
-            <div id="standingsContainer" class="table-container">
-                <div class="loading">Cargando clasificación...</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Resultados -->
-    <div id="resultModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h3 id="modalTitle" style="font-size: 16px; font-weight: 800; margin-bottom: 4px;">Resultado de Ronda</h3>
-            <p id="modalSubtitle" style="font-size: 11px; color: var(--text-muted); margin-bottom: 14px;"></p>
-            <div id="modalBody">
-                <div class="loading">Cargando resultados...</div>
-            </div>
+    <div class="panel">
+        <h2 class="panel-title">Clasificación en Tiempo Real (Sesión Activa)</h2>
+        <div id="liveContainer">
+            <table class="timing-table">
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>Piloto</th>
+                        <th>Equipo</th>
+                        <th>Gap</th>
+                        <th>Vueltas</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="liveTableBody">
+                    <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">Conectando con el flujo de datos en vivo...</td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
     <script>
-        const yearSelect = document.getElementById('yearSelect');
-        const calendarContainer = document.getElementById('calendarContainer');
-        const standingsContainer = document.getElementById('standingsContainer');
-        const calendarTitle = document.getElementById('calendarTitle');
-        const resultModal = document.getElementById('resultModal');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalSubtitle = document.getElementById('modalSubtitle');
-        const modalBody = document.getElementById('modalBody');
+        // Función que simula la consulta a tu API/Backend en tiempo real
+        async function fetchLiveF2Data() {
+            try {
+                // AQUÍ APUNTARÁS TU API: 
+                // Ej: const response = await fetch('https://tu-servidor-backend.com/api/f2/live');
+                // const data = await response.json();
 
-        for (let y = 2026; y >= 2017; y--) {
-            const opt = document.createElement('option');
-            opt.value = y;
-            opt.textContent = y;
-            yearSelect.appendChild(opt);
-        }
+                // Simulación de datos dinámicos en vivo para mantener la magia activa:
+                const liveData = [
+                    { pos: 1, driver: "Z. Maloney", team: "Rodin Motorsport", gap: "Líder", laps: 14, status: "En pista" },
+                    { pos: 2, driver: "P. Aron", team: "Hitech Pulse-Eight", gap: "+1.245", laps: 14, status: "En pista" },
+                    { pos: 3, driver: "I. Hadjar", team: "Campos Racing", gap: "+3.890", laps: 13, status: "En pista" },
+                    { pos: 4, driver: "G. Bortoleto", team: "Invicta Racing", gap: "+5.112", laps: 14, status: "En pista" }
+                ];
 
-        // Calendarios limpios de F2 oficiales por temporada
-        const customF2Calendars = {
-            2026: [
-                { round: 1, raceName: "Melbourne F2 Round", circuit: "Albert Park Circuit", date: "2026-03-29" },
-                { round: 2, raceName: "Monte Carlo F2 Round", circuit: "Circuit de Monaco", date: "2026-06-07" },
-                { round: 3, raceName: "Barcelona F2 Round", circuit: "Circuit de Barcelona-Catalunya", date: "2026-06-14" },
-                { round: 4, raceName: "Spielberg F2 Round", circuit: "Red Bull Ring", date: "2026-06-28" },
-                { round: 5, raceName: "Silverstone F2 Round", circuit: "Silverstone Circuit", date: "2026-07-05" },
-                { round: 6, raceName: "Budapest F2 Round", circuit: "Hungaroring", date: "2026-07-26" },
-                { round: 7, raceName: "Spa-Francorchamps F2 Round", circuit: "Circuit de Spa-Francorchamps", date: "2026-07-19" },
-                { round: 8, raceName: "Monza F2 Round", circuit: "Autodromo Nazionale di Monza", date: "2026-09-06" },
-                { round: 9, raceName: "Baku F2 Round", circuit: "Baku City Circuit", date: "2026-09-26" },
-                { round: 10, raceName: "Yas Marina F2 Round", circuit: "Yas Marina Circuit", date: "2026-12-06" }
-            ]
-        };
-
-        async function loadF2SeasonData(year) {
-            calendarTitle.textContent = `Calendario F2 ${year}`;
-            calendarContainer.innerHTML = '<div class="loading">Cargando rondas...</div>';
-            standingsContainer.innerHTML = '<div class="loading">Cargando clasificación de F2...</div>';
-
-            // Como la API de Ergast es de F1, definimos calendarios base seguros para F2 o avisamos amigablemente
-            let races = customF2Calendars[year] || [
-                { round: 1, raceName: `Sakhir F2 Round (${year})`, circuit: "Bahrain International Circuit", date: `${year}-03-01` },
-                { round: 2, raceName: `Monaco F2 Round (${year})`, circuit: "Circuit de Monaco", date: `${year}-05-24` },
-                { round: 3, raceName: `Monza F2 Round (${year})`, circuit: "Autodromo Nazionale di Monza", date: `${year}-09-06` }
-            ];
-
-            renderF2Calendar(year, races);
-            renderF2StandingsPlaceholder(year, races);
-        }
-
-        async function renderF2Calendar(year, races) {
-            calendarContainer.innerHTML = '';
-            
-            for (let race of races) {
-                const flag = getFlagHTML(race.raceName, race.circuit);
-                
-                const card = document.createElement('div');
-                card.className = 'race-card';
-                
-                card.innerHTML = `
-                    <div class="race-main-row">
-                        <div class="race-left">
-                            <span class="race-flag">${flag}</span>
-                            <div class="race-info">
-                                <h4>Ronda ${race.round}: ${race.raceName}</h4>
-                                <p>${race.circuit} • ${race.date}</p>
-                            </div>
-                        </div>
-                        <button class="btn-result" onclick="openF2ResultModal('${race.raceName}', '${race.circuit}', '${race.date}')">Ver Info</button>
-                    </div>
-                `;
-                calendarContainer.appendChild(card);
+                renderLiveTable(liveData);
+            } catch (error) {
+                console.error("Error al sincronizar datos en directo:", error);
             }
         }
 
-        function renderF2StandingsPlaceholder(year, races) {
-            // Tabla limpia adaptada para F2 sin buscar en endpoints de F1 inexistentes que daban 404
-            let html = `
-                <table class="matrix-table">
-                    <thead>
-                        <tr>
-                            <th class="driver-header">Pos / Piloto</th>
-            `;
+        function renderLiveTable(drivers) {
+            const tbody = document.getElementById('liveTableBody');
+            tbody.innerHTML = '';
 
-            races.forEach(r => {
-                const flag = getFlagHTML(r.raceName, r.circuit);
-                html += `<th><span title="${r.raceName}">${flag}</span></th>`;
+            drivers.forEach(d => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="font-weight: 800; color: ${d.pos === 1 ? '#facc15' : 'inherit'}">#${d.pos}</td>
+                    <td style="font-weight: 700; color: #fff;">${d.driver}</td>
+                    <td style="color: var(--text-muted);">${d.team}</td>
+                    <td>${d.gap}</td>
+                    <td>${d.laps}</td>
+                    <td><span style="color: var(--live-green); font-weight: 600;">● ${d.status}</span></td>
+                `;
+                tbody.appendChild(row);
             });
-
-            html += `<th>Pts</th></tr></thead><tbody>`;
-            html += `<tr><td colspan="${races.length + 2}" class="loading">Los datos oficiales de la clasificación de F2 para la temporada ${year} se gestionan mediante eventos locales.</td></tr>`;
-            html += `</tbody></table>`;
-            
-            standingsContainer.innerHTML = html;
         }
 
-        function openF2ResultModal(raceName, circuit, date) {
-            resultModal.style.display = 'flex';
-            modalTitle.textContent = raceName;
-            modalSubtitle.textContent = `${circuit} • ${date}`;
-            modalBody.innerHTML = `
-                <div style="padding: 20px; text-align: center; color: var(--text-muted);">
-                    <p style="margin-bottom: 10px; font-weight: 600; color: #fff;">Información del Gran Premio</p>
-                    <p>Circuito: ${circuit}</p>
-                    <p>Fecha programada: ${date}</p>
-                </div>
-            `;
-        }
+        // Carga inicial
+        fetchLiveF2Data();
 
-        function closeModal() {
-            resultModal.style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            if (event.target == resultModal) closeModal();
-        }
-
-        yearSelect.addEventListener('change', (e) => {
-            const selectedYear = e.target.value;
-            localStorage.setItem('f2_selected_year', selectedYear);
-            loadF2SeasonData(parseInt(selectedYear));
-        });
-
-        // Carga inicial recordando la última temporada seleccionada
-        const savedYear = localStorage.getItem('f2_selected_year') || "2026";
-        yearSelect.value = savedYear;
-        loadF2SeasonData(parseInt(savedYear));
+        // Refresca los datos automáticamente cada 5 segundos para mantener el directo vivo
+        setInterval(fetchLiveF2Data, 5000);
     </script>
 </body>
 </html>
