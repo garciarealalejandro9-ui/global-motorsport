@@ -54,7 +54,7 @@ const countryCodes = {
     "portugal": "pt", "algarve": "pt", "portimão": "pt", "estoril": "pt",
     "500": "us", "indianapolis": "us", // Para las 500 Millas de Indianápolis (histórico F1)
     "pacific": "jp", "tiAis": "jp", // Para el GP del Pacífico (Japón)
-    "eifel": "de" // Para el GP de Eifel (Alemania)
+    "eifel": "de", // Para el GP de Eifel (Alemania)
     "morocco": "ma", "marruecos": "ma", "ain-diab": "ma"
 };
 
