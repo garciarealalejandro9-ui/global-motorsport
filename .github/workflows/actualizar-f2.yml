@@ -1,0 +1,30 @@
+name: Actualizar F2 Automático
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Se ejecuta automáticamente todos los domingos
+  workflow_dispatch: # Permite darle a un botón para ejecutarlo cuando quieras manualmente
+
+jobs:
+  run-scraper:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar dependencias
+        run: pip install requests beautifulsoup4
+
+      - name: Ejecutar script extractor
+        run: python scraper/f2_scraper.py
+
+      - name: Guardar y subir cambios a la web
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Actualización automática de datos F2"
+          file_pattern: data/*.json
