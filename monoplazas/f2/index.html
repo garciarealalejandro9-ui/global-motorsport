@@ -224,30 +224,6 @@
             box-shadow: 0 4px 16px var(--f2-blue-glow);
         }
 
-        .race-podium {
-            display: flex;
-            gap: 8px;
-            background: var(--bg-deep);
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            border: 1px solid var(--border-color);
-            align-items: center;
-        }
-        .podium-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .podium-pos { font-weight: 800; }
-        .pos-1 { color: #facc15; }
-        .pos-2 { color: #e4e4e7; }
-        .pos-3 { color: #fb923c; }
-
         .table-container {
             width: 100%;
             overflow-x: auto;
@@ -288,24 +264,6 @@
             z-index: 15;
             background: var(--bg-deep);
         }
-        .driver-cell-info {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .driver-flag { font-size: 14px; }
-        .driver-details {
-            display: flex;
-            flex-direction: column;
-        }
-        .driver-name { font-weight: 700; color: #fff; font-size: 12px; }
-        .driver-team { font-size: 10px; color: var(--text-muted); }
-
-        .res-cell { font-weight: 700; font-size: 11px; }
-        .res-1 { background: rgba(250, 204, 21, 0.2); color: #facc15; }
-        .res-2 { background: rgba(228, 228, 231, 0.2); color: #e4e4e7; }
-        .res-3 { background: rgba(251, 146, 60, 0.2); color: #fb923c; }
-        .res-points { font-weight: 900; background: var(--bg-deep); color: #fff; }
 
         .modal {
             display: none;
@@ -340,25 +298,6 @@
             transition: color 0.2s;
         }
         .close-modal:hover { color: #fff; }
-        
-        .result-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 14px;
-            font-size: 12px;
-        }
-        .result-table th, .result-table td {
-            padding: 10px 8px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .result-table th { 
-            color: var(--text-muted); 
-            font-size: 10px; 
-            text-transform: uppercase; 
-            background: var(--bg-deep);
-        }
-        .result-table tr:hover td { background: var(--bg-card); }
         
         .loading { 
             text-align: center; 
@@ -430,43 +369,38 @@
             yearSelect.appendChild(opt);
         }
 
-        // Calendarios limpios de F2 oficiales por temporada
-        const customF2Calendars = {
-            2026: [
-                { round: 1, raceName: "Melbourne F2 Round", circuit: "Albert Park Circuit", date: "2026-03-29" },
-                { round: 2, raceName: "Monte Carlo F2 Round", circuit: "Circuit de Monaco", date: "2026-06-07" },
-                { round: 3, raceName: "Barcelona F2 Round", circuit: "Circuit de Barcelona-Catalunya", date: "2026-06-14" },
-                { round: 4, raceName: "Spielberg F2 Round", circuit: "Red Bull Ring", date: "2026-06-28" },
-                { round: 5, raceName: "Silverstone F2 Round", circuit: "Silverstone Circuit", date: "2026-07-05" },
-                { round: 6, raceName: "Budapest F2 Round", circuit: "Hungaroring", date: "2026-07-26" },
-                { round: 7, raceName: "Spa-Francorchamps F2 Round", circuit: "Circuit de Spa-Francorchamps", date: "2026-07-19" },
-                { round: 8, raceName: "Monza F2 Round", circuit: "Autodromo Nazionale di Monza", date: "2026-09-06" },
-                { round: 9, raceName: "Baku F2 Round", circuit: "Baku City Circuit", date: "2026-09-26" },
-                { round: 10, raceName: "Yas Marina F2 Round", circuit: "Yas Marina Circuit", date: "2026-12-06" }
-            ]
-        };
-
+        // Función conectada al sistema automático de archivos JSON de GitHub
         async function loadF2SeasonData(year) {
             calendarTitle.textContent = `Calendario F2 ${year}`;
             calendarContainer.innerHTML = '<div class="loading">Cargando rondas...</div>';
             standingsContainer.innerHTML = '<div class="loading">Cargando clasificación de F2...</div>';
 
-            // Como la API de Ergast es de F1, definimos calendarios base seguros para F2 o avisamos amigablemente
-            let races = customF2Calendars[year] || [
-                { round: 1, raceName: `Sakhir F2 Round (${year})`, circuit: "Bahrain International Circuit", date: `${year}-03-01` },
-                { round: 2, raceName: `Monaco F2 Round (${year})`, circuit: "Circuit de Monaco", date: `${year}-05-24` },
-                { round: 3, raceName: `Monza F2 Round (${year})`, circuit: "Autodromo Nazionale di Monza", date: `${year}-09-06` }
-            ];
+            try {
+                const response = await fetch(`../../data/f2_${year}.json`);
+                if (!response.ok) throw new Error("No se encontraron los datos");
+                
+                const data = await response.json();
+                const races = data.rondas || [];
 
-            renderF2Calendar(year, races);
-            renderF2StandingsPlaceholder(year, races);
+                renderF2Calendar(year, races);
+                renderF2Standings(year, races);
+            } catch (error) {
+                console.error("Error cargando temporada:", error);
+                calendarContainer.innerHTML = `<div class="loading" style="color: #ef4444;">No hay datos para ${year}. Ejecuta el scraper.</div>`;
+                standingsContainer.innerHTML = `<div class="loading">Sin datos disponibles.</div>`;
+            }
         }
 
         async function renderF2Calendar(year, races) {
             calendarContainer.innerHTML = '';
             
+            if (races.length === 0) {
+                calendarContainer.innerHTML = '<div class="loading">No hay rondas registradas.</div>';
+                return;
+            }
+
             for (let race of races) {
-                const flag = getFlagHTML(race.raceName, race.circuit);
+                const flag = getFlagHTML(race.nombre, race.circuito);
                 
                 const card = document.createElement('div');
                 card.className = 'race-card';
@@ -476,19 +410,18 @@
                         <div class="race-left">
                             <span class="race-flag">${flag}</span>
                             <div class="race-info">
-                                <h4>Ronda ${race.round}: ${race.raceName}</h4>
-                                <p>${race.circuit} • ${race.date}</p>
+                                <h4>Ronda ${race.round}: ${race.nombre}</h4>
+                                <p>${race.circuito} • ${race.fecha}</p>
                             </div>
                         </div>
-                        <button class="btn-result" onclick="openF2ResultModal('${race.raceName}', '${race.circuit}', '${race.date}')">Ver Info</button>
+                        <button class="btn-result" onclick="openF2ResultModal('${race.nombre}', '${race.circuito}', '${race.fecha}')">Ver Info</button>
                     </div>
                 `;
                 calendarContainer.appendChild(card);
             }
         }
 
-        function renderF2StandingsPlaceholder(year, races) {
-            // Tabla limpia adaptada para F2 sin buscar en endpoints de F1 inexistentes que daban 404
+        function renderF2Standings(year, races) {
             let html = `
                 <table class="matrix-table">
                     <thead>
@@ -497,12 +430,12 @@
             `;
 
             races.forEach(r => {
-                const flag = getFlagHTML(r.raceName, r.circuit);
-                html += `<th><span title="${r.raceName}">${flag}</span></th>`;
+                const flag = getFlagHTML(r.nombre, r.circuito);
+                html += `<th><span title="${r.nombre}">${flag}</span></th>`;
             });
 
             html += `<th>Pts</th></tr></thead><tbody>`;
-            html += `<tr><td colspan="${races.length + 2}" class="loading">Los datos oficiales de la clasificación de F2 para la temporada ${year} se gestionan mediante eventos locales.</td></tr>`;
+            html += `<tr><td colspan="${races.length + 2}" class="loading">Temporada ${year} sincronizada correctamente desde el repositorio.</td></tr>`;
             html += `</tbody></table>`;
             
             standingsContainer.innerHTML = html;
@@ -514,9 +447,9 @@
             modalSubtitle.textContent = `${circuit} • ${date}`;
             modalBody.innerHTML = `
                 <div style="padding: 20px; text-align: center; color: var(--text-muted);">
-                    <p style="margin-bottom: 10px; font-weight: 600; color: #fff;">Información del Gran Premio</p>
+                    <p style="margin-bottom: 10px; font-weight: 600; color: #fff;">Información de la Ronda</p>
                     <p>Circuito: ${circuit}</p>
-                    <p>Fecha programada: ${date}</p>
+                    <p>Fecha: ${date}</p>
                 </div>
             `;
         }
@@ -535,7 +468,6 @@
             loadF2SeasonData(parseInt(selectedYear));
         });
 
-        // Carga inicial recordando la última temporada seleccionada
         const savedYear = localStorage.getItem('f2_selected_year') || "2026";
         yearSelect.value = savedYear;
         loadF2SeasonData(parseInt(savedYear));
