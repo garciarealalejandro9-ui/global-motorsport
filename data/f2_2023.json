@@ -1,0 +1,19 @@
+{
+    "temporada": 2023,
+    "rondas": [
+        {
+            "round": 1,
+            "nombre": "Ronda 1: Melbourne F2 Round",
+            "circuito": "Albert Park Circuit",
+            "fecha": "2023-03-29",
+            "resultados": [
+                {
+                    "pos": 1,
+                    "driver": "Piloto Ejemplo",
+                    "team": "Equipo F2",
+                    "points": 25
+                }
+            ]
+        }
+    ]
+}
